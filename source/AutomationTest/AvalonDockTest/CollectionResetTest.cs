@@ -1,6 +1,7 @@
 using AvalonDockTest.TestHelpers;
 using AvalonDockTest.Views;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -69,7 +70,7 @@ namespace AvalonDockTest
 			task.Wait();
 
 			CollectionResetTestWindow window = task.Result;
-			Assert.IsTrue(window.IsLoaded);
+			ClassicAssert.IsTrue(window.IsLoaded);
 
 			// Hook up to ObservableCollection notifications
 			window.Anchorables.CollectionChanged += (s, e) => { UpdateNotificationCount(e, AnchorNotifications); };
@@ -171,7 +172,7 @@ namespace AvalonDockTest
 			ThreadExecutor.RunCodeAsSTA(_are, () =>
 			{
 				CollectionResetTestWindow window = TestWindow.Value;
-				Assert.IsTrue(window.IsLoaded);
+				ClassicAssert.IsTrue(window.IsLoaded);
 
 				var adapter = new AnchorablesTestAdapter(window);
 				TestResetNotification(adapter);
@@ -189,8 +190,8 @@ namespace AvalonDockTest
 		private void TestResetNotification(ITestAdapter adapter)
 		{
 			// Make sure we have the correct initial counts
-			Assert.AreEqual(adapter.ExpectedCount, adapter.CollectionCount);
-			Assert.AreEqual(adapter.ExpectedCount, adapter.SourceCount);
+			ClassicAssert.AreEqual(adapter.ExpectedCount, adapter.CollectionCount);
+			ClassicAssert.AreEqual(adapter.ExpectedCount, adapter.SourceCount);
 
 			// We are only expecting the newly added items
 			AreEqual(adapter.Notifications, new NotifyActionCount { AddCount = adapter.ExpectedCount });
@@ -199,8 +200,8 @@ namespace AvalonDockTest
 			adapter.GetCollection().Refresh();
 
 			// Nothing should have changed
-			Assert.AreEqual(adapter.ExpectedCount, adapter.CollectionCount);
-			Assert.AreEqual(adapter.ExpectedCount, adapter.SourceCount);
+			ClassicAssert.AreEqual(adapter.ExpectedCount, adapter.CollectionCount);
+			ClassicAssert.AreEqual(adapter.ExpectedCount, adapter.SourceCount);
 
 			// Verify nothing has been closed and the Reset notification was received
 			AreEqual(adapter.Notifications, new NotifyActionCount { AddCount = adapter.ExpectedCount, ResetCount = 1 });
@@ -211,8 +212,8 @@ namespace AvalonDockTest
 
 			// Verify the remaining items
 			int remainingCount = adapter.ExpectedCount - removeChildren.Count;
-			Assert.AreEqual(remainingCount, adapter.CollectionCount);
-			Assert.AreEqual(remainingCount, adapter.SourceCount);
+			ClassicAssert.AreEqual(remainingCount, adapter.CollectionCount);
+			ClassicAssert.AreEqual(remainingCount, adapter.SourceCount);
 
 			// NOTE: The RemoveCount is still zero because RemoveRange silently removed the items then issues a Reset.
 			AreEqual(adapter.Notifications, new NotifyActionCount { AddCount = adapter.ExpectedCount, ResetCount = 2 });
@@ -221,7 +222,7 @@ namespace AvalonDockTest
 		// Use simple string comparison instead of IEquatable<T>
 		private void AreEqual(NotifyActionCount expected, NotifyActionCount actual)
 		{
-			Assert.AreEqual(expected.ToString(), actual.ToString());
+			ClassicAssert.AreEqual(expected.ToString(), actual.ToString());
 		}
 	}
 }

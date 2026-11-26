@@ -1,0 +1,182 @@
+<Window
+	x:Class="ExperimentalTestApp.Views.ShellView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+	xmlns:cal="http://caliburnmicro.com"
+	xmlns:docking="clr-namespace:ExperimentalTestApp.Docking"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	Width="1280"
+	Height="800"
+	Background="{Binding Background, ElementName=DockManager}"
+	UseLayoutRounding="True"
+	WindowStartupLocation="CenterScreen">
+	<!--
+		The Window title is bound to ShellViewModel.DisplayName by Caliburn.Micro's WindowManager.
+		The DataContext (ShellViewModel) is set by Caliburn.Micro's ViewModelBinder - never set it here.
+	-->
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/ExperimentalTestApp;component/Docking/DockingResources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<!-- Tool window shortcuts come from IToolbox.Shortcut (the classic DockingManager does not register them itself). -->
+	<i:Interaction.Behaviors>
+		<docking:ToolboxShortcutBehavior Toolboxes="{Binding Tools}" />
+	</i:Interaction.Behaviors>
+
+	<DockPanel>
+		<!--
+			Application shortcuts: Caliburn.Micro actions fired by Microsoft.Xaml.Behaviors key triggers (no ICommand).
+			IMPORTANT: Host guarded ActionMessages on a leaf FrameworkElement, NEVER directly on <Window> or a layout panel!
+			ActionMessage.ApplyAvailabilityEffect sets source.IsEnabled = Can<Method>(), which would set Window.IsEnabled = false
+			whenever CanSave / CanSaveAll / CanCloseActiveDocument is false, disabling all mouse and keyboard input on the window.
+			KeyTrigger (ActiveOnFocus=False) walks up the visual tree and listens on the root Window regardless.
+		-->
+		<FrameworkElement
+			Width="0"
+			Height="0"
+			DockPanel.Dock="Top"
+			Focusable="False"
+			IsHitTestVisible="False">
+			<i:Interaction.Triggers>
+				<i:KeyTrigger Key="N" Modifiers="Control">
+					<cal:ActionMessage MethodName="NewDocument" />
+				</i:KeyTrigger>
+				<i:KeyTrigger Key="S" Modifiers="Control">
+					<cal:ActionMessage MethodName="Save" />
+				</i:KeyTrigger>
+				<i:KeyTrigger Key="S" Modifiers="Control+Shift">
+					<cal:ActionMessage MethodName="SaveAll" />
+				</i:KeyTrigger>
+				<i:KeyTrigger Key="W" Modifiers="Control">
+					<cal:ActionMessage MethodName="CloseActiveDocument" />
+				</i:KeyTrigger>
+			</i:Interaction.Triggers>
+		</FrameworkElement>
+
+		<DockPanel DockPanel.Dock="Top" LastChildFill="True">
+			<StackPanel
+				Margin="4,2"
+				VerticalAlignment="Center"
+				DockPanel.Dock="Right"
+				Orientation="Horizontal">
+				<TextBlock
+					Margin="0,0,6,0"
+					VerticalAlignment="Center"
+					Foreground="{Binding Foreground, ElementName=DockManager}"
+					Text="Theme:" />
+				<!-- Convention: ItemsSource <- Themes, SelectedItem <- SelectedTheme. -->
+				<ComboBox x:Name="Themes" MinWidth="140" />
+			</StackPanel>
+
+			<Menu VerticalAlignment="Center">
+				<MenuItem Header="_File">
+					<MenuItem
+						cal:Message.Attach="NewDocument"
+						Header="_New Document"
+						InputGestureText="Ctrl+N" />
+					<MenuItem
+						cal:Message.Attach="Save"
+						Header="_Save"
+						InputGestureText="Ctrl+S" />
+					<MenuItem
+						cal:Message.Attach="SaveAll"
+						Header="Save _All"
+						InputGestureText="Ctrl+Shift+S" />
+					<Separator />
+					<MenuItem
+						cal:Message.Attach="CloseActiveDocument"
+						Header="_Close Document"
+						InputGestureText="Ctrl+W" />
+					<MenuItem cal:Message.Attach="CloseAllDocuments" Header="Close All Doc_uments" />
+					<Separator />
+					<MenuItem
+						cal:Message.Attach="Exit"
+						Header="E_xit"
+						InputGestureText="Alt+F4" />
+				</MenuItem>
+
+				<!-- One checkable item per IToolbox: IsChecked <-> IsOpen; the gesture text comes from IToolbox.Shortcut. -->
+				<MenuItem Header="_View" ItemsSource="{Binding Tools}">
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="{x:Type MenuItem}">
+							<Setter Property="Header" Value="{Binding Title}" />
+							<Setter Property="IsCheckable" Value="True" />
+							<Setter Property="IsChecked" Value="{Binding IsOpen, Mode=TwoWay}" />
+							<Setter Property="InputGestureText" Value="{Binding Shortcut}" />
+							<Setter Property="ToolTip" Value="{Binding ToolTipText}" />
+						</Style>
+					</MenuItem.ItemContainerStyle>
+				</MenuItem>
+
+				<MenuItem Header="_Layout">
+					<MenuItem cal:Message.Attach="SaveLayout" Header="_Save Layout" />
+					<MenuItem cal:Message.Attach="LoadLayout" Header="_Load Layout" />
+					<MenuItem cal:Message.Attach="ResetLayout" Header="_Reset Layout" />
+				</MenuItem>
+
+				<MenuItem Header="_Help">
+					<MenuItem cal:Message.Attach="About" Header="_About..." />
+				</MenuItem>
+			</Menu>
+		</DockPanel>
+
+		<StatusBar DockPanel.Dock="Bottom">
+			<StatusBarItem>
+				<!-- Convention: Text <- StatusText. -->
+				<TextBlock x:Name="StatusText" />
+			</StatusBarItem>
+			<StatusBarItem HorizontalAlignment="Right">
+				<TextBlock Text="{Binding ActiveItem.Title, StringFormat=Active document: {0}, FallbackValue=No document}" />
+			</StatusBarItem>
+		</StatusBar>
+
+		<!--
+			Classic DockingManager driven by the v5 MVVM surface:
+			  * DockLayout <- IDockLayoutService.Layout (LayoutSyncBridge owns DocumentsSource, AnchorablesSource and ActiveContent).
+			  * Floating / detached window policy is configured on the IRootDock in the Bootstrapper, not here.
+			  * Document/tool bodies come from the implicit DataTemplate for DockableScreen (Docking/DockingResources.xaml);
+			    LayoutItemTemplate is deliberately left unset (see the comment there).
+			  * ZonePlacementStrategy puts each IToolbox into the Zone_* pane declared below.
+		-->
+		<ad:DockingManager
+			x:Name="DockManager"
+			AllowAnchorDoubleClickDock="True"
+			DocumentHeaderTemplate="{StaticResource DocumentHeaderTemplate}"
+			DockLayout="{Binding DockLayout}"
+			LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}">
+			<i:Interaction.Behaviors>
+				<docking:DocumentCloseBehavior />
+				<docking:ToolboxVisibilityBehavior />
+			</i:Interaction.Behaviors>
+
+			<ad:DockingManager.LayoutUpdateStrategy>
+				<docking:ZonePlacementStrategy />
+			</ad:DockingManager.LayoutUpdateStrategy>
+
+			<ad:LayoutRoot>
+				<ad:LayoutPanel Orientation="Horizontal">
+					<ad:LayoutAnchorablePaneGroup DockWidth="260" Orientation="Vertical">
+						<ad:LayoutAnchorablePane Name="Zone_LeftTop" />
+						<ad:LayoutAnchorablePane Name="Zone_LeftBottom" />
+					</ad:LayoutAnchorablePaneGroup>
+					<ad:LayoutPanel Orientation="Vertical">
+						<ad:LayoutDocumentPane />
+						<ad:LayoutAnchorablePaneGroup DockHeight="200" Orientation="Horizontal">
+							<ad:LayoutAnchorablePane Name="Zone_BottomLeft" />
+							<ad:LayoutAnchorablePane Name="Zone_BottomRight" />
+						</ad:LayoutAnchorablePaneGroup>
+					</ad:LayoutPanel>
+					<ad:LayoutAnchorablePaneGroup DockWidth="260" Orientation="Vertical">
+						<ad:LayoutAnchorablePane Name="Zone_RightTop" />
+						<ad:LayoutAnchorablePane Name="Zone_RightBottom" />
+					</ad:LayoutAnchorablePaneGroup>
+				</ad:LayoutPanel>
+			</ad:LayoutRoot>
+		</ad:DockingManager>
+	</DockPanel>
+</Window>

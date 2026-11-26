@@ -1,0 +1,74 @@
+<UserControl
+	x:Class="ExperimentalTestApp.Views.Tools.PropertiesView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DesignHeight="300"
+	d:DesignWidth="250"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+		<Style x:Key="Label" TargetType="TextBlock">
+			<Setter Property="Margin" Value="0,2,8,2" />
+			<Setter Property="Opacity" Value="0.7" />
+		</Style>
+		<Style x:Key="Value" TargetType="TextBlock">
+			<Setter Property="Margin" Value="0,2" />
+			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+		</Style>
+	</UserControl.Resources>
+	<Grid Margin="8">
+		<TextBlock Opacity="0.7" Text="No active document.">
+			<TextBlock.Style>
+				<Style TargetType="TextBlock">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding HasActiveDocument}" Value="True">
+							<Setter Property="Visibility" Value="Collapsed" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</TextBlock.Style>
+		</TextBlock>
+		<Grid Visibility="{Binding HasActiveDocument, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<TextBlock Grid.Row="0" Style="{StaticResource Label}" Text="Title" />
+			<TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.Title}" />
+
+			<TextBlock Grid.Row="1" Style="{StaticResource Label}" Text="Id (ContentId)" />
+			<TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.Id}" />
+
+			<TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="Type" />
+			<TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument}" />
+
+			<TextBlock Grid.Row="3" Style="{StaticResource Label}" Text="IsModified" />
+			<TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.IsModified}" />
+
+			<TextBlock Grid.Row="4" Style="{StaticResource Label}" Text="Screen.IsActive" ToolTip="Caliburn.Micro lifecycle state" />
+			<TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.IsActive}" />
+
+			<TextBlock Grid.Row="5" Style="{StaticResource Label}" Text="IsDockActive" ToolTip="AvalonDock focus (IDockable.IsActive)" />
+			<TextBlock Grid.Row="5" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.IsDockActive}" />
+
+			<TextBlock Grid.Row="6" Style="{StaticResource Label}" Text="Lines" />
+			<TextBlock Grid.Row="6" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.LineCount, FallbackValue=-}" />
+
+			<TextBlock Grid.Row="7" Style="{StaticResource Label}" Text="Characters" />
+			<TextBlock Grid.Row="7" Grid.Column="1" Style="{StaticResource Value}" Text="{Binding ActiveDocument.CharacterCount, FallbackValue=-}" />
+		</Grid>
+	</Grid>
+</UserControl>

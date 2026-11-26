@@ -14,10 +14,10 @@ This guide walks you through creating a complete WPF docking layout with tool wi
 
 ## Step 1: Create a WPF Project
 
-Create a new WPF application targeting `.NET 9` or `.NET 10` (or `.NET 8` / `.NET 11`):
+Create a new WPF application targeting `.NET 8` (or `.NET Framework 4.8`):
 
 ```bash
-dotnet new wpf -n MyDockingApp --framework net10.0-windows
+dotnet new wpf -n MyDockingApp --framework net8.0-windows
 cd MyDockingApp
 ```
 

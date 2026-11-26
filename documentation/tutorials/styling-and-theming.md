@@ -17,7 +17,7 @@ In this tutorial you will build a WPF application that switches live across **al
 Create a new WPF application and install `Dirkster.AvalonDock`, `CommunityToolkit.Mvvm`, and the theme packages you want to offer:
 
 ```bash
-dotnet new wpf -n AvalonDockThemeDemo --framework net10.0-windows
+dotnet new wpf -n AvalonDockThemeDemo --framework net8.0-windows
 cd AvalonDockThemeDemo
 
 dotnet add package Dirkster.AvalonDock

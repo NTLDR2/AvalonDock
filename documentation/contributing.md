@@ -15,7 +15,7 @@ permalink: /contributing/
 ## Ways to Contribute
 
 - **Star** the [NTLDR2/AvalonDock repository](https://github.com/NTLDR2/AvalonDock) (and upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock))
-- **Report fork bugs or roadmap feedback** via [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues) with reproduction steps, OS version, and .NET target framework (`net48` or `.NET 8–11`)
+- **Report fork bugs or roadmap feedback** via [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues) with reproduction steps, OS version, and .NET target framework (`net48` or `.NET 8+`)
 - **Submit pull requests** with focused bug fixes, tests, or documentation improvements
 - **Improve documentation** — the Jekyll documentation site source lives in `documentation/` and deploys via `.github/workflows/docs.yml` (always label `Upstream v5.0.0`–`v5.1.0` vs. `NTLDR2 Fork v5.1.0` scope explicitly when editing version or migration claims)
 
@@ -26,7 +26,7 @@ permalink: /contributing/
 ### Prerequisites
 
 - **OS:** Windows (required — WPF projects only build and run on Windows)
-- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** plus **.NET 8.0**, **.NET 9.0**, **.NET 10.0**, and **.NET 11.0** SDKs (see `source/Directory.Build.props`)
+- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** plus the **.NET 8.0 SDK** (the only SDK needed) (see `source/Directory.Build.props`)
 - **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or any editor with C# and .NET CLI support
 
 ### Restore & Build
@@ -59,8 +59,7 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 FlaUI tests launch real WPF windows (`AvalonDockCodeApp` and test hosts) and drive mouse/keyboard input. Run them separately, once per modern .NET desktop target:
 
 ```powershell
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
 ```
 
 ---

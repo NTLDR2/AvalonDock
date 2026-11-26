@@ -1,8 +1,11 @@
-﻿using System;
+using System;
+using System.Linq;
 #if !NET452
 using System.Runtime.InteropServices;
 #endif
 using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace UnitTests
 {
@@ -24,8 +27,35 @@ namespace UnitTests
                     {
                         Console.WriteLine("An error occurred {0}", ex.Message);
                     }
+                    finally
+                    {
+                        var dispatcher = Dispatcher.FromThread(Thread.CurrentThread);
+                        if (dispatcher != null && dispatcher != Application.Current?.Dispatcher)
+                        {
+                            try
+                            {
+                                var threadWindows = Application.Current?.Dispatcher?.Invoke(() =>
+                                    Application.Current.Windows.OfType<Window>().Where(w => w.Dispatcher == dispatcher).ToList());
+                                if (threadWindows != null)
+                                {
+                                    foreach (var window in threadWindows)
+                                    {
+                                        try { window.Close(); } catch { }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
 
-                    are.Set();
+                            if (!dispatcher.HasShutdownStarted && !dispatcher.HasShutdownFinished)
+                            {
+                                dispatcher.InvokeShutdown();
+                            }
+                        }
+
+                        are.Set();
+                    }
                 });
 #if !NET452
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

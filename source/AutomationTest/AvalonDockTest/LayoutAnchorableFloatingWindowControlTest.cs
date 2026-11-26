@@ -8,6 +8,7 @@ namespace AvalonDockTest
 	using System.Threading.Tasks;
 
 	using NUnit.Framework;
+	using NUnit.Framework.Legacy;
 
 	using AvalonDock.Serializer.Xml;
 	using TestHelpers;
@@ -32,7 +33,7 @@ namespace AvalonDockTest
                 window.Show();
                 
                 window.Window1.Float();
-				Assert.IsTrue(window.Window1.IsFloating);
+				ClassicAssert.IsTrue(window.Window1.IsFloating);
 				var layoutSerializer = new XmlLayoutSerializer(window.dockingManager);
 				layoutSerializer.Serialize(@".\AvalonDock.Layout.config");
 				window.tabControl.SelectedIndex = 1;

@@ -19,7 +19,7 @@ flowchart LR
 | **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `documentation/` site, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
 | **Phase 2** | `.NET Framework 4.8` transitive-dependency audit, build/props isolation, and vendored integration into [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) | **Planned (Next)** |
 | **Phase 3** | Design & implementation of `AvalonDock.Mvvm.CaliburnMicro` (`netstandard2.0` BCL equivalent to `AvalonDock.Mvvm.CommunityToolkit`) + STA unit tests | **Proposed / Design Ready** |
-| **Phase 4** | Modernize dated sample applications—starting with `source/CaliburnDockTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **Planned** |
+| **Phase 4** | Modernize dated sample applications—starting with `source/ExperimentalTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **In Progress** (`ExperimentalTestApp` rewritten for Caliburn.Micro 6.0.15-beta — done) |
 | **Phase 5** | Full fork rebranding (**`AvalonDock` → `AvalonDox`**) across NuGet `<PackageId>`s, assembly names, WPF `pack://` URIs, namespaces, and CI release workflows | **Planned** |
 
 ---
@@ -29,7 +29,7 @@ flowchart LR
 Every roadmap item in this fork is governed by four permanent constraints:
 
 1. **Zero `System.Text.Json` (Permanent Ban):** No library, bridge package, sample, or test project may directly or transitively reference `System.Text.Json`. Any candidate third-party NuGet dependency must have its `net48` and `netstandard2.0` dependency graph audited before adoption to prevent `System.Memory` / `System.Buffers` / `System.Runtime.CompilerServices.Unsafe` / `Microsoft.Bcl.AsyncInterfaces` DLL hell.
-2. **`.NET Framework 4.8` & WPF First:** Every WPF feature, theme dictionary, multi-window mode (`LayoutFloatingWindowControl` and `DetachedAnchorableWindow`), and MVVM bridge must compile cleanly (`--warnaserror`) and pass STA regression tests on `net48` (Windows 7 SP1 64-bit through Windows 11) alongside modern `.NET 8.0`–`11.0-windows`.
+2. **`.NET Framework 4.8` & WPF First:** Every WPF feature, theme dictionary, multi-window mode (`LayoutFloatingWindowControl` and `DetachedAnchorableWindow`), and MVVM bridge must compile cleanly (`--warnaserror`) and pass STA regression tests on `net48` (Windows 7 SP1 64-bit through Windows 11) alongside modern `net8.0-windows`.
 3. **Strict `netstandard2.0` UI-Agnostic Boundary:** ViewModel and service libraries (`AvalonDock.Core`, `AvalonDock.Mvvm`, `AvalonDock.Mvvm.CommunityToolkit`, `AvalonDock.Serializer.Xml`, and the planned `AvalonDock.Mvvm.CaliburnMicro`) must remain pure `netstandard2.0` with zero `System.Windows.*` references.
 4. **Inside-Out AI-Readable Documentation:** Architectural changes must simultaneously update `documentation/`, [AGENTS.md](AGENTS.md), and [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md) so AI coding agents always operate from ground-truth invariants.
 
@@ -59,12 +59,12 @@ Upstream AvalonDock v5 ships two `netstandard2.0` MVVM ViewModel layers:
 1. **`AvalonDock.Mvvm`** — zero external dependencies (`DockableBase`, `ToolboxBase`, `DockBase`, `Document`, `Tool`).
 2. **`AvalonDock.Mvvm.CommunityToolkit`** — `CommunityToolkit.Mvvm` `ObservableObject`-backed equivalents (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDockBase`, `ObservableDocument`, `ObservableTool`) for developers using `[ObservableProperty]` and `[RelayCommand]` source generators.
 
-Developers building WPF applications with **[Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)** currently have no equivalent v5 bridge. Instead, as seen in the legacy `source/CaliburnDockTestApp` sample, Caliburn.Micro users must drop back to v4-style `DocumentsSource="{Binding Items}"` bindings and hand-author XAML `DocumentHeaderTemplate`, `LayoutItemTemplate`, and `LayoutItemContainerStyle` glue—losing automatic access to v5's `IDockLayoutService`, `ToggleDockingManager` 6-zone sidebars (`IToolbox`), `SideToggleManager`, and `[DataContract]` serialization metadata.
+Developers building WPF applications with **[Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)** currently have no equivalent v5 bridge, so they write the glue themselves. The rewritten `source/ExperimentalTestApp` (Phase 4) shows exactly that glue as clearly labelled, sample-internal **boilerplate** (`Boilerplate/DockableScreen`, `ToolboxScreen`, `DocumentScreen`, `DockLayoutConductor<T>` plus WPF behaviors in `Docking/`) on top of the classic `DockingManager` + `DockLayout` + `IDockLayoutService`. That folder is the natural starting point for this **optional** BCL.
 
 Creating **`AvalonDock.Mvvm.CaliburnMicro`** will give Caliburn.Micro developers a first-class Base Class Library (BCL) that feels completely native to both Caliburn.Micro (`Screen`, `PropertyChangedBase`, `Conductor<T>`, `NotifyOfPropertyChange`) and AvalonDock v5 (`IDockable`, `IToolbox`, `IDock`, `IDockLayoutService`).
 
 > [!TIP]
-> **AI-Ready Companion Internals Repository ([NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)):** When implementing `AvalonDock.Mvvm.CaliburnMicro` and modernizing `CaliburnDockTestApp`, consult **[https://github.com/NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)** alongside this repository's [AGENTS.md](AGENTS.md) and [SKILL.md](.agents/skills/avalondock-internals/SKILL.md). That companion fork provides AI-ready, inside-out documentation of Caliburn.Micro's internal architecture (`PropertyChangedBase`, `Screen` activation/deactivation state machines, `Conductor<T>` collections, `IGuardClose` async close pipelines, `ViewLocator` / `ViewModelBinder` conventions, and `SimpleContainer`).
+> **AI-Ready Companion Internals Repository ([NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)):** When implementing `AvalonDock.Mvvm.CaliburnMicro` and modernizing `ExperimentalTestApp`, consult **[https://github.com/NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)** alongside this repository's [AGENTS.md](AGENTS.md) and [SKILL.md](.agents/skills/avalondock-internals/SKILL.md). That companion fork provides AI-ready, inside-out documentation of Caliburn.Micro's internal architecture (`PropertyChangedBase`, `Screen` activation/deactivation state machines, `Conductor<T>` collections, `IGuardClose` async close pipelines, `ViewLocator` / `ViewModelBinder` conventions, and `SimpleContainer`).
 
 ### Proposed Project & Package Identity
 
@@ -74,7 +74,7 @@ Creating **`AvalonDock.Mvvm.CaliburnMicro`** will give Caliburn.Micro developers
 | **Root Namespace & Assembly** | `AvalonDock.Mvvm.CaliburnMicro` |
 | **Package ID** | `Dirkster.AvalonDock.Mvvm.CaliburnMicro` *(or fork-scoped equivalent)* |
 | **Target Framework** | `netstandard2.0` *(strictly UI-agnostic — zero `System.Windows.*` references)* |
-| **Dependencies** | `AvalonDock.Core` (`ProjectReference`) + `Caliburn.Micro.Core` (stable `4.0.x`, `netstandard2.0`) |
+| **Dependencies** | `AvalonDock.Core` (`ProjectReference`) + `Caliburn.Micro.Core` (`netstandard2.0`, zero dependencies; `ExperimentalTestApp` currently uses `6.0.15-beta`) |
 | **AI Internals Reference** | **[NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)** *(AI-friendly Caliburn.Micro internals repository)* |
 | **`System.Text.Json` Check** | `Caliburn.Micro.Core` (`netstandard2.0`) has **zero** `System.Text.Json` dependencies (must still pass automated lockfile audit on `net48`) |
 
@@ -92,7 +92,7 @@ Creating **`AvalonDock.Mvvm.CaliburnMicro`** will give Caliburn.Micro developers
 
 ### Target Developer Experience (Sketch)
 
-With `AvalonDock.Mvvm.CaliburnMicro`, a Caliburn.Micro screen participates directly in `ToggleDockingManager` 6-zone sidebars and `IDockLayoutService` while retaining Caliburn's `Set(...)`, `NotifyOfPropertyChange`, `DisplayName`, and `OnActivateAsync` / `CanCloseAsync` lifecycle:
+With `AvalonDock.Mvvm.CaliburnMicro`, a Caliburn.Micro screen participates directly in `ToggleDockingManager` 6-zone sidebars and `IDockLayoutService` while retaining Caliburn's `Set(...)`, `NotifyOfPropertyChange`, `DisplayName`, and `OnActivatedAsync` / `CanCloseAsync` lifecycle (`OnActivateAsync` / `OnInitializeAsync` are `[Obsolete]` since Caliburn.Micro 5):
 
 ```csharp
 using AvalonDock.Core;
@@ -128,7 +128,8 @@ Implementing `CaliburnDockableBase : Screen, IDockable` cleanly requires solving
 - **Solution:** Override `DisplayName` on `CaliburnDockableBase` and back `Title` with `DisplayName` (or synchronize both setters) so mutating either property raises `NotifyOfPropertyChange(nameof(DisplayName))` **and** `NotifyOfPropertyChange(nameof(Title))` without re-entrancy loops.
 
 #### 2. `IDockable.IsActive { get; set; }` vs. `Screen.IsActive { get; }` Signature Conflict
-- **Mismatch:** `Caliburn.Micro.Screen` implements `IActivate.IsActive` as `public bool IsActive { get; private set; }` (mutated only via `ActivateAsync` / `DeactivateAsync`), whereas `AvalonDock.Core.IDockable` declares `bool IsActive { get; set; }` so `LayoutSyncBridge` can push focus changes onto the ViewModel.
+- **Mismatch:** `Caliburn.Micro.Screen` implements `IActivate.IsActive` as `public bool IsActive { get; private set; }` (mutated only via `ActivateAsync` / `DeactivateAsync`), whereas `AvalonDock.Core.IDockable` declares `bool IsActive { get; set; }`.
+- **Correction (verified in source):** `LayoutSyncBridge` does **not** push focus onto `IDockable.IsActive`, and never calls `IDockable.OnClose()` / `OnSelected()`; it only writes `IRootDock.ActiveDockable` and removes closed documents from the `IDocumentDock`. A bridge must derive the focus flag from `IRootDock.ActiveDockable` itself (as `ExperimentalTestApp`'s `DockLayoutConductor<T>` does).
 - **Solution:** Keep `Screen.IsActive` intact for Caliburn consumers and implement `bool IDockable.IsActive` explicitly (or route setter transitions through a non-blocking lifecycle adapter that updates active state and invokes `OnSelected()` without corrupting `Screen`'s internal activation flags).
 
 #### 3. Synchronous `IDockable.OnClose()` vs. Asynchronous `IGuardClose.CanCloseAsync`
@@ -139,38 +140,33 @@ Implementing `CaliburnDockableBase : Screen, IDockable` cleanly requires solving
 
 #### 4. WPF `ViewLocator` (`cal:View.Model`) & Single-Presenter Invariants
 - **Context:** In AvalonDock v5, `LayoutItem` (`DataContext = this`, `Model = LayoutElement.Content`) creates a single `ContentPresenter` (`LayoutItem.View`) bound to the ViewModel and `DockingManager.LayoutItemTemplate` (see [SKILL.md](.agents/skills/avalondock-internals/SKILL.md)). Meanwhile, `TabControlEx` caches materialized presenters inside `PART_ItemsHolder` across tab switches, and `DetachedAnchorableWindow` transfers that single `LayoutItem.View` presenter when detaching/re-docking.
-- **Solution:** Provide a documented (or optional WPF helper ResourceDictionary) `LayoutItemTemplate` + `LayoutItemContainerStyle` recipe using `<ContentControl cal:View.Model="{Binding}" IsTabStop="False" />` and `<Setter Property="ContentId" Value="{Binding Model.Id}" />`, verified with STA tests across tab switching, tear-off `LayoutFloatingWindowControl`, and standalone `DetachedAnchorableWindow` transitions so `ViewAware` views are not prematurely detached or recreated.
+- **Solution:** Provide a documented (or optional WPF helper ResourceDictionary) recipe using an **implicit** `<DataTemplate DataType="{x:Type CaliburnDockableBase}"><ContentControl cal:View.Model="{Binding}" IsTabStop="False" /></DataTemplate>` plus `<Setter Property="ContentId" Value="{Binding Model.Id}" />` — **not** `LayoutItemTemplate`. The theme templates host `LayoutItem.View` in an outer `ContentPresenter` that also receives `View.ContentTemplate`, so a `LayoutItemTemplate` sees `DataContext` = the inner presenter in docked/floating panes but the ViewModel in `DetachedAnchorableWindow`. `ExperimentalTestApp` verifies the implicit-template recipe keeps one view instance per ViewModel across tab switching, tear-off `LayoutFloatingWindowControl`, and standalone `DetachedAnchorableWindow` transitions.
 
 #### 5. IoC Container Agnosticism (`SimpleContainer` & `IServiceCollection`)
 - **Solution:** Ensure `CaliburnToolboxBase`, `CaliburnDocument`, and `DockLayoutService` work identically whether composed through Caliburn.Micro's classic `BootstrapperBase` + `SimpleContainer` (`GetAllInstances(typeof(IToolbox))`) or via `AvalonDock.DependencyInjection` (`services.AddDockLayoutService(...)`).
 
 ---
 
-## Phase 4: Sample Applications Audit & Modernization (`CaliburnDockTestApp` & Sibling Samples)
+## Phase 4: Sample Applications Audit & Modernization (`ExperimentalTestApp` & Sibling Samples)
 
 > [!IMPORTANT]
-> **Audit Note:** Several sample applications under `source/` predate the full AvalonDock v5 architecture and carry dated target frameworks, pre-release packages, or legacy v4 binding boilerplate. Updating them—starting with **`source/CaliburnDockTestApp`**—is an explicit roadmap priority.
+> **Audit Note:** Several sample applications under `source/` predate the full AvalonDock v5 architecture and carry dated target frameworks, pre-release packages, or legacy v4 binding boilerplate. Updating them—starting with **`source/ExperimentalTestApp`**—is an explicit roadmap priority.
 
-### 1. Overhaul `source/CaliburnDockTestApp` *(Priority Sample Update)*
-Our audit of `source/CaliburnDockTestApp/` identified the following dated artifacts to clean up alongside Phase 3:
-- **Pre-release Package:** Currently references `Caliburn.Micro` `4.0.136-rc` instead of a current stable `4.0.x` release.
-- **Obsolete v3.2 Preprocessor Shims:** `MainWindowViewModel.cs` and `ViewModelBase.cs` still contain `#if CALIBURN_ASYNC` / `#else` branches for legacy synchronous Caliburn.Micro 3.2.
-- **v4-Era Boilerplate Only:** `MainWindowView.xaml` binds `DocumentsSource="{Binding Items}"` with custom Marlett close buttons and manual `DocumentHeaderTemplate` / `LayoutItemContainerStyle` wiring, without demonstrating `ArcDarkTheme` / `ArcLightTheme`, `ToggleDockingManager` 6-zone toolboxes, `IDockLayoutService`, or `XmlLayoutSerializer`.
-- **Dated TFM Matrix:** Currently targets `net9.0-windows;net48`.
-- **Planned Modernization:**
-  1. Upgrade to stable `Caliburn.Micro` (or vendored source from [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro), verifying zero `System.Text.Json` transitive dependencies on `net48`).
-  2. Remove `#if CALIBURN_ASYNC` legacy shims and local `RelayCommand.cs` boilerplate.
-  3. Rebuild the sample around `AvalonDock.Mvvm.CaliburnMicro` (`CaliburnToolboxBase`, `CaliburnDocument`), showcasing `ToggleDockingManager` / `DockingManager`, `ArcDarkTheme` + runtime theme switching, dirty-document close guards, and `XmlLayoutSerializer` round-trip persistence.
-  4. Align `<TargetFrameworks>` to prioritize `net48` alongside current `.NET` (`net10.0-windows;net11.0-windows;net48`).
+### 1. Add `source/ExperimentalTestApp` Alongside Upstream `source/CaliburnDockTestApp` *(Completed — NTLDR2 Fork v5.1.0)*
+While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Micro `4.0.136-rc`, `#if CALIBURN_ASYNC` shims for Caliburn.Micro 3.2, a local `RelayCommand`, `DisplayRootViewFor<T>()`, off-UI-thread `ActivateItemAsync`, v4-style `DocumentsSource="{Binding Items}"` with an unfiltered `ActiveContent` ↔ `ActiveItem` binding, retargeted to `net8.0-windows;net48`, standalone outside `AvalonDock.sln`), a modern reference sample **`source/ExperimentalTestApp`** was added to the solution:
+- **Stack:** classic `DockingManager` driven by `DockLayout` + `IDockLayoutService` (`AvalonDock.Mvvm`), Caliburn.Micro **6.0.15-beta** (NuGet build of upstream commit `83e93b34`, part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) history — zero `System.Text.Json`), `SimpleContainer`, `net8.0-windows;net48`, VS2010 default theme with runtime switching across all theme packages.
+- **Patterns:** sample-internal `IDockable`/`IToolbox` boilerplate on Caliburn.Micro `Screen`s, a conductor synchronized with the layout service, every AvalonDock document close routed through `CanCloseAsync` (serialized Save/Discard/Cancel prompts), 6-zone tool placement on the classic manager, `IToolbox.IsOpen`/`Shortcut` honoured, `IEventAggregator` decoupling, Caliburn.Micro actions instead of `ICommand`, `XmlLayoutSerializer` save/load/reset with auto-save on exit.
+- **Docs:** `source/ExperimentalTestApp/README.md` and `documentation/guides/caliburn-micro.md`.
+- **Deferred:** a FlaUI smoke test for the sample, and unit tests for the boilerplate (it graduates into tests with the optional Phase 3 BCL).
 
 ### 2. Audit & Refresh Remaining Sample Projects in `source/`
 
 | Sample Project | Current State Found in Audit | Planned Cleanup |
 |:---------------|:-----------------------------|:----------------|
-| **`AvalonDockCodeApp`** | Flagship v5 `ToggleDockingManager` IDE demo, currently targeting `net10.0-windows;net11.0-windows` **only** (omits `net48`) | Evaluate adding `net48` support (or a zero-transitive-dep `AvalonDock.Mvvm` `net48` variant) so the flagship demo runs directly on `.NET Framework 4.8` |
-| **`MVVMTestApp`** | Classic `DocumentsSource` / `AnchorablesSource` + `XmlLayoutSerializer` sample targeting `net9.0-windows;net48` | Align TFMs (`net10.0-windows;net11.0-windows;net48`) and include `ArcDarkTheme` / `ArcLightTheme` in its theme switcher |
-| **`WinFormsTestApp`** | `ElementHost` / `WindowsFormsHost` airspace interop test targeting `net9.0-windows;net48` | Align TFMs with current test matrix and verify `net48` interop focus behavior |
-| **`MLibTest`** | Targets `net9.0-windows;net48`, retains dead MSBuild conditions (`net5.0-windows`, `netcoreapp3.0`, `net40`), and references non-SDK `Settings.csproj` (`v4.5.2`) | Prune dead pre-v5 MSBuild conditions and upgrade or retire legacy `v4.5.2` helper project |
+| **`AvalonDockCodeApp`** | Flagship v5 `ToggleDockingManager` IDE demo, currently targeting `net8.0-windows` **only** (omits `net48`) | Evaluate adding `net48` support (or a zero-transitive-dep `AvalonDock.Mvvm` `net48` variant) so the flagship demo runs directly on `.NET Framework 4.8` |
+| **`MVVMTestApp`** | Classic `DocumentsSource` / `AnchorablesSource` + `XmlLayoutSerializer` sample targeting `net8.0-windows;net48` | Include `ArcDarkTheme` / `ArcLightTheme` in its theme switcher |
+| **`WinFormsTestApp`** | `ElementHost` / `WindowsFormsHost` airspace interop test targeting `net8.0-windows;net48` | Verify `net48` interop focus behavior |
+| **`MLibTest`** | Targets `net8.0-windows;net48`, retains dead MSBuild conditions (`net5.0-windows`, `netcoreapp3.0`, `net40`), and references non-SDK `Settings.csproj` (`v4.5.2`) | Prune dead pre-v5 MSBuild conditions and upgrade or retire legacy `v4.5.2` helper project |
 | **`AvalonDocPanelMemoryLeaks`** | Legacy non-SDK `.csproj` targeting `.NET Framework v4.6.1` | Migrate leak regression scenarios into `AvalonDockTest` (`net48` + modern `.NET`) or convert to SDK-style `net48` |
 
 ---
@@ -210,7 +206,7 @@ Executing a WPF control-library rename cleanly requires updating seven coupled s
    - Update `<AssemblyName>`, `<PackageId>`, `<Product>`, `<PackageProjectUrl>`, `<RepositoryUrl>`, and `<Authors>` while preserving historical copyright notices and `LICENSE` (`Ms-PL`) attribution.
 2. **WPF `pack://application:,,,` Resource URIs *(Critical Runtime Invariant)*:**
    - Every `Theme.GetResourceUri()` implementation (`GenericTheme`, `ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `Expression*Theme`, `MetroTheme`, `AeroTheme`) and every XAML `<ResourceDictionary Source="/AvalonDock...;component/...">` merge embeds the exact `<AssemblyName>`.
-   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests across `net48` and `.NET 8–11`.
+   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests across `net48` and `net8.0-windows`.
 3. **C# Root Namespaces & XAML `[XmlnsDefinition]` Mapping:**
    - Transition C# namespaces from `AvalonDock.*` → `AvalonDox.*` and introduce the new primary XAML namespace URI (`https://github.com/NTLDR2/AvalonDox` with `[assembly: XmlnsPrefix(..., "avalonDox")]`) in `Properties/AssemblyInfo.cs`.
    - Optionally retain secondary `[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", ...)]` attributes in `AssemblyInfo.cs` so existing XAML views migrate with minimal friction.

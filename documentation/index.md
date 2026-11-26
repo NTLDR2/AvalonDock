@@ -42,7 +42,7 @@ AvalonDock is used by [many open source and commercial projects](https://github.
 | **First-Class MVVM** | Bind view-model trees via `AvalonDock.Mvvm` (zero external dependencies) or `AvalonDock.Mvvm.CommunityToolkit` (`[ObservableProperty]` / `[RelayCommand]` support). |
 | **Dependency Injection** | Register `IDockLayoutService`, toolboxes, and docking options cleanly via `Microsoft.Extensions.DependencyInjection`. |
 | **5 Theme Packages + `GenericTheme`** | Modern `Arc` (Dark & Light), `VS2010`, `Expression` (Dark & Light), `Metro`, and `Aero` themes, plus live runtime switching and `DictionaryTheme` customization. |
-| **Broad .NET Support** | Targets `.NET 8`, `.NET 9`, `.NET 10`, `.NET 11` *(v5.1+)*, and `.NET Framework 4.8` (Windows 7 SP1 through Windows 11 with zero `System.Text.Json` dependencies), plus `netstandard2.0` core/MVVM/DI/serializer packages. |
+| **Broad .NET Support** | Targets `.NET 8` (the same assembly runs on later runtimes) and `.NET Framework 4.8` (Windows 7 SP1 through Windows 11 with zero `System.Text.Json` dependencies), plus `netstandard2.0` core/MVVM/DI/serializer packages. |
 
 ---
 
@@ -91,7 +91,7 @@ This fork builds **11 modular libraries** (all with embedded XML IntelliSense do
 
 | Package | Target | Description |
 |:--------|:-------|:------------|
-| [Dirkster.AvalonDock](https://www.nuget.org/packages/Dirkster.AvalonDock) | `net8.0-windows`–`net11.0-windows`, `net48` | Main WPF docking controls (`DockingManager`, `ToggleDockingManager`, layout model, generic theme) |
+| [Dirkster.AvalonDock](https://www.nuget.org/packages/Dirkster.AvalonDock) | `net8.0-windows`, `net48` | Main WPF docking controls (`DockingManager`, `ToggleDockingManager`, layout model, generic theme) |
 | [Dirkster.AvalonDock.Core](https://www.nuget.org/packages/Dirkster.AvalonDock.Core) | `netstandard2.0` | UI-agnostic interfaces (`IDockable`, `IRootDock`, `IToolbox`, `IDockLayoutService`), enums, and DTO contracts |
 | [Dirkster.AvalonDock.Mvvm](https://www.nuget.org/packages/Dirkster.AvalonDock.Mvvm) | `netstandard2.0` | MVVM base classes (`DockableBase`, `ToolboxBase`, `DockLayoutService`, `SideToggleManager`) with zero external dependencies |
 | [Dirkster.AvalonDock.Mvvm.CommunityToolkit](https://www.nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | `netstandard2.0` | `CommunityToolkit.Mvvm` `ObservableObject`-based classes (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDocument`, `ObservableTool`) |
@@ -120,10 +120,7 @@ This fork builds **11 modular libraries** (all with embedded XML IntelliSense do
 | Target Framework | Status | Introduced In / Scope |
 |:-----------------|:-------|:----------------------|
 | `.NET Framework 4.8` (`net48`) | ✅ Supported | **Primary prioritized target in `NTLDR2 Fork v5.1.0`** (supported since `Upstream v5.0.0`, Win7 SP1 64-bit – Win11) |
-| `.NET 11` (`net11.0-windows`) | ✅ Supported | Added in `Upstream v5.1.0` & included in `NTLDR2 Fork v5.1.0` |
-| `.NET 10` (`net10.0-windows`) | ✅ Supported | Supported since `Upstream v5.0.0` |
-| `.NET 9` (`net9.0-windows`) | ✅ Supported | Supported since `Upstream v5.0.0` |
-| `.NET 8` (`net8.0-windows`) | ✅ Supported | Added in `Upstream v5.0.2` (`#673`) |
+| `.NET 8+` (`net8.0-windows`) | ✅ Supported | NTLDR2 Fork v5.1.0 ships only `net8.0-windows` and `net48` WPF builds; the `net8.0-windows` assembly runs unchanged on the .NET 9, 10 and 11 runtimes. (`Upstream v5.0.2`, `#673`, additionally ships separate `net9.0`/`net10.0`/`net11.0` builds.) |
 | `.NET Standard 2.0` (`netstandard2.0`) | ✅ Supported | UI-agnostic packages (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`) since `Upstream v5.0.0` |
 
 {: .note }

@@ -52,5 +52,6 @@ These 11 projects produce the published `Dirkster.AvalonDock*` NuGet packages:
 | `TestApp/` | Classic `DockingManager` feature showcase |
 | `WinFormsTestApp/` | `WindowsFormsHost` / `ElementHost` interop sample (`VS2010Theme` default) |
 | `MLibTest/` | MLib theming integration sample |
-| `CaliburnDockTestApp/` | Caliburn.Micro integration sample |
+| `CaliburnDockTestApp/` | Upstream Caliburn.Micro 4 integration sample |
+| `ExperimentalTestApp/` | Caliburn.Micro 6 + `DockLayout` reference sample |
 | `AvalonDocPanelMemoryLeaks/` | Memory-leak regression harness |

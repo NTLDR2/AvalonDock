@@ -1,0 +1,45 @@
+<UserControl
+	x:Class="ExperimentalTestApp.Views.Documents.WelcomeView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DesignHeight="450"
+	d:DesignWidth="700"
+	mc:Ignorable="d">
+	<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+		<StackPanel Margin="24" MaxWidth="760" HorizontalAlignment="Left">
+			<TextBlock FontSize="22" FontWeight="SemiBold" Text="Caliburn.Micro + AvalonDock v5" />
+			<TextBlock
+				Margin="0,6,0,18"
+				Opacity="0.8"
+				Text="A reference sample: classic DockingManager, DockLayout + IDockLayoutService, Caliburn.Micro conductors, actions and the event aggregator."
+				TextWrapping="Wrap" />
+
+			<TextBlock FontWeight="SemiBold" Text="Open a sample file" />
+			<WrapPanel Margin="0,6,0,18">
+				<!-- Convention: a Button named X invokes the ViewModel method X (an async Task method is fine). -->
+				<Button x:Name="OpenReadme" Margin="0,0,8,0" Padding="10,4" Content="readme.txt" />
+				<Button x:Name="OpenCaliburnNotes" Margin="0,0,8,0" Padding="10,4" Content="caliburn-micro.txt" />
+				<Button x:Name="OpenAvalonDockNotes" Padding="10,4" Content="avalondock.txt" />
+			</WrapPanel>
+
+			<TextBlock FontWeight="SemiBold" Text="Things to try" />
+			<TextBlock Margin="0,6,0,0" TextWrapping="Wrap">
+				<Run Text="&#x2022; Edit a document, then close its tab: Caliburn.Micro's CanCloseAsync asks Save / Discard / Cancel." /><LineBreak />
+				<Run Text="&#x2022; Tear documents or tool windows off into floating windows; use 'Window' on a tool window to detach it to an OS window." /><LineBreak />
+				<Run Text="&#x2022; Toggle tool windows from the View menu or with their shortcuts (Ctrl+Shift+E, D, P, L, B)." /><LineBreak />
+				<Run Text="&#x2022; Pin / unpin tool windows to auto-hide them at the window edge." /><LineBreak />
+				<Run Text="&#x2022; Switch themes with the combo box in the top right corner (VS2010 is the default)." /><LineBreak />
+				<Run Text="&#x2022; Layout &gt; Save Layout, rearrange, then Load or Reset. The layout is also saved when you exit." /><LineBreak />
+				<Run Text="&#x2022; Watch the Caliburn Log and the Event Bus (Ctrl+Shift+B) while you do all of the above." />
+			</TextBlock>
+
+			<TextBlock
+				Margin="0,18,0,0"
+				Opacity="0.7"
+				Text="This page cannot be closed from its tab: WelcomeViewModel sets CanClose = false."
+				TextWrapping="Wrap" />
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

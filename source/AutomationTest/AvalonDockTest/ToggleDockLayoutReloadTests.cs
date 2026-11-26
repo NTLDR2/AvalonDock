@@ -111,19 +111,27 @@ namespace AvalonDockTest
 				{
 					var task = WindowHelpers.CreateInvisibleWindowAsync<ToggleDockTestWindow>();
 					task.Wait();
-					var manager = task.Result.Manager;
+					var window = task.Result;
+					try
+					{
+						var manager = window.Manager;
 
-					// The layout the user saved, back when the application still offered "tool1".
-					manager.Layout = BuildLayout("tool1", "tool2");
-					var stale = manager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+						// The layout the user saved, back when the application still offered "tool1".
+						manager.Layout = BuildLayout("tool1", "tool2");
+						var stale = manager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
 
-					// The application of today: "tool1" does not exist any more.
-					var reloaded = BuildLayout("tool2");
-					manager.Layout = reloaded;
+						// The application of today: "tool1" does not exist any more.
+						var reloaded = BuildLayout("tool2");
+						manager.Layout = reloaded;
 
-					var buttons = SidebarButtons(manager);
-					titlesAfterReload = buttons.Select(b => b.Anchorable?.Title).ToList();
-					ghostButtons = buttons.Count(b => stale.Contains(b.Anchorable));
+						var buttons = SidebarButtons(manager);
+						titlesAfterReload = buttons.Select(b => b.Anchorable?.Title).ToList();
+						ghostButtons = buttons.Count(b => stale.Contains(b.Anchorable));
+					}
+					finally
+					{
+						window.Close();
+					}
 				});
 
 			_are.WaitOne();
@@ -149,14 +157,22 @@ namespace AvalonDockTest
 				{
 					var task = WindowHelpers.CreateInvisibleWindowAsync<ToggleDockTestWindow>();
 					task.Wait();
-					var manager = task.Result.Manager;
+					var window = task.Result;
+					try
+					{
+						var manager = window.Manager;
 
-					manager.Layout = BuildLayout("tool1");
-					manager.Layout = BuildLayout("tool1", "tool2", "tool3");
+						manager.Layout = BuildLayout("tool1");
+						manager.Layout = BuildLayout("tool1", "tool2", "tool3");
 
-					titlesAfterReload = SidebarButtons(manager)
-						.Select(b => b.Anchorable?.Title)
-						.ToList();
+						titlesAfterReload = SidebarButtons(manager)
+							.Select(b => b.Anchorable?.Title)
+							.ToList();
+					}
+					finally
+					{
+						window.Close();
+					}
 				});
 
 			_are.WaitOne();
@@ -179,14 +195,22 @@ namespace AvalonDockTest
 				{
 					var task = WindowHelpers.CreateInvisibleWindowAsync<ToggleDockTestWindow>();
 					task.Wait();
-					var manager = task.Result.Manager;
+					var window = task.Result;
+					try
+					{
+						var manager = window.Manager;
 
-					manager.Layout = BuildLayout("tool1", "tool2");
-					manager.Layout = BuildLayout("tool3");
+						manager.Layout = BuildLayout("tool1", "tool2");
+						manager.Layout = BuildLayout("tool3");
 
-					var current = manager.Layout;
-					orphanedButtons = SidebarButtons(manager)
-						.Count(b => b.Anchorable == null || b.Anchorable.Root != current);
+						var current = manager.Layout;
+						orphanedButtons = SidebarButtons(manager)
+							.Count(b => b.Anchorable == null || b.Anchorable.Root != current);
+					}
+					finally
+					{
+						window.Close();
+					}
 				});
 
 			_are.WaitOne();

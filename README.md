@@ -1,6 +1,6 @@
 # AvalonDock (NTLDR2 Fork)
 
-![Net48](https://badgen.net/badge/Primary%20Target/.NET%20Framework%204.8/0078D4) ![WPF](https://badgen.net/badge/UI/WPF/512BD4) ![ZeroSTJ](https://badgen.net/badge/System.Text.Json/Zero%20Dependencies/2EA043) ![NetStd20](https://badgen.net/badge/Core/.NET%20Standard%202.0/blue) ![Net8_11](https://badgen.net/badge/Modern%20.NET/8%20%7C%209%20%7C%2010%20%7C%2011/blue) [![License: Ms-PL](https://badgen.net/badge/License/Ms-PL/green)](LICENSE)
+![Net48](https://badgen.net/badge/Primary%20Target/.NET%20Framework%204.8/0078D4) ![WPF](https://badgen.net/badge/UI/WPF/512BD4) ![ZeroSTJ](https://badgen.net/badge/System.Text.Json/Zero%20Dependencies/2EA043) ![NetStd20](https://badgen.net/badge/Core/.NET%20Standard%202.0/blue) ![Net8](https://badgen.net/badge/Modern%20.NET/8.0/blue) [![License: Ms-PL](https://badgen.net/badge/License/Ms-PL/green)](LICENSE)
 
 AvalonDock is a WPF Document and Tool Window docking layout container used to arrange tabbed documents, split panes, floating windows, and auto-hidden or sidebar-toggled tool windows—powering IDE-style workspaces similar to Visual Studio, JetBrains Rider, Eclipse, and VS Code.
 
@@ -20,10 +20,10 @@ This fork ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)) refines [D
 **Mission & Core Goals:**
 
 - **Eliminate `System.Text.Json` DLL Hell:** Never reference or transitively import `System.Text.Json`. On `.NET Framework 4.8`, `System.Text.Json` drags in out-of-band `System.Memory`, `System.Buffers`, `System.Runtime.CompilerServices.Unsafe`, and `Microsoft.Bcl.AsyncInterfaces` packages—a notorious source of runtime `FileLoadException` binding-redirect conflicts in complex desktop hosts. Three upstream packages that depended on `System.Text.Json` have already been surgically removed in favor of inbox XML DTO persistence.
-- **Prioritize `.NET Framework 4.8` & WPF:** Treat `net48` and Windows Presentation Foundation as primary, first-class targets—never legacy afterthoughts—while maintaining full multi-target support for `.NET 8.0` through `.NET 11.0` (`-windows`) and `netstandard2.0` UI-agnostic contracts.
+- **Prioritize `.NET Framework 4.8` & WPF:** Treat `net48` and Windows Presentation Foundation as primary, first-class targets—never legacy afterthoughts—while maintaining full multi-target support for `.NET 8.0` (`net8.0-windows`, rolling forward onto newer .NET runtimes) and `netstandard2.0` UI-agnostic contracts.
 - **Vendored Docking Dependency for SomaFrameQD:** Maintain a self-contained, warning-free (`--warnaserror`) component tree engineered to serve as the vendored docking engine inside [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD).
-- **Caliburn.Micro MVVM Comfort:** Explore a first-class **Caliburn.Micro** bridge / Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`) analogous to `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, guided by the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) so Caliburn.Micro developers feel at home. Full details live in [ROADMAP.md](ROADMAP.md).
-- **Inside-Out Documentation for AI Agents & Engineers:** Ship a complete 38-page v5 documentation suite ([documentation/](documentation/index.md)), always-loaded agent guardrails ([AGENTS.md](AGENTS.md)), and a deep engine-invariants reference ([SKILL.md](.agents/skills/avalondock-internals/SKILL.md)) so AI coding agents produce accurate v5 code without legacy v4 hallucinations.
+- **Caliburn.Micro MVVM Comfort:** Provide the modernized [ExperimentalTestApp](source/ExperimentalTestApp/README.md) reference sample (`Caliburn.Micro 6.0.15-beta` + classic `DockingManager`, documented in [Caliburn.Micro Integration](documentation/guides/caliburn-micro.md)) and plan an optional **Caliburn.Micro** Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`), guided by [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) and detailed in [ROADMAP.md](ROADMAP.md).
+- **Inside-Out Documentation for AI Agents & Engineers:** Ship a complete 39-page v5 documentation suite ([documentation/](documentation/index.md)), always-loaded agent guardrails ([AGENTS.md](AGENTS.md)), and a deep engine-invariants reference ([SKILL.md](.agents/skills/avalondock-internals/SKILL.md)) so AI coding agents produce accurate v5 code without legacy v4 hallucinations.
 
 ---
 
@@ -39,9 +39,9 @@ Before installing or migrating code from upstream tutorials, note the deliberate
 | **`System.Text.Json` Policy** | Used by JSON serializer and `.vstheme` / VS2013 theme loaders | **Zero `System.Text.Json` anywhere** across all library, sample, and test projects to prevent `net48` DLL hell |
 | **Layout Persistence** | XML (`Serializer.Xml`) + JSON (`Serializer.Json`) | **XML DTO persistence (`AvalonDock.Serializer.Xml`)** using inbox `System.Xml.Serialization` (backward-compatible with v4 XML) + `LayoutSerializerBase` for custom formats |
 | **Available Themes** | `Arc`, `VS` (2015/2022), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **`Arc` (Dark/Light), `VS2010`, `Expression` (Dark/Light), `Metro`, `Aero`, `GenericTheme`**, plus `DictionaryTheme` custom XAML themes |
-| **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **`.NET Framework 4.8` + WPF prioritized**, built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)), while supporting `.NET 8`–`11` |
+| **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **`.NET Framework 4.8` + WPF prioritized**, built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)), while supporting `.NET 8` (`net8.0-windows`) |
 | **Package & Brand Identity** | `Dirkster.AvalonDock*` on `nuget.org` | Retains `Dirkster.AvalonDock*` assembly/package names temporarily for vendored compatibility; **planned rebrand to `AvalonDox`** ([ROADMAP.md](ROADMAP.md)) prior to any standalone NuGet publishing |
-| **Documentation & AI Tooling** | Docs site & GitHub Wiki | **38-page [documentation/](documentation/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
+| **Documentation & AI Tooling** | Docs site & GitHub Wiki | **39-page [documentation/](documentation/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
 
 ### Step 1: Consume This Fork (Vendored Source or Local NuGet Feed)
 
@@ -52,7 +52,7 @@ Because this fork removes upstream `System.Text.Json` modules and targets vendor
 git clone https://github.com/NTLDR2/AvalonDock.git
 cd AvalonDock
 
-# Build all 11 libraries (net48 + net8.0/9.0/10.0/11.0-windows + netstandard2.0)
+# Build all 11 libraries (net48 + net8.0-windows + netstandard2.0)
 dotnet restore source/AvalonDock.sln
 dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnaserror
 
@@ -60,10 +60,10 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 dotnet pack source/AvalonDock.sln --configuration Release --no-build --output ./artifacts/nupkgs
 ```
 
-In a `.NET Framework 4.8` (`net48`) or `.NET 8–11` (`net10.0-windows`) WPF host project, reference only the modules your app needs:
+In a `.NET Framework 4.8` (`net48`) or `.NET 8+` (`net8.0-windows`) WPF host project, reference only the modules your app needs:
 
 ```xml
-<!-- Direct vendored ProjectReference example (works identically on net48 and net8.0–net11.0-windows) -->
+<!-- Direct vendored ProjectReference example (works identically on net48 and net8.0-windows) -->
 <ItemGroup>
   <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
   <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Core\AvalonDock.Core.csproj" />
@@ -156,14 +156,14 @@ All 11 libraries ship with embedded XML IntelliSense documentation (`CS1591` enf
 
 | Project / Package ID | Target Frameworks | Description |
 |:---------------------|:------------------|:------------|
-| `Dirkster.AvalonDock` | `net48`, `net8.0-windows`–`net11.0-windows` | Core WPF docking controls (`DockingManager`, `ToggleDockingManager`, layout model, floating & detached windows, `GenericTheme`) |
+| `Dirkster.AvalonDock` | `net48`, `net8.0-windows` | Core WPF docking controls (`DockingManager`, `ToggleDockingManager`, layout model, floating & detached windows, `GenericTheme`) |
 | `Dirkster.AvalonDock.Core` | `netstandard2.0` | UI-agnostic interfaces (`IDockable`, `IRootDock`, `IToolbox`, `IDockLayoutService`), enums, and 17 serialization DTOs — zero WPF or external dependencies |
 | `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | Ready-to-use MVVM base classes (`DockableBase`, `ToolboxBase`, `Document`, `Tool`, `DockLayoutService`, `SideToggleManager`) — **zero external dependencies** |
 | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | Optional `CommunityToolkit.Mvvm` (`ObservableObject`) base classes (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDocument`, `ObservableTool`) supporting `[ObservableProperty]` and `[RelayCommand]` |
 | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `IServiceCollection` registration extensions (`AddDockLayoutService`, `DockLayoutBuilder`, `DockingOptions`, `ToggleDockOptions`) |
 
 > [!TIP]
-> **Using Caliburn.Micro?** For maximum zero-dependency simplicity on `net48`, `Dirkster.AvalonDock.Mvvm` has zero third-party package dependencies today, and a native **Caliburn.Micro** bridge (`AvalonDock.Mvvm.CaliburnMicro`)—paired with the AI-ready Caliburn.Micro internals reference at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)—is detailed in [ROADMAP.md](ROADMAP.md).
+> **Using Caliburn.Micro?** See the modernized [ExperimentalTestApp](source/ExperimentalTestApp/README.md) reference sample (`Caliburn.Micro 6.0.15-beta` + classic `DockingManager`) and [Caliburn.Micro Integration](documentation/guides/caliburn-micro.md); an optional dedicated BCL (`AvalonDock.Mvvm.CaliburnMicro`) paired with [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) is detailed in [ROADMAP.md](ROADMAP.md).
 
 ### Layout Serializer
 
@@ -175,11 +175,11 @@ All 11 libraries ship with embedded XML IntelliSense documentation (`CS1591` enf
 
 | Project / Package ID | Target Frameworks | Variants & Style |
 |:---------------------|:------------------|:-----------------|
-| `Dirkster.AvalonDock.Themes.Arc` | `net48`, `net8.0-windows`–`net11.0-windows` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE theme with rounded tabs |
-| `Dirkster.AvalonDock.Themes.VS2010` | `net48`, `net8.0-windows`–`net11.0-windows` | `VS2010Theme` — classic Visual Studio 2010 gradient docking theme |
-| `Dirkster.AvalonDock.Themes.Expression` | `net48`, `net8.0-windows`–`net11.0-windows` | `ExpressionDarkTheme`, `ExpressionLightTheme` — Expression Blend-inspired studio themes |
-| `Dirkster.AvalonDock.Themes.Metro` | `net48`, `net8.0-windows`–`net11.0-windows` | `MetroTheme` — clean, flat Metro / WinUI style |
-| `Dirkster.AvalonDock.Themes.Aero` | `net48`, `net8.0-windows`–`net11.0-windows` | `AeroTheme` — classic Windows Aero appearance |
+| `Dirkster.AvalonDock.Themes.Arc` | `net48`, `net8.0-windows` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE theme with rounded tabs |
+| `Dirkster.AvalonDock.Themes.VS2010` | `net48`, `net8.0-windows` | `VS2010Theme` — classic Visual Studio 2010 gradient docking theme |
+| `Dirkster.AvalonDock.Themes.Expression` | `net48`, `net8.0-windows` | `ExpressionDarkTheme`, `ExpressionLightTheme` — Expression Blend-inspired studio themes |
+| `Dirkster.AvalonDock.Themes.Metro` | `net48`, `net8.0-windows` | `MetroTheme` — clean, flat Metro / WinUI style |
+| `Dirkster.AvalonDock.Themes.Aero` | `net48`, `net8.0-windows` | `AeroTheme` — classic Windows Aero appearance |
 
 ---
 
@@ -406,15 +406,15 @@ AvalonDock.Core                       UI-agnostic contracts & 17 serialization D
 ├── AvalonDock.Mvvm.CommunityToolkit  CommunityToolkit.Mvvm ObservableObject bridge (netstandard2.0)
 ├── AvalonDock.Serializer.Xml         Inbox XML DTO layout persistence (netstandard2.0, zero external deps)
 └── AvalonDock                        WPF DockingManager, ToggleDockingManager, Layout*, Controls*
-    │                                 (net48; net8.0-windows; net9.0-windows; net10.0-windows; net11.0-windows)
+    │                                 (net48; net8.0-windows)
     └── AvalonDock.Themes.*           Arc, VS2010, Expression, Metro, Aero WPF theme libraries
 ```
 
 | Target Framework | Role in This Fork | OS Support |
 |:-----------------|:------------------|:-----------|
 | **`.NET Framework 4.8` (`net48`)** | **Primary prioritized desktop target** (WPF controls, themes, tests) | Windows 7 SP1 64-bit – Windows 11 |
-| **`.NET Standard 2.0` (`netstandard2.0`)** | UI-agnostic `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | Shared across `net48` and `.NET 8`–`11` |
-| **`.NET 8.0` – `.NET 11.0` (`-windows`)** | Modern .NET desktop WPF support (`net8.0`, `net9.0`, `net10.0`, `net11.0-windows`) | Windows 10 / Windows 11 |
+| **`.NET Standard 2.0` (`netstandard2.0`)** | UI-agnostic `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | Shared across `net48` and `.NET 8+` |
+| **`.NET 8.0` (`net8.0-windows`)** | Modern .NET desktop WPF target (rolls forward onto `.NET 9+` runtimes) | Windows 10 / Windows 11 |
 
 ---
 
@@ -444,7 +444,7 @@ This repository tracks a **fork-specific `v5.1.0` baseline** built upon Dirkster
 | XML serializer extracted to `AvalonDock.Serializer.Xml` | **Upstream `v5.0.0`** | High | Reference `AvalonDock.Serializer.Xml`; update `using AvalonDock.Layout.Serialization;` → `using AvalonDock.Serializer.Xml;` + `using AvalonDock.Core;` |
 | `IXmlSerializable` removed from layout classes | **Upstream `v5.0.0`** | Medium | Subclass `AvalonDock.Core.LayoutSerializerBase` over `LayoutRootDto` for custom formats |
 | Unresolved deserialized anchorables removed by default | **Upstream `v5.0.0`** | Medium | Opt into `UnresolvedContentHandling.Hide` if lazy-loading plugin panes after layout restore |
-| Frameworks `< net48` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added | **Upstream `v5.0.0`–`v5.1.0`** | High | Target `net48` or `net8.0-windows`–`net11.0-windows` (`net8.0` added in `v5.0.2`; `net11.0` in `v5.1.0`) |
+| Frameworks `< net48` & `.NET Core 3.x / 5` dropped; `.NET 8`–`11` added upstream | **Upstream `v5.0.0`–`v5.1.0`** | High | Target `net48` or `net8.0-windows` in `NTLDR2 Fork v5.1.0` (rolls forward onto `.NET 9+` runtimes) |
 | `Serializer.Json`, `Themes.VS`, & `Themes.VS2013` removed (14 → 11 libraries) | **`NTLDR2 Fork v5.1.0`** *(shipped in upstream `v5.0.0`)* | Medium–High | Use `XmlLayoutSerializer` and `ArcDarkTheme` / `ArcLightTheme` or `VS2010Theme` (eliminates `System.Text.Json` DLL hell on `net48`) |
 
 Read the complete [Migration Guide](documentation/migration/index.md) and [Breaking Changes Reference](documentation/migration/breaking-changes.md).
@@ -453,7 +453,7 @@ Read the complete [Migration Guide](documentation/migration/index.md) and [Break
 
 ## Building & Testing from Source
 
-Prerequisites: **Windows** (`UseWPF=true`), **.NET 8.0 / 9.0 / 10.0 / 11.0 SDKs**, and the **.NET Framework 4.8 Developer Pack**. `TreatWarningsAsErrors` is enabled globally across the solution.
+Prerequisites: **Windows** (`UseWPF=true`), the **.NET 8.0 SDK** (the only SDK required), and the **.NET Framework 4.8 Developer Pack**. `TreatWarningsAsErrors` is enabled globally across the solution.
 
 ```powershell
 # Restore & compile with zero-warnings enforcement
@@ -464,8 +464,7 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
 
 # FlaUI desktop UI automation tests
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
 ```
 
 See [Building from Source](documentation/getting-started/building-from-source.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for analyzer rules and STA testing guidelines.
@@ -536,7 +535,7 @@ See [Building from Source](documentation/getting-started/building-from-source.md
 
 ## Documentation, Internals & Roadmap
 
-- **[v5 Documentation Suite (`documentation/`)](documentation/index.md)** — 38-page user guide, tutorials, theme gallery, migration checklist, and API reference
+- **[v5 Documentation Suite (`documentation/`)](documentation/index.md)** — 39-page user guide, tutorials, theme gallery, migration checklist, and API reference
 - **[Fork Roadmap, Caliburn.Micro Bridge & `AvalonDox` Rebrand (`ROADMAP.md`)](ROADMAP.md)** — [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) vendoring plan, `AvalonDock.Mvvm.CaliburnMicro` BCL design, sample modernization, and planned **`AvalonDox`** rebranding
 - **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
 - **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map

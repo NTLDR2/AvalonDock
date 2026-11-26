@@ -49,11 +49,11 @@ Legacy out-of-support frameworks were dropped in `Upstream v5.0.0`, while `.NET 
 |:------------|:-------------------|:---------------|
 | `.NET Framework 4.0` / `4.5.2` | ❌ Dropped — upgrade to `net48` | `Upstream v5.0.0` |
 | `.NET Framework 4.8` (`net48`) | ✅ **Supported (Primary Focus)** | `Upstream v5.0.0` + **Prioritized in `NTLDR2 Fork v5.1.0`** (Win7 SP1 64-bit – Win11) |
-| `.NET Core 3.0` / `3.1`, `.NET 5` | ❌ Dropped — upgrade to `net8.0-windows` or newer | `Upstream v5.0.0` |
-| `.NET 8` (`net8.0-windows`) | ✅ Supported | `Upstream v5.0.2` (`#673`) |
-| `.NET 9` (`net9.0-windows`) | ✅ Supported | `Upstream v5.0.0` |
-| `.NET 10` (`net10.0-windows`) | ✅ Supported | `Upstream v5.0.0` |
-| `.NET 11` (`net11.0-windows`) | ✅ Supported | `Upstream v5.1.0` & `NTLDR2 Fork v5.1.0` |
+| `.NET Core 3.0` / `3.1`, `.NET 5` | ❌ Dropped — upgrade to `net8.0-windows` | `Upstream v5.0.0` |
+| `.NET 8` (`net8.0-windows`) | ✅ **Supported** (rolls forward onto `.NET 9`–`.NET 11` runtimes) | `Upstream v5.0.2` (`#673`) & `NTLDR2 Fork v5.1.0` |
+| `.NET 9` (`net9.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
+| `.NET 10` (`net10.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
+| `.NET 11` (`net11.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.1.0` |
 
 ---
 

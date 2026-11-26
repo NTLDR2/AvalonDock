@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using AvalonDock.Controls;
 using AvalonDock.Converters;
@@ -49,18 +50,18 @@ namespace AvalonDockTest
 			  });
 
 			BindingExpression visibilityBinding = floatingWindowControl.GetBindingExpression(UIElement.VisibilityProperty);
-			Assert.IsNotNull(visibilityBinding);
+			ClassicAssert.IsNotNull(visibilityBinding);
 
 			layoutAnchorable.Show();
 			layoutAnchorable.Hide();
 
 			visibilityBinding = floatingWindowControl.GetBindingExpression(UIElement.VisibilityProperty);
-			Assert.IsNotNull(visibilityBinding);
+			ClassicAssert.IsNotNull(visibilityBinding);
 
 			floatingWindowControl.Hide();
 
 			visibilityBinding = floatingWindowControl.GetBindingExpression(UIElement.VisibilityProperty);
-			Assert.IsNull(visibilityBinding);
+			ClassicAssert.IsNull(visibilityBinding);
 		}
 	}
 }

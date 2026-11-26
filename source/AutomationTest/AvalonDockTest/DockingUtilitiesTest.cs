@@ -4,6 +4,7 @@
 	using System.Windows.Controls;
 
 	using NUnit.Framework;
+	using NUnit.Framework.Legacy;
 
 	using AvalonDock.Layout;
 
@@ -36,34 +37,34 @@
 			layoutPanel.InsertChildAt(0, layoutDocumentPaneGroup);
 			layoutPanel.InsertChildAt(1, layoutAnchorablePaneGroup);
 
-			Assert.AreEqual(defaultDockMinWidth, layoutPanel.DockMinWidth);
-			Assert.AreEqual(defaultDockMinHeight, layoutPanel.DockMinHeight);
-			Assert.AreEqual(documentPaneDockMinWidth + anchorablePaneDockMinWidth, layoutPanel.CalculatedDockMinWidth());
-			Assert.AreEqual(Math.Max(documentPaneDockMinHeight, anchorablePaneDockMinHeight), layoutPanel.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(defaultDockMinWidth, layoutPanel.DockMinWidth);
+			ClassicAssert.AreEqual(defaultDockMinHeight, layoutPanel.DockMinHeight);
+			ClassicAssert.AreEqual(documentPaneDockMinWidth + anchorablePaneDockMinWidth, layoutPanel.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(Math.Max(documentPaneDockMinHeight, anchorablePaneDockMinHeight), layoutPanel.CalculatedDockMinHeight());
 
-			Assert.AreEqual(documentPaneDockMinWidth, layoutDocumentPane.DockMinWidth);
-			Assert.AreEqual(documentPaneDockMinHeight, layoutDocumentPane.DockMinHeight);
-			Assert.AreEqual(layoutDocumentPane.DockMinWidth, layoutDocumentPane.CalculatedDockMinWidth());
-			Assert.AreEqual(layoutDocumentPane.DockMinHeight, layoutDocumentPane.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(documentPaneDockMinWidth, layoutDocumentPane.DockMinWidth);
+			ClassicAssert.AreEqual(documentPaneDockMinHeight, layoutDocumentPane.DockMinHeight);
+			ClassicAssert.AreEqual(layoutDocumentPane.DockMinWidth, layoutDocumentPane.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(layoutDocumentPane.DockMinHeight, layoutDocumentPane.CalculatedDockMinHeight());
 
-			Assert.AreEqual(defaultDockMinWidth, layoutDocumentPaneGroup.DockMinWidth);
-			Assert.AreEqual(defaultDockMinWidth, layoutDocumentPaneGroup.DockMinHeight);
-			Assert.AreEqual(documentPaneDockMinWidth, layoutDocumentPaneGroup.CalculatedDockMinWidth());
-			Assert.AreEqual(documentPaneDockMinHeight, layoutDocumentPaneGroup.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(defaultDockMinWidth, layoutDocumentPaneGroup.DockMinWidth);
+			ClassicAssert.AreEqual(defaultDockMinWidth, layoutDocumentPaneGroup.DockMinHeight);
+			ClassicAssert.AreEqual(documentPaneDockMinWidth, layoutDocumentPaneGroup.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(documentPaneDockMinHeight, layoutDocumentPaneGroup.CalculatedDockMinHeight());
 
-			Assert.AreEqual(anchorablePaneDockMinWidth, layoutAnchorablePane.DockMinWidth);
-			Assert.AreEqual(anchorablePaneDockMinHeight, layoutAnchorablePane.DockMinHeight);
-			Assert.AreEqual(layoutAnchorablePane.DockMinWidth, layoutAnchorablePane.CalculatedDockMinWidth());
-			Assert.AreEqual(layoutAnchorablePane.DockMinHeight, layoutAnchorablePane.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(anchorablePaneDockMinWidth, layoutAnchorablePane.DockMinWidth);
+			ClassicAssert.AreEqual(anchorablePaneDockMinHeight, layoutAnchorablePane.DockMinHeight);
+			ClassicAssert.AreEqual(layoutAnchorablePane.DockMinWidth, layoutAnchorablePane.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(layoutAnchorablePane.DockMinHeight, layoutAnchorablePane.CalculatedDockMinHeight());
 
-			Assert.AreEqual(defaultDockMinWidth, layoutAnchorablePaneGroup.DockMinWidth);
-			Assert.AreEqual(defaultDockMinWidth, layoutAnchorablePaneGroup.DockMinHeight);
-			Assert.AreEqual(anchorablePaneDockMinWidth, layoutAnchorablePaneGroup.CalculatedDockMinWidth());
-			Assert.AreEqual(anchorablePaneDockMinHeight, layoutAnchorablePaneGroup.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(defaultDockMinWidth, layoutAnchorablePaneGroup.DockMinWidth);
+			ClassicAssert.AreEqual(defaultDockMinWidth, layoutAnchorablePaneGroup.DockMinHeight);
+			ClassicAssert.AreEqual(anchorablePaneDockMinWidth, layoutAnchorablePaneGroup.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(anchorablePaneDockMinHeight, layoutAnchorablePaneGroup.CalculatedDockMinHeight());
 
 			layoutPanel.RemoveChild(layoutDocumentPaneGroup);
-			Assert.AreEqual(anchorablePaneDockMinWidth, layoutPanel.CalculatedDockMinWidth());
-			Assert.AreEqual(anchorablePaneDockMinHeight, layoutPanel.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(anchorablePaneDockMinWidth, layoutPanel.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(anchorablePaneDockMinHeight, layoutPanel.CalculatedDockMinHeight());
 		}
 
 		[Test]
@@ -95,17 +96,17 @@
 			layoutPanel.InsertChildAt(0, layoutDocumentPaneGroup);
 			layoutPanel.InsertChildAt(1, layoutAnchorablePaneGroup);
 
-			Assert.AreEqual(anchorablePane2DockMinWidth + anchorablePane1DockMinWidth, layoutAnchorablePaneGroup.CalculatedDockMinWidth());
-			Assert.AreEqual(Math.Max(anchorablePane2DockMinHeight, anchorablePane1DockMinHeight), layoutAnchorablePaneGroup.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(anchorablePane2DockMinWidth + anchorablePane1DockMinWidth, layoutAnchorablePaneGroup.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(Math.Max(anchorablePane2DockMinHeight, anchorablePane1DockMinHeight), layoutAnchorablePaneGroup.CalculatedDockMinHeight());
 
-			Assert.AreEqual(documentPaneDockMinWidth, layoutDocumentPaneGroup.CalculatedDockMinWidth());
-			Assert.AreEqual(documentPaneDockMinHeight, layoutDocumentPaneGroup.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(documentPaneDockMinWidth, layoutDocumentPaneGroup.CalculatedDockMinWidth());
+			ClassicAssert.AreEqual(documentPaneDockMinHeight, layoutDocumentPaneGroup.CalculatedDockMinHeight());
 
-			Assert.AreEqual(
+			ClassicAssert.AreEqual(
 				Math.Max(anchorablePane1DockMinWidth + anchorablePane2DockMinWidth, documentPaneDockMinWidth),
 				layoutPanel.CalculatedDockMinWidth());
 
-			Assert.AreEqual(documentPaneDockMinHeight + anchorablePane2DockMinHeight, layoutPanel.CalculatedDockMinHeight());
+			ClassicAssert.AreEqual(documentPaneDockMinHeight + anchorablePane2DockMinHeight, layoutPanel.CalculatedDockMinHeight());
 		}
 	}
 }

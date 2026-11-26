@@ -5,7 +5,7 @@ Thank you for contributing to **[NTLDR2/AvalonDock](https://github.com/NTLDR2/Av
 ## Prerequisites
 
 - **OS:** Windows (`UseWPF=true` requires Windows)
-- **.NET SDKs:** **.NET 8.0**, **.NET 9.0**, **.NET 10.0**, and **.NET 11.0** SDKs, plus the **.NET Framework 4.8 Developer Pack**
+- **.NET SDKs:** the **.NET 8.0 SDK** (the only SDK needed), plus the **.NET Framework 4.8 Developer Pack**
 - **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or VS Code with .NET CLI support
 
 ## Building (`--warnaserror`)
@@ -26,8 +26,7 @@ Always execute tests single-threaded (`-m:1`) because WPF STA dispatchers and mu
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
 
 # Desktop UI automation tests (FlaUI)
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
 ```
 
 ## Fork Guardrails & Pull Request Expectations

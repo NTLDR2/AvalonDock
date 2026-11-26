@@ -1,0 +1,43 @@
+<UserControl
+	x:Class="ExperimentalTestApp.Views.Dialogs.AboutView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d">
+	<StackPanel Margin="16" MinWidth="380">
+		<TextBlock FontSize="16" FontWeight="SemiBold" Text="ExperimentalTestApp" />
+		<TextBlock
+			Margin="0,4,0,12"
+			Opacity="0.8"
+			Text="Reference sample: AvalonDock v5 (classic DockingManager) + Caliburn.Micro." />
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Margin="0,2,12,2" Text="AvalonDock" />
+			<TextBlock x:Name="AvalonDockVersion" Grid.Row="0" Grid.Column="1" Margin="0,2" />
+			<TextBlock Grid.Row="1" Margin="0,2,12,2" Text="Caliburn.Micro" />
+			<TextBlock x:Name="CaliburnMicroVersion" Grid.Row="1" Grid.Column="1" Margin="0,2" TextWrapping="Wrap" MaxWidth="320" />
+			<TextBlock Grid.Row="2" Margin="0,2,12,2" Text="Runtime" />
+			<TextBlock x:Name="Framework" Grid.Row="2" Grid.Column="1" Margin="0,2" />
+			<TextBlock Grid.Row="3" Margin="0,2,12,2" Text="Theme" />
+			<TextBlock x:Name="Theme" Grid.Row="3" Grid.Column="1" Margin="0,2" />
+		</Grid>
+		<Button
+			x:Name="Close"
+			MinWidth="80"
+			Margin="0,16,0,0"
+			HorizontalAlignment="Right"
+			Content="Close"
+			IsCancel="True"
+			IsDefault="True" />
+	</StackPanel>
+</UserControl>

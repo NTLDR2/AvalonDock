@@ -21,6 +21,7 @@ ECHO Components\AvalonDock.Themes.Metro
 ECHO.
 ECHO AutomationTest\AvalonDockTest
 ECHO CaliburnDockTestApp
+ECHO ExperimentalTestApp
 ECHO AvalonDocPanelMemoryLeaks
 ECHO.
 REM Ask the user if hes really sure to continue beyond this point XXXXXXXX
@@ -102,6 +103,11 @@ ECHO Deleting BIN and OBJ Folders in CaliburnDockTestApp
 ECHO.
 RMDIR /S /Q CaliburnDockTestApp\bin
 RMDIR /S /Q CaliburnDockTestApp\obj
+
+ECHO Deleting BIN and OBJ Folders in ExperimentalTestApp
+ECHO.
+RMDIR /S /Q ExperimentalTestApp\bin
+RMDIR /S /Q ExperimentalTestApp\obj
 
 ECHO Deleting BIN and OBJ Folders in AvalonDocPanelMemoryLeaks
 ECHO.

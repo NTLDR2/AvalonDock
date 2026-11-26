@@ -3,7 +3,7 @@
 **Repository Root:** `C:\SOFTDEV\AvalonDock-V5-NEW`  
 **Solution File:** `source/AvalonDock.sln`  
 **Current Version Prefix:** `5.1.0` (`source/Directory.Build.props`)  
-**Authoritative Documentation:** `documentation/` *(38-page Jekyll `just-the-docs` site for the `NTLDR2/AvalonDock` `v5.1.0` fork)*
+**Authoritative Documentation:** `documentation/` *(39-page Jekyll `just-the-docs` site for the `NTLDR2/AvalonDock` `v5.1.0` fork)*
 
 > [!NOTE]
 > **Documentation & Scope Attribution:** `documentation/` is the single source of truth deployed by `.github/workflows/docs.yml` (`source: ./documentation`). Migration and architecture pages explicitly distinguish upstream `Dirkster99/AvalonDock` (`v5.0.0`–`v5.1.0`) changes from `NTLDR2/AvalonDock` (`v5.1.0` fork) changes.
@@ -21,10 +21,10 @@ AvalonDock-V5-NEW/
 ├── .github/
 │   ├── dependabot.yml                 # Automated dependency updates
 │   └── workflows/
-│       ├── ci.yml                     # PR build (--warnaserror) + Unit + FlaUI (.NET 10 & 11) tests
+│       ├── ci.yml                     # PR build (--warnaserror) + Unit + FlaUI (.NET 8) tests
 │       ├── release.yml                # Pack all 11 NuGet packages, OIDC push to nuget.org, GitHub Release
 │       └── docs.yml                   # GitHub Pages Jekyll deployment workflow (builds ./documentation on documentation/**)
-├── documentation/                     # AUTHORITATIVE v5.1.0 fork documentation site (38 pages + 8 PNGs)
+├── documentation/                     # AUTHORITATIVE v5.1.0 fork documentation site (39 pages + 8 PNGs)
 │   ├── _config.yml                    # Jekyll / just-the-docs@v0.10.0 configuration
 │   ├── Gemfile                        # github-pages Ruby gem bundle
 │   ├── index.md                       # Home (nav_order: 1)
@@ -48,7 +48,8 @@ AvalonDock-V5-NEW/
 │   ├── MVVMTestApp/                   # Classic MVVM + XmlLayoutSerializer sample app
 │   ├── TestApp/                       # Classic XAML code-behind sample app
 │   ├── MLibTest/                      # Multi-project MLib theming sample
-│   ├── CaliburnDockTestApp/           # Caliburn.Micro integration sample
+│   ├── CaliburnDockTestApp/           # Upstream Caliburn.Micro 4 sample (standalone, outside AvalonDock.sln)
+│   ├── ExperimentalTestApp/           # Caliburn.Micro 6 + classic DockingManager (DockLayout) reference sample
 │   ├── WinFormsTestApp/               # WindowsFormsHost interop sample
 │   └── AvalonDocPanelMemoryLeaks/     # Memory-leak regression harness
 ├── AGENTS.md                          # Build, test, code-style, and commit instructions for AI agents
@@ -64,7 +65,7 @@ AvalonDock-V5-NEW/
 
 ## 2. Architectural Layering & Dependency Flow
 
-AvalonDock v5 separates **UI-agnostic abstractions, MVVM base classes, DI registration, and DTO XML serialization (`netstandard2.0`)** from **WPF visual controls and themes (`net8.0-windows`–`net11.0-windows` + `net48`, zero `System.Text.Json`)**:
+AvalonDock v5 separates **UI-agnostic abstractions, MVVM base classes, DI registration, and DTO XML serialization (`netstandard2.0`)** from **WPF visual controls and themes (`net8.0-windows` + `net48`, zero `System.Text.Json`)**:
 
 ```mermaid
 flowchart TD
@@ -76,7 +77,7 @@ flowchart TD
         Xml["AvalonDock.Serializer.Xml\n(XmlLayoutSerializer)"]
     end
 
-    subgraph WPF_Layer["WPF Docking & Theme Layer (net8/9/10/11-windows; net48)"]
+    subgraph WPF_Layer["WPF Docking & Theme Layer (net8.0-windows; net48)"]
         AD["AvalonDock\n(DockingManager, ToggleDockingManager,\nLayoutSyncBridge, LayoutDtoMapper,\nLayout*, Controls*)"]
         Themes["AvalonDock.Themes.Arc / VS2010 /\nExpression / Metro / Aero"]
     end
@@ -105,17 +106,17 @@ All 11 component projects are packed and published together by `.github/workflow
 
 | Project Folder (`source/Components/…`) | NuGet Package ID | Target Framework(s) | Primary Namespace(s) | SLOC | Primary Documentation (`documentation/…`) |
 |:---|:---|:---|:---|---:|:---|
-| `AvalonDock` | `Dirkster.AvalonDock` | `net8/9/10/11-windows;net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Commands`, `AvalonDock.Converters` | 30,169 | `api-reference/docking-manager.md`, `api-reference/toggle-docking-manager.md`, `api-reference/layout-classes.md`, `api-reference/controls.md`, `api-reference/events.md` |
+| `AvalonDock` | `Dirkster.AvalonDock` | `net8.0-windows;net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Commands`, `AvalonDock.Converters` | 30,169 | `api-reference/docking-manager.md`, `api-reference/toggle-docking-manager.md`, `api-reference/layout-classes.md`, `api-reference/controls.md`, `api-reference/events.md` |
 | `AvalonDock.Core` | `Dirkster.AvalonDock.Core` | `netstandard2.0` | `AvalonDock.Core`, `AvalonDock.Core.Events`, `AvalonDock.Core.Controls`, `AvalonDock.Core.Serialization`, `AvalonDock.Core.Serialization.Dto` | 1,331 | `concepts/architecture.md`, `api-reference/core-and-mvvm.md` |
 | `AvalonDock.Mvvm` | `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | `AvalonDock.Mvvm` | 510 | `guides/mvvm.md`, `api-reference/core-and-mvvm.md` |
 | `AvalonDock.Mvvm.CommunityToolkit` | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | `AvalonDock.Mvvm.CommunityToolkit` | 231 | `guides/mvvm.md`, `tutorials/mvvm-ide.md`, `api-reference/core-and-mvvm.md` |
 | `AvalonDock.DependencyInjection` | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `AvalonDock.DependencyInjection` | 208 | `guides/dependency-injection.md`, `tutorials/dependency-injection-app.md`, `api-reference/core-and-mvvm.md` |
 | `AvalonDock.Serializer.Xml` | `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | `AvalonDock.Serializer.Xml` | 56 | `guides/serialization.md`, `tutorials/layout-persistence.md` |
-| `AvalonDock.Themes.Arc` | `Dirkster.AvalonDock.Themes.Arc` | `net8/9/10/11-windows;net48` | `AvalonDock.Themes`, `AvalonDock.Themes.Arc.Themes` | 4,375 | `themes/arc.md`, `guides/custom-themes.md` |
-| `AvalonDock.Themes.VS2010` | `Dirkster.AvalonDock.Themes.VS2010` | `net8/9/10/11-windows;net48` | `AvalonDock.Themes` | 2,043 | `themes/vs2010.md` |
-| `AvalonDock.Themes.Expression` | `Dirkster.AvalonDock.Themes.Expression` | `net8/9/10/11-windows;net48` | `AvalonDock.Themes` | 2,002 | `themes/expression.md` |
-| `AvalonDock.Themes.Metro` | `Dirkster.AvalonDock.Themes.Metro` | `net8/9/10/11-windows;net48` | `AvalonDock.Themes` | 1,903 | `themes/metro.md` |
-| `AvalonDock.Themes.Aero` | `Dirkster.AvalonDock.Themes.Aero` | `net8/9/10/11-windows;net48` | `AvalonDock.Themes` | 2,035 | `themes/aero.md` |
+| `AvalonDock.Themes.Arc` | `Dirkster.AvalonDock.Themes.Arc` | `net8.0-windows;net48` | `AvalonDock.Themes`, `AvalonDock.Themes.Arc.Themes` | 4,375 | `themes/arc.md`, `guides/custom-themes.md` |
+| `AvalonDock.Themes.VS2010` | `Dirkster.AvalonDock.Themes.VS2010` | `net8.0-windows;net48` | `AvalonDock.Themes` | 2,043 | `themes/vs2010.md` |
+| `AvalonDock.Themes.Expression` | `Dirkster.AvalonDock.Themes.Expression` | `net8.0-windows;net48` | `AvalonDock.Themes` | 2,002 | `themes/expression.md` |
+| `AvalonDock.Themes.Metro` | `Dirkster.AvalonDock.Themes.Metro` | `net8.0-windows;net48` | `AvalonDock.Themes` | 1,903 | `themes/metro.md` |
+| `AvalonDock.Themes.Aero` | `Dirkster.AvalonDock.Themes.Aero` | `net8.0-windows;net48` | `AvalonDock.Themes` | 2,035 | `themes/aero.md` |
 
 ---
 
@@ -163,12 +164,13 @@ All 5 compiled XAML `Theme` packages live in the `AvalonDock.Themes` namespace:
 | `source/AvalonDockCodeApp/` | **Primary v5 Reference App.** Demonstrates `ToggleDockingManager`, `AvalonDock.Mvvm.CommunityToolkit`, toggle sidebars, detached windows, and `ArcDarkTheme` / `ArcLightTheme`. Also serves as the target executable for the FlaUI ToggleDock UI automation suite. |
 | `source/MVVMTestApp/` | Classic MVVM sample demonstrating `DocumentsSource`, `AnchorablesSource`, `LayoutInitializer`, and `XmlLayoutSerializer`. |
 | `source/TestApp/` | Classic XAML-first `DockingManager` sample application. |
-| `source/MLibTest/`, `source/CaliburnDockTestApp/`, `source/WinFormsTestApp/`, `source/AvalonDocPanelMemoryLeaks/` | Legacy/specialized test harnesses for MLib theming, Caliburn.Micro, WinForms `WindowsFormsHost` interop, and memory-leak regression checks. |
-| `source/AutomationTest/AvalonDockTest/` | Multi-targeted test suite (`net10.0-windows;net11.0-windows;net48`):<br>• **Unit Tests (`Category!=FlaUI`):** Layout tree manipulation, XML serialization & `LayoutDtoMapper` round-trips, `LayoutSyncBridge`, MVVM/DI, `VS2010Theme` template verification, memory/unload tests.<br>• **FlaUI UI Tests (`FlaUI/`, `Category=FlaUI`):** End-to-end Windows UI Automation driving real WPF windows (`TestApp` and `AvalonDockCodeApp`). |
+| `source/ExperimentalTestApp/` | *(NTLDR2 Fork)* Reference sample: Caliburn.Micro 6.0.15-beta (`SimpleContainer`, conductor, actions, `IEventAggregator`) hosting the classic `DockingManager` through `DockLayout` + `IDockLayoutService`. Sample-internal `IDockable`/`IToolbox` boilerplate (`Boilerplate/`) and WPF glue (`Docking/`). Targets `net8.0-windows;net48`, in `AvalonDock.sln`. See its `README.md`. |
+| `source/CaliburnDockTestApp/`, `source/MLibTest/`, `source/WinFormsTestApp/`, `source/AvalonDocPanelMemoryLeaks/` | Legacy/specialized test harnesses for upstream Caliburn.Micro 4, MLib theming, WinForms `WindowsFormsHost` interop, and memory-leak regression checks. |
+| `source/AutomationTest/AvalonDockTest/` | Multi-targeted test suite (`net8.0-windows;net48`):<br>• **Unit Tests (`Category!=FlaUI`):** Layout tree manipulation, XML serialization & `LayoutDtoMapper` round-trips, `LayoutSyncBridge`, MVVM/DI, `VS2010Theme` template verification, memory/unload tests.<br>• **FlaUI UI Tests (`FlaUI/`, `Category=FlaUI`):** End-to-end Windows UI Automation driving real WPF windows (`TestApp` and `AvalonDockCodeApp`). |
 
 ---
 
-## 6. Authoritative v5 Documentation Map (`documentation/` — 38 Pages)
+## 6. Authoritative v5 Documentation Map (`documentation/` — 39 Pages)
 
 All internal Jekyll links in `documentation/` use `{{ site.baseurl }}{% link <path>.md %}` and local screenshots use `{{ site.baseurl }}/images/<file>.png`.
 
@@ -177,7 +179,7 @@ All internal Jekyll links in `documentation/` use `{{ site.baseurl }}{% link <pa
 | **1. Home** | `documentation/index.md` | — |
 | **2. Getting Started** | `documentation/getting-started/index.md` | `1` `getting-started/installation.md` — All 11 NuGet packages & TFMs<br>`2` `getting-started/quick-start.md` — 5-minute WPF docking layout<br>`3` `getting-started/building-from-source.md` — SDKs, `--warnaserror`, unit & FlaUI tests |
 | **3. Concepts** | `documentation/concepts/index.md` | `1` `concepts/architecture.md` — v5 `Core` vs WPF split, `LayoutSyncBridge`, engines<br>`2` `concepts/layout-model.md` — `LayoutRoot`, panels, groups, panes, proportions<br>`3` `concepts/documents-and-anchorables.md` — Lifecycle, closing vs hiding, `ContentId`<br>`4` `concepts/floating-windows.md` — Floating vs `DetachedAnchorableWindow`, `OverlayWindow` |
-| **4. Guides** | `documentation/guides/index.md` | `1` `guides/mvvm.md` — `RootDock` + `IDockLayoutService` vs `DocumentsSource`/`AnchorablesSource`<br>`2` `guides/toggle-docking-manager.md` — Sidebars, popups, docked splits, detached windows<br>`3` `guides/dependency-injection.md` — `AddDockLayoutService`, `IThemeManager`<br>`4` `guides/serialization.md` — `XmlLayoutSerializer`, `LayoutSerializationCallback`, custom DTO serializers<br>`5` `guides/theming.md` — Applying & switching all 5 theme packages + `GenericTheme`<br>`6` `guides/custom-themes.md` — `DictionaryTheme` & `Arc` `ResourceKeys` |
+| **4. Guides** | `documentation/guides/index.md` | `1` `guides/mvvm.md` — `RootDock` + `IDockLayoutService` vs `DocumentsSource`/`AnchorablesSource`<br>`2` `guides/toggle-docking-manager.md` — Sidebars, popups, docked splits, detached windows<br>`3` `guides/dependency-injection.md` — `AddDockLayoutService`, `IThemeManager`<br>`4` `guides/serialization.md` — `XmlLayoutSerializer`, `LayoutSerializationCallback`, custom DTO serializers<br>`5` `guides/theming.md` — Applying & switching all 5 theme packages + `GenericTheme`<br>`6` `guides/custom-themes.md` — `DictionaryTheme` & `Arc` `ResourceKeys`<br>`7` `guides/caliburn-micro.md` — Hosting classic `DockingManager` (`DockLayout` + `IDockLayoutService`) with Caliburn.Micro 6.0.15-beta |
 | **5. Tutorials** | `documentation/tutorials/index.md` | `1` `tutorials/mvvm-ide.md` — Full MVVM IDE with `CommunityToolkit.Mvvm` & `ToggleDockingManager`<br>`2` `tutorials/dependency-injection-app.md` — DI multi-pane application<br>`3` `tutorials/styling-and-theming.md` — Live theme switcher, persisted settings, custom corporate & `DictionaryTheme` themes<br>`4` `tutorials/layout-persistence.md` — End-to-end XML workspace save/restore |
 | **6. Themes** | `documentation/themes/index.md` | `1` `themes/arc.md` — `ArcDarkTheme` / `ArcLightTheme` + screenshots & `ResourceKeys`<br>`2` `themes/vs2010.md` — `VS2010Theme`<br>`3` `themes/expression.md` — `ExpressionDarkTheme` / `ExpressionLightTheme`<br>`4` `themes/metro.md` — `MetroTheme`<br>`5` `themes/aero.md` — `AeroTheme` & `AeroColors` |
 | **7. API Reference** | `documentation/api-reference/index.md` | `1` `api-reference/docking-manager.md`<br>`2` `api-reference/toggle-docking-manager.md`<br>`3` `api-reference/layout-classes.md`<br>`4` `api-reference/controls.md`<br>`5` `api-reference/events.md`<br>`6` `api-reference/core-and-mvvm.md` |
@@ -196,9 +198,8 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 # 2. Run Unit Tests (single-threaded -m:1 required for .NET Framework test targets)
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
 
-# 3. Run FlaUI UI Automation Tests (.NET 10 & .NET 11)
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
+# 3. Run FlaUI UI Automation Tests (.NET 8)
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
 ```
 
 - **Commit Message Format:** `[Fix|Feature] #<TicketID> - [<Topic>] <What was done>`
@@ -218,4 +219,4 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 | Modify drag-drop docking targets or `Ctrl+Tab` navigator | `Components/AvalonDock/Controls/OverlayWindow.cs`, `*DropTarget.cs`, `DragService.cs`, `NavigatorWindow.cs`, `Components/AvalonDock.Core/Controls/Overlay*.cs` | `concepts/floating-windows.md`, `api-reference/controls.md` |
 | Add or fix a theme or brush key | `Components/AvalonDock/Themes/*.cs`, `Components/AvalonDock.Themes.Arc/`, `Components/AvalonDock.Themes.*` | `themes/index.md`, `themes/arc.md`, `guides/theming.md`, `guides/custom-themes.md` |
 | Add unit tests or FlaUI UI automation tests | `AutomationTest/AvalonDockTest/*.cs`, `AutomationTest/AvalonDockTest/FlaUI/*.cs` | `getting-started/building-from-source.md`, `contributing.md` |
-| Implement `AvalonDock.Mvvm.CaliburnMicro` or modernize `CaliburnDockTestApp` | `CaliburnDockTestApp/`, `Components/AvalonDock.Mvvm.CommunityToolkit/*.cs`, `Components/AvalonDock.Mvvm/*.cs` | Root `ROADMAP.md` + AI-ready Caliburn.Micro internals repo (`https://github.com/NTLDR2/Caliburn.Micro`) |
+| Host AvalonDock in a Caliburn.Micro app, or implement the optional `AvalonDock.Mvvm.CaliburnMicro` | `ExperimentalTestApp/` (`Boilerplate/`, `Docking/`, `README.md`), `Components/AvalonDock.Mvvm.CommunityToolkit/*.cs`, `Components/AvalonDock.Mvvm/*.cs` | `documentation/guides/caliburn-micro.md`, root `ROADMAP.md` + AI-ready Caliburn.Micro internals repo (`https://github.com/NTLDR2/Caliburn.Micro`) |

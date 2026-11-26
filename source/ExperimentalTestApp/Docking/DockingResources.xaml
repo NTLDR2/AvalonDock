@@ -1,0 +1,70 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+	xmlns:cal="http://caliburnmicro.com"
+	xmlns:boilerplate="clr-namespace:ExperimentalTestApp.Boilerplate"
+	xmlns:docking="clr-namespace:ExperimentalTestApp.Docking">
+
+	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+	<!--
+		Body of every document and tool window: an IMPLICIT DataTemplate keyed by the ViewModel base type.
+		Caliburn.Micro's ViewLocator then finds and binds the matching view
+		(ViewModels.Tools.ExplorerViewModel -> Views.Tools.ExplorerView).
+
+		Why not DockingManager.LayoutItemTemplate? The theme templates host LayoutItem.View (itself a ContentPresenter
+		whose Content is the ViewModel) in an outer ContentPresenter that ALSO receives LayoutItem.View.ContentTemplate.
+		A LayoutItemTemplate is therefore applied with DataContext = that inner ContentPresenter in docked/floating panes,
+		but with DataContext = the ViewModel in a DetachedAnchorableWindow ("Window" mode), so neither {Binding} nor
+		{Binding Content} works everywhere. With LayoutItemTemplate left unset, the outer presenter simply shows
+		LayoutItem.View, and LayoutItem.View resolves this implicit template with DataContext = the ViewModel in every host.
+	-->
+	<DataTemplate DataType="{x:Type boilerplate:DockableScreen}">
+		<ContentControl cal:View.Model="{Binding}" IsTabStop="False" />
+	</DataTemplate>
+
+	<!-- Document tab header. The DataContext is the LayoutDocument; Content is the ViewModel. -->
+	<DataTemplate x:Key="DocumentHeaderTemplate">
+		<StackPanel Orientation="Horizontal">
+			<TextBlock
+				MaxWidth="220"
+				Text="{Binding Title}"
+				TextTrimming="CharacterEllipsis" />
+			<TextBlock
+				Margin="4,0,0,0"
+				FontWeight="Bold"
+				Text="&#x25CF;"
+				ToolTip="Unsaved changes"
+				Visibility="{Binding Content.IsModified, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+		</StackPanel>
+	</DataTemplate>
+
+	<!--
+		Container styles: the DataContext of a LayoutItem is the LayoutItem itself and Model is the ViewModel.
+		Title and ContentId MUST be bound live - AvalonDock never copies IDockable.Title/Id onto documents.
+		Do not bind IsActive to Model.IsActive: on a Caliburn.Micro Screen that is the lifecycle flag.
+	-->
+	<Style x:Key="DocumentItemStyle" TargetType="{x:Type ad:LayoutItem}">
+		<Setter Property="Title" Value="{Binding Model.Title}" />
+		<Setter Property="ContentId" Value="{Binding Model.Id}" />
+		<Setter Property="ToolTip" Value="{Binding Model.ToolTipText}" />
+		<Setter Property="CanClose" Value="{Binding Model.CanClose}" />
+		<Setter Property="CanFloat" Value="{Binding Model.CanFloat}" />
+	</Style>
+
+	<Style x:Key="ToolboxItemStyle" TargetType="{x:Type ad:LayoutAnchorableItem}">
+		<Setter Property="Title" Value="{Binding Model.Title}" />
+		<Setter Property="ContentId" Value="{Binding Model.Id}" />
+		<Setter Property="ToolTip" Value="{Binding Model.ToolTipText}" />
+		<Setter Property="CanClose" Value="{Binding Model.CanClose}" />
+		<Setter Property="CanFloat" Value="{Binding Model.CanFloat}" />
+		<Setter Property="CanHide" Value="True" />
+	</Style>
+
+	<docking:PanesStyleSelector
+		x:Key="PanesStyleSelector"
+		DocumentStyle="{StaticResource DocumentItemStyle}"
+		ToolboxStyle="{StaticResource ToolboxItemStyle}" />
+
+</ResourceDictionary>

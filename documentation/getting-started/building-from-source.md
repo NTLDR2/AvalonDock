@@ -15,7 +15,7 @@ This guide covers cloning the repository, compiling all libraries and sample app
 ## Prerequisites
 
 - **OS:** Windows (WPF projects only build and execute on Windows)
-- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** (primary prioritized desktop target) plus **.NET 8.0 SDK**, **.NET 9.0 SDK**, **.NET 10.0 SDK**, and **.NET 11.0 SDK**
+- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** (primary prioritized desktop target) plus the **.NET 8.0 SDK** (the only SDK required; `LangVersion` is 12 and the tests pin NUnit 4.3.x)
 - **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or VS Code with .NET CLI support
 
 ---
@@ -45,8 +45,7 @@ Tests **must** run single-threaded (`-m:1`) because WPF requires STA threads and
 | Suite | Command | Description |
 |:------|:--------|:------------|
 | **Unit Tests** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1` | Fast unit, XML serialization, DI, MVVM, and STA layout regression tests |
-| **FlaUI UI Tests (.NET 10)** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1` | Launches live WPF windows to automate drag-and-drop, floating, and toggle-dock gestures on .NET 10 |
-| **FlaUI UI Tests (.NET 11)** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1` | Runs the FlaUI desktop UI automation suite on .NET 11 |
+| **FlaUI UI Tests (.NET 8)** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1` | Launches live WPF windows to automate drag-and-drop, floating, and toggle-dock gestures on .NET 8 |
 
 ---
 
@@ -73,7 +72,8 @@ source/
 ├── MVVMTestApp/                            # Classic MVVM sample (DocumentsSource / AnchorablesSource + XML)
 ├── TestApp/                                # Classic code-behind showcase (themes, serialization, interop)
 ├── MLibTest/                               # MLib application theming integration demo
-├── CaliburnDockTestApp/                    # Caliburn.Micro MVVM integration demo
+├── CaliburnDockTestApp/                    # Upstream Caliburn.Micro 4 integration sample (standalone)
+├── ExperimentalTestApp/                    # Caliburn.Micro 6 + classic DockingManager (DockLayout) reference sample
 └── WinFormsTestApp/                        # Windows Forms ElementHost interop demo
 ```
 

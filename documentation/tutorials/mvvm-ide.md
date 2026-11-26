@@ -30,10 +30,10 @@ This tutorial mirrors the architecture of `source/AvalonDockCodeApp` in the Aval
 
 ## Prerequisites
 
-- Windows with **.NET 9** or **.NET 10** SDK (or **.NET 8** / **.NET 11**)
+- Windows with the **.NET 8.0 SDK** (plus the **.NET Framework 4.8 Developer Pack** if also targeting `net48`)
 
 ```bash
-dotnet new wpf -n MvvmIdeApp --framework net10.0-windows
+dotnet new wpf -n MvvmIdeApp --framework net8.0-windows
 cd MvvmIdeApp
 
 dotnet add package Dirkster.AvalonDock

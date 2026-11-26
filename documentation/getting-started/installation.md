@@ -109,11 +109,8 @@ Build the project (`dotnet build`). Once it compiles cleanly, continue to the [Q
 | Target Framework | WPF Libraries (`AvalonDock`, `Themes.*`) | UI-Agnostic Libraries (`Core`, `Mvvm*`, `DI`, `Serializer.Xml`) | Introduced In / Scope |
 |:-----------------|:----------------------------------------:|:---------------------------------------------------------------:|:----------------------|
 | `.NET Framework 4.8` (`net48`) | ✅ | ✅ (via `netstandard2.0`) | **Primary prioritized target in `NTLDR2 Fork v5.1.0`** (`Upstream v5.0.0+`) |
-| `.NET 11` (`net11.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.1.0` & `NTLDR2 Fork v5.1.0` |
-| `.NET 10` (`net10.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.0+` |
-| `.NET 9` (`net9.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.0+` |
-| `.NET 8` (`net8.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.2+` (`#673`) |
+| `.NET 8+` (`net8.0-windows`; the same assembly runs on the .NET 9, 10 and 11 runtimes) | ✅ | ✅ (via `netstandard2.0`) | NTLDR2 Fork v5.1.0 ships only `net8.0-windows` and `net48` WPF builds (`Upstream v5.0.2+`, `#673`, additionally ships separate `net9.0`/`net10.0`/`net11.0` builds) |
 | `.NET Standard 2.0` (`netstandard2.0`) | — (requires WPF) | ✅ | `Upstream v5.0.0+` |
 
 {: .important }
-WPF application projects on .NET 8 or later **must** include the `-windows` target framework suffix (for example, `<TargetFramework>net10.0-windows</TargetFramework>`) and `<UseWPF>true</UseWPF>`.
+WPF application projects on .NET 8 or later **must** include the `-windows` target framework suffix (for example, `<TargetFramework>net8.0-windows</TargetFramework>`) and `<UseWPF>true</UseWPF>`.

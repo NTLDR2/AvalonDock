@@ -1,4 +1,4 @@
-﻿using UnitTests;
+using UnitTests;
 
 namespace AvalonDockTest.TestHelpers
 {
@@ -21,26 +21,32 @@ namespace AvalonDockTest.TestHelpers
         [TearDown]
         public void After()
         {
-            ThreadExecutor.RunCodeAsSTA(
-                _are,
-                () =>
-                {
-                    Application.Current?.Dispatcher?.Invoke(() =>
-                    {
-                        var windows = Application.Current?.Windows?.OfType<Window>().ToList();
-                        if (windows == null)
-                        {
-                            return;
-                        }
-                        
-                        foreach (Window window in windows)
-                        {
-                            window.Close();
-                        }
-                    });
-                });
+            var appDispatcher = Application.Current?.Dispatcher;
+            if (appDispatcher == null || appDispatcher.HasShutdownStarted || appDispatcher.HasShutdownFinished)
+            {
+                return;
+            }
 
-            _are.WaitOne();
+            var windows = appDispatcher.Invoke(() => Application.Current?.Windows?.OfType<Window>().ToList());
+            if (windows == null)
+            {
+                return;
+            }
+
+            foreach (Window window in windows)
+            {
+                var windowDispatcher = window.Dispatcher;
+                if (windowDispatcher != null && !windowDispatcher.HasShutdownStarted && !windowDispatcher.HasShutdownFinished)
+                {
+                    try
+                    {
+                        windowDispatcher.Invoke(() => window.Close());
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
         }
 
         [OneTimeSetUp]

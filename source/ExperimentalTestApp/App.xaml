@@ -1,0 +1,19 @@
+<Application
+	x:Class="ExperimentalTestApp.App"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:ExperimentalTestApp">
+	<!--
+		Caliburn.Micro starts the application: the Bootstrapper lives in the merged resources and
+		there is deliberately NO StartupUri (a StartupUri would open a second, unbound window).
+	-->
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary>
+					<local:Bootstrapper x:Key="Bootstrapper" />
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>

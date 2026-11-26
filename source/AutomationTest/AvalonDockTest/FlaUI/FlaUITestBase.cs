@@ -585,7 +585,7 @@ namespace AvalonDockTest.FlaUITests
 			var testDir = TestContext.CurrentContext.TestDirectory;
 			var configs = new[] { "Debug", "Release" };
 			// Prefer the app build matching the test host's TFM (the test output folder name).
-			var tfms = new[] { new DirectoryInfo(testDir).Name, "net11.0-windows", "net10.0-windows", "net48" }.Distinct();
+			var tfms = new[] { new DirectoryInfo(testDir).Name, "net8.0-windows", "net48" }.Distinct();
 
 			foreach (var config in configs)
 			foreach (var tfm in tfms)
