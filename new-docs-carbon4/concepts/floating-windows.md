@@ -92,7 +92,7 @@ While `AllowFloatingWindows` is `false`:
 - `LayoutItem.FloatCommand` reports `CanExecute == false`, disabling **Float** menu items automatically.
 - `LayoutContent.Float()` does nothing and `DockingManager.CreateFloatingWindow(...)` returns `null`.
 - Setting `AllowFloatingWindows = false` at runtime immediately docks all open floating windows back into the main layout via `DockAllFloatingWindows()`.
-- Loading a saved XML/JSON layout that contains floating windows automatically docks their content into the main window before creating visuals.
+- Loading a saved XML layout that contains floating windows automatically docks their content into the main window before creating visuals.
 
 You can also call `dockManager.DockAllFloatingWindows()` directly (for example, from a **Window → Dock All Floating Windows** menu command) while keeping `AllowFloatingWindows = true`.
 
@@ -250,7 +250,7 @@ In the UI, users toggle standalone mode via **View Mode → Window** in the tool
 
 1. **Single Presenter Ownership:** Because a WPF visual can have only one parent, `DetachAnchorableToWindow` disconnects `LayoutItem.View` (`ContentPresenter`) from the main visual/logical tree and places it inside `DetachedAnchorableWindow` beneath the panel's `AnchorablePaneTitle` (or `ToggleAnchorablePaneTitle`) header, merging the active `DockingManager.Theme` resources into the standalone window.
 2. **Manager-Specific Slot Behavior:** Classic `DockingManager` parks the detached `LayoutAnchorable` in `LayoutRoot.Hidden` (remembering `PreviousContainer` and `PreviousContainerIndex`) so `ReattachAnchorable` restores its exact tab position. `ToggleDockingManager` collapses the panel onto its sidebar rail so its `ToggleDockButton` remains visible—clicking the sidebar button activates and brings the standalone window to the front.
-3. **Serialization & Off-Screen Protection:** `LayoutAnchorable.IsDetached` (`LayoutAnchorableDto.IsDetached`) and window bounds (`FloatingLeft`, `FloatingTop`, `FloatingWidth`, `FloatingHeight`) round-trip through `XmlLayoutSerializer` and `JsonLayoutSerializer`. On restore, `DetachedAnchorableWindow` verifies that at least an `80 × 80` DIP region intersects `SystemParameters.VirtualScreen*`; if a secondary monitor was disconnected, it falls back to `WindowStartupLocation.CenterScreen` so the window is never stranded off-screen.
+3. **Serialization & Off-Screen Protection:** `LayoutAnchorable.IsDetached` (`LayoutAnchorableDto.IsDetached`) and window bounds (`FloatingLeft`, `FloatingTop`, `FloatingWidth`, `FloatingHeight`) round-trip through `XmlLayoutSerializer`. On restore, `DetachedAnchorableWindow` verifies that at least an `80 × 80` DIP region intersects `SystemParameters.VirtualScreen*`; if a secondary monitor was disconnected, it falls back to `WindowStartupLocation.CenterScreen` so the window is never stranded off-screen.
 4. **Clean Shutdown:** Even though `DetachedAnchorableWindow` has `Owner = null`, `DockingManager` hooks the host window's `Closed` event (and `OnLayoutChanged`) to close all standalone windows automatically so ownerless windows never keep the process alive under `ShutdownMode.OnLastWindowClose`.
 
 ---

@@ -2,9 +2,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using AvalonDock;
-using AvalonDock.Core;
 using AvalonDock.Layout;
-using AvalonDock.Serializer.Json;
 using AvalonDock.Serializer.Xml;
 using NUnit.Framework;
 
@@ -23,19 +21,6 @@ namespace AvalonDockTest
 	[Apartment(ApartmentState.STA)]
 	public class ToolTipNotSerializedTests
 	{
-		/// <summary>The serializers under test, so every case runs through both formats.</summary>
-		/// <returns>The names of the formats.</returns>
-		private static string[] Formats() => new[] { "Xml", "Json" };
-
-		/// <summary>Builds a serializer of the named format for a docking manager.</summary>
-		/// <param name="format">The format name.</param>
-		/// <param name="manager">The docking manager.</param>
-		/// <returns>The serializer.</returns>
-		private static ILayoutSerializer CreateSerializer(string format, DockingManager manager) =>
-			format == "Xml"
-				? (ILayoutSerializer)new XmlLayoutSerializer(manager)
-				: new JsonLayoutSerializer(manager);
-
 		/// <summary>Builds a layout whose document and tool window both carry a tool tip.</summary>
 		/// <returns>The layout root.</returns>
 		private static LayoutRoot BuildLayout()
@@ -60,25 +45,22 @@ namespace AvalonDockTest
 			return new LayoutRoot { RootPanel = panel };
 		}
 
-		/// <summary>Stores a layout and hands back what was written.</summary>
-		/// <param name="format">The format to store in.</param>
+		/// <summary>Stores a layout as XML and hands back what was written.</summary>
 		/// <param name="layout">The layout to store.</param>
-		/// <returns>The stored document.</returns>
-		private static string Store(string format, LayoutRoot layout)
+		/// <returns>The stored XML document.</returns>
+		private static string StoreXml(LayoutRoot layout)
 		{
 			var manager = new DockingManager { Layout = layout };
 			using var stream = new MemoryStream();
-			CreateSerializer(format, manager).Serialize(stream);
+			new XmlLayoutSerializer(manager).Serialize(stream);
 			return Encoding.UTF8.GetString(stream.ToArray());
 		}
 
 		/// <summary>The stored layout must not mention the tool tip at all.</summary>
-		/// <param name="format">The format to store in.</param>
 		[Test]
-		[TestCaseSource(nameof(Formats))]
-		public void Serialize_DoesNotWriteTheToolTip(string format)
+		public void Serialize_DoesNotWriteTheToolTip()
 		{
-			var stored = Store(format, BuildLayout());
+			var stored = StoreXml(BuildLayout());
 
 			Assert.Multiple(() =>
 			{
@@ -96,7 +78,7 @@ namespace AvalonDockTest
 		[Test]
 		public void Deserialize_IgnoresAToolTipLeftInAnOlderXmlFile()
 		{
-			var stored = Store("Xml", BuildLayout())
+			var stored = StoreXml(BuildLayout())
 				.Replace("ContentId=\"explorer\"", "ContentId=\"explorer\" ToolTip=\"Files of the solution\"");
 
 			Assert.That(stored, Does.Contain("ToolTip"), "The older attribute was not injected.");

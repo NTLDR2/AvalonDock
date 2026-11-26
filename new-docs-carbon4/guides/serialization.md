@@ -3,13 +3,13 @@ title: Layout Serialization
 layout: default
 parent: Guides
 nav_order: 4
-description: "Save and restore AvalonDock v5 docking layouts using XML, JSON, or custom DTO serializers."
+description: "Save and restore AvalonDock v5 docking layouts using XML or custom DTO serializers."
 ---
 
 # Layout Serialization
 {: .no_toc }
 
-AvalonDock v5 persists and restores complete docking layouts—including split orientations, proportional and pixel pane sizes, tab order, auto-hide groups, floating windows, standalone detached windows, and `ToggleDockingManager` sidebar zones—through a UI-agnostic DTO pipeline.
+AvalonDock v5 persists and restores complete docking layouts—including split orientations, proportional and pixel pane sizes, tab order, auto-hide groups, floating windows, standalone detached windows, and `ToggleDockingManager` sidebar zones—through a UI-agnostic DTO pipeline with zero third-party serializer dependencies.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
@@ -20,19 +20,17 @@ AvalonDock v5 persists and restores complete docking layouts—including split o
 
 ---
 
-## Choose a Serializer
+## Install the XML Serializer
 
-Both official serializer packages target `netstandard2.0`, depend only on `Dirkster.AvalonDock.Core` (plus `System.Text.Json` for the JSON serializer), and implement `AvalonDock.Core.ILayoutSerializer` via `LayoutSerializerBase`:
+`Dirkster.AvalonDock.Serializer.Xml` targets `netstandard2.0`, depends only on `Dirkster.AvalonDock.Core` (`System.Xml.Serialization` is inbox on both `.NET Framework 4.8` and modern `.NET`), and implements `AvalonDock.Core.ILayoutSerializer` via `LayoutSerializerBase`:
 
 | Format | NuGet Package | Class & Namespace | Best For |
 |:-------|:--------------|:------------------|:---------|
-| **XML** | `Dirkster.AvalonDock.Serializer.Xml` | `AvalonDock.Serializer.Xml.XmlLayoutSerializer` | Human-readable configs, migrating legacy AvalonDock v4 XML layouts |
-| **JSON** | `Dirkster.AvalonDock.Serializer.Json` | `AvalonDock.Serializer.Json.JsonLayoutSerializer` | Modern apps, compact storage, `System.Text.Json` pipelines |
+| **XML** | `Dirkster.AvalonDock.Serializer.Xml` | `AvalonDock.Serializer.Xml.XmlLayoutSerializer` | Human-readable configs, zero external dependencies, migrating legacy AvalonDock v4 XML layouts |
+| **Custom** | `Dirkster.AvalonDock.Core` | Subclass `AvalonDock.Core.LayoutSerializerBase` | Custom binary, YAML, SQLite, or app-specific DTO persistence |
 
 ```bash
-# Install one or both packages
 dotnet add package Dirkster.AvalonDock.Serializer.Xml
-dotnet add package Dirkster.AvalonDock.Serializer.Json
 ```
 
 ---
@@ -54,7 +52,6 @@ Because `Serialize(string filepath)` creates and disposes the file stream automa
 
 ```csharp
 using System.IO;
-using AvalonDock.Serializer.Json;
 using AvalonDock.Serializer.Xml;
 
 // Ensure parent directory exists when writing under %AppData%
@@ -65,16 +62,13 @@ if (Path.GetDirectoryName(layoutPath) is { Length: > 0 } dir)
 
 // XML — direct file path overload
 new XmlLayoutSerializer(dockManager).Serialize("layout.xml");
-
-// JSON — direct file path overload
-new JsonLayoutSerializer(dockManager).Serialize("layout.json");
 ```
 
-To serialize into memory (for example, to store a layout in user settings or capture an undo snapshot), pass a `Stream` or `StringWriter`:
+To serialize into memory (for example, to store a layout in user settings or capture a reset snapshot), pass a `Stream` or `StringWriter`:
 
 ```csharp
 using var buffer = new MemoryStream();
-new JsonLayoutSerializer(dockManager).Serialize(buffer);
+new XmlLayoutSerializer(dockManager).Serialize(buffer);
 ```
 
 ### Restore a Layout
@@ -103,49 +97,6 @@ if (File.Exists("layout.xml"))
     serializer.Deserialize("layout.xml");
 }
 ```
-
----
-
-## JSON Options & Polymorphic `_type` Discriminator
-
-`JsonLayoutSerializer` accepts an optional `System.Text.Json.JsonSerializerOptions` instance:
-
-```csharp
-public JsonLayoutSerializer(IDockingManager manager, JsonSerializerOptions options = null)
-```
-
-When `options` is `null`, `JsonLayoutSerializer` defaults to:
-- `WriteIndented = true`
-- `DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull`
-
-When you supply custom `JsonSerializerOptions` (for example, compact single-line output or custom converters), `JsonLayoutSerializer` clones your options and honors every setting **except `TypeInfoResolver`**, which it replaces with a `DefaultJsonTypeInfoResolver` configured for AvalonDock's polymorphic DTO hierarchy:
-
-```csharp
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using AvalonDock.Serializer.Json;
-
-var compactOptions = new JsonSerializerOptions
-{
-    WriteIndented = false,
-    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-};
-
-var serializer = new JsonLayoutSerializer(dockManager, compactOptions);
-serializer.Serialize("layout.compact.json");
-```
-
-### How `_type` Polymorphism Works
-
-To keep `AvalonDock.Core` free of JSON library attributes, `JsonLayoutSerializer` configures polymorphism dynamically using a `"_type"` discriminator property on the three abstract DTO base classes that appear as polymorphic properties or collection element types:
-
-| Declared Base DTO Type | Where It Appears | `"_type"` Discriminator Values |
-|:-----------------------|:-----------------|:-------------------------------|
-| `LayoutPositionableGroupDto` | `LayoutPanelDto.Children`, `LayoutDocumentPaneGroupDto.Children`, `LayoutAnchorablePaneGroupDto.Children` | `"LayoutPanelDto"`, `"LayoutDocumentPaneDto"`, `"LayoutDocumentPaneGroupDto"`, `"LayoutAnchorablePaneDto"`, `"LayoutAnchorablePaneGroupDto"` |
-| `LayoutContentDto` | `LayoutDocumentPaneDto.Children` *(holds documents and tabbed anchorables)* | `"LayoutDocumentDto"`, `"LayoutAnchorableDto"` |
-| `LayoutFloatingWindowDto` | `LayoutRootDto.FloatingWindows` | `"LayoutDocumentFloatingWindowDto"`, `"LayoutAnchorableFloatingWindowDto"` |
-
-Collections typed directly to a concrete DTO—such as `LayoutAnchorablePaneDto.Children` (`List<LayoutAnchorableDto>`) and `LayoutRootDto.Hidden` (`List<LayoutAnchorableDto>`)—carry no type ambiguity and are serialized without a `"_type"` property.
 
 ---
 
@@ -351,25 +302,25 @@ public interface ILayoutDtoMapper
 
 All 17 DTO classes live in `AvalonDock.Core.Serialization.Dto` (`Dirkster.AvalonDock.Core`):
 
-| DTO Class | Kind | Base Class | XML Element / JSON `_type` | Maps To / Purpose |
-|:----------|:-----|:-----------|:---------------------------|:------------------|
+| DTO Class | Kind | Base Class | XML Element | Maps To / Purpose |
+|:----------|:-----|:-----------|:------------|:------------------|
 | `LayoutElementDto` | `abstract` | `object` | — | Root base class for all serialization DTOs |
 | `LayoutGroupDto` | `abstract` | `LayoutElementDto` | — | Base class for layout container groups |
 | `LayoutPositionableGroupDto` | `abstract` | `LayoutGroupDto` | *(polymorphic base)* | Base carrying `DockWidth`, `DockHeight`, `DockMin*`, `Floating*`, and `IsMaximized` |
 | `LayoutContentDto` | `abstract` | `LayoutElementDto` | *(polymorphic base)* | Base carrying `ContentId`, `Title`, `IsSelected`, `Floating*`, `Can*`, and `PreviousContainer*` |
 | `LayoutFloatingWindowDto` | `abstract` | `LayoutElementDto` | *(polymorphic base)* | Base class for document and anchorable floating window DTOs |
 | `LayoutRootDto` | `class` | `LayoutElementDto` | `<LayoutRoot>` | Root container (`RootPanel`, `TopSide`, `RightSide`, `LeftSide`, `BottomSide`, `FloatingWindows`, `Hidden`) |
-| `LayoutPanelDto` | `class` | `LayoutPositionableGroupDto` | `LayoutPanel` / `"LayoutPanelDto"` | Split container (`Orientation`, `CanDock`, `Children`) |
-| `LayoutDocumentPaneGroupDto` | `class` | `LayoutPositionableGroupDto` | `LayoutDocumentPaneGroup` / `"LayoutDocumentPaneGroupDto"` | Splitter group of document panes (`Orientation`, `Children`) |
-| `LayoutDocumentPaneDto` | `class` | `LayoutPositionableGroupDto` | `LayoutDocumentPane` / `"LayoutDocumentPaneDto"` | Tabbed document pane (`Id`, `ShowHeader`, `Children` of `LayoutContentDto`) |
-| `LayoutAnchorablePaneGroupDto` | `class` | `LayoutPositionableGroupDto` | `LayoutAnchorablePaneGroup` / `"LayoutAnchorablePaneGroupDto"` | Splitter group of anchorable panes (`Orientation`, `Children`) |
-| `LayoutAnchorablePaneDto` | `class` | `LayoutPositionableGroupDto` | `LayoutAnchorablePane` / `"LayoutAnchorablePaneDto"` | Tool window pane (`Id`, `Name`, `Children` of `LayoutAnchorableDto`) |
-| `LayoutDocumentDto` | `class` | `LayoutContentDto` | `LayoutDocument` / `"LayoutDocumentDto"` | Individual document (`Description`, `CanMove`; `CanClose` defaults to `true`) |
-| `LayoutAnchorableDto` | `class` | `LayoutContentDto` | `LayoutAnchorable` / `"LayoutAnchorableDto"` | Individual tool window (`CanHide`, `CanAutoHide`, `AutoHide*`, `CanDockAsTabbedDocument`, `CanMove`, `IsDetached`; `CanClose` defaults to `false`) |
-| `LayoutDocumentFloatingWindowDto` | `class` | `LayoutFloatingWindowDto` | `LayoutDocumentFloatingWindow` / `"LayoutDocumentFloatingWindowDto"` | Floating window hosting a `LayoutDocumentPaneGroupDto` (`RootPanel`) |
-| `LayoutAnchorableFloatingWindowDto` | `class` | `LayoutFloatingWindowDto` | `LayoutAnchorableFloatingWindow` / `"LayoutAnchorableFloatingWindowDto"` | Floating window hosting a `LayoutAnchorablePaneGroupDto` (`RootPanel`) |
+| `LayoutPanelDto` | `class` | `LayoutPositionableGroupDto` | `<LayoutPanel>` | Split container (`Orientation`, `CanDock`, `Children`) |
+| `LayoutDocumentPaneGroupDto` | `class` | `LayoutPositionableGroupDto` | `<LayoutDocumentPaneGroup>` | Splitter group of document panes (`Orientation`, `Children`) |
+| `LayoutDocumentPaneDto` | `class` | `LayoutPositionableGroupDto` | `<LayoutDocumentPane>` | Tabbed document pane (`Id`, `ShowHeader`, `Children` of `LayoutContentDto`) |
+| `LayoutAnchorablePaneGroupDto` | `class` | `LayoutPositionableGroupDto` | `<LayoutAnchorablePaneGroup>` | Splitter group of anchorable panes (`Orientation`, `Children`) |
+| `LayoutAnchorablePaneDto` | `class` | `LayoutPositionableGroupDto` | `<LayoutAnchorablePane>` | Tool window pane (`Id`, `Name`, `Children` of `LayoutAnchorableDto`) |
+| `LayoutDocumentDto` | `class` | `LayoutContentDto` | `<LayoutDocument>` | Individual document (`Description`, `CanMove`; `CanClose` defaults to `true`) |
+| `LayoutAnchorableDto` | `class` | `LayoutContentDto` | `<LayoutAnchorable>` | Individual tool window (`CanHide`, `CanAutoHide`, `AutoHide*`, `CanDockAsTabbedDocument`, `CanMove`, `IsDetached`; `CanClose` defaults to `false`) |
+| `LayoutDocumentFloatingWindowDto` | `class` | `LayoutFloatingWindowDto` | `<LayoutDocumentFloatingWindow>` | Floating window hosting a `LayoutDocumentPaneGroupDto` (`RootPanel`) |
+| `LayoutAnchorableFloatingWindowDto` | `class` | `LayoutFloatingWindowDto` | `<LayoutAnchorableFloatingWindow>` | Floating window hosting a `LayoutAnchorablePaneGroupDto` (`RootPanel`) |
 | `LayoutAnchorSideDto` | `class` | `LayoutGroupDto` | `<TopSide>` / `<RightSide>` / `<LeftSide>` / `<BottomSide>` | Auto-hide border side containing `LayoutAnchorGroupDto` children |
-| `LayoutAnchorGroupDto` | `class` | `LayoutGroupDto` | `LayoutAnchorGroup` | Auto-hide tab group (`Id`, `PreviousContainerId`, `Children` of `LayoutAnchorableDto`) |
+| `LayoutAnchorGroupDto` | `class` | `LayoutGroupDto` | `<LayoutAnchorGroup>` | Auto-hide tab group (`Id`, `PreviousContainerId`, `Children` of `LayoutAnchorableDto`) |
 
 ### Implementing a Custom Serializer
 
@@ -412,12 +363,12 @@ Save the layout in `OnClosing` and restore it once the window is loaded (or in `
 using System;
 using System.ComponentModel;
 using System.IO;
-using AvalonDock.Serializer.Json;
+using AvalonDock.Serializer.Xml;
 
 private static string LayoutFilePath => Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
     "MyApp",
-    "layout.json");
+    "layout.xml");
 
 protected override void OnClosing(CancelEventArgs e)
 {
@@ -426,7 +377,7 @@ protected override void OnClosing(CancelEventArgs e)
         Directory.CreateDirectory(dir);
     }
 
-    new JsonLayoutSerializer(dockManager).Serialize(LayoutFilePath);
+    new XmlLayoutSerializer(dockManager).Serialize(LayoutFilePath);
     base.OnClosing(e);
 }
 
@@ -441,7 +392,7 @@ protected override void OnContentRendered(EventArgs e)
 
     try
     {
-        var serializer = new JsonLayoutSerializer(dockManager);
+        var serializer = new XmlLayoutSerializer(dockManager);
         serializer.LayoutSerializationCallback += OnLayoutDeserialization;
         serializer.Deserialize(LayoutFilePath);
     }
@@ -457,7 +408,7 @@ protected override void OnContentRendered(EventArgs e)
 
 ## Related Documentation
 
-- [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Step-by-step walkthrough covering code-behind, `ToggleDockingManager` + `IDockLayoutService`, classic MVVM, JSON options, and reset workflows.
+- [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Step-by-step walkthrough covering code-behind, `ToggleDockingManager` + `IDockLayoutService`, classic MVVM, and reset workflows.
 - [Core & MVVM API Reference]({{ site.baseurl }}{% link api-reference/core-and-mvvm.md %}) — Full member signatures for `ILayoutSerializer`, `LayoutSerializerBase`, `LayoutSerializationCallbackEventArgs`, and `UnresolvedContentHandling`.
 - [MVVM Guide]({{ site.baseurl }}{% link guides/mvvm.md %}) — `IDockable`, `DockLayout`, and `PanesStyleSelector` binding conventions.
 - [Breaking Changes (v4 → v5)]({{ site.baseurl }}{% link migration/breaking-changes.md %}) — Namespace and package updates when migrating from AvalonDock v4 `XmlLayoutSerializer`.

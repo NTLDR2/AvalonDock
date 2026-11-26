@@ -22,8 +22,8 @@ These tutorials assume you have completed the [Quick Start]({{ site.baseurl }}{%
 |:---------|:------------------|:-----------|
 | [MVVM IDE Application]({{ site.baseurl }}{% link tutorials/mvvm-ide.md %}) | A VS Code / Rider-style multi-panel IDE | `ObservableToolboxBase`, `ObservableDocument`, `IDockLayoutService`, `SideToggleManager`, `ToggleDockingManager`, `DockZone`, `Shortcut`, DI |
 | [Dependency Injection App]({{ site.baseurl }}{% link tutorials/dependency-injection-app.md %}) | Scalable DI composition root & headless NUnit tests | `AddDockLayoutService` builder, `ConfigureDocking`, `ConfigureToggleDock`, factory toolboxes, `IDisposable` cleanup, NUnit testing |
-| [Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) | A runtime theme-switchable app with custom branding | All 7 theme packages (`Arc`, `VS` 2015/2022/2026, `VS2013`, etc.), `ResourceKeys` brush overrides, custom `Theme` classes, `.vstheme` / JSON palettes |
-| [Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) | An app that saves and restores its workspace | `XmlLayoutSerializer` & `JsonLayoutSerializer`, v5 `DockLayout` MVVM callbacks, classic MVVM callbacks, `UnresolvedContentHandling`, layout reset |
+| [Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) | A runtime theme-switchable app with custom branding | All 5 theme packages (`Arc`, `VS2010`, `Expression`, `Metro`, `Aero`), `ResourceKeys` brush overrides, custom `Theme` & `DictionaryTheme` classes |
+| [Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) | An app that saves and restores its workspace | `XmlLayoutSerializer`, v5 `DockLayout` MVVM callbacks, classic MVVM callbacks, `UnresolvedContentHandling`, layout reset |
 
 ---
 
@@ -36,7 +36,6 @@ Every tutorial corresponds directly to working sample projects under `source/`:
 | `AvalonDockCodeApp` | `net10.0-windows`, `net11.0-windows` | Flagship v5 reference IDE: `ToggleDockingManager`, `AvalonDock.Mvvm.CommunityToolkit`, DI, AvalonEdit syntax highlighting, live PowerShell terminal, XML layout save/load, and theme/priority switching. |
 | `MVVMTestApp` | `net9.0-windows`, `net48` | Classic MVVM using `DocumentsSource` / `AnchorablesSource` and `XmlLayoutSerializer`. |
 | `TestApp` | `net10.0-windows`, `net11.0-windows`, `net48` | Comprehensive classic `DockingManager` feature showcase. |
-| `VS2013Test` | `net9.0-windows` | Classic Visual Studio-style multi-tool IDE demo. |
 | `MLibTest` | `net9.0-windows`, `net48` | Unified application + docking theming with `Dirkster.MLib`. |
 | `CaliburnDockTestApp` | `net9.0-windows`, `net48` | Integration with the Caliburn.Micro MVVM framework. |
 | `WinFormsTestApp` | `net9.0-windows`, `net48` | Hosting AvalonDock inside a Windows Forms `ElementHost`. |

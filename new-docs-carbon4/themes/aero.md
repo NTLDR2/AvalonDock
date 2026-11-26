@@ -2,7 +2,7 @@
 title: Aero Theme
 layout: default
 parent: Themes
-nav_order: 7
+nav_order: 5
 description: "Classic Windows 7 Aero theme with soft gradients and AeroColors resource keys."
 ---
 
@@ -89,4 +89,4 @@ dockManager.Theme = new AeroTheme();
 
 - [Metro Theme]({{ site.baseurl }}{% link themes/metro.md %}) — Clean, flat Windows Modern UI light theme.
 - [VS2010 Theme]({{ site.baseurl }}{% link themes/vs2010.md %}) — Classic Visual Studio 2010 theme with tab icon support.
-- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Compare all seven theme packages and `GenericTheme`.
+- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Compare all five theme packages and `GenericTheme`.

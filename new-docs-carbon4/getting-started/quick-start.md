@@ -142,5 +142,5 @@ Prefer a modern **VS Code / JetBrains Rider-style** interface with compact sideb
 
 - Understand how `LayoutRoot`, `LayoutPanel`, and panes fit together in [Layout Model]({{ site.baseurl }}{% link concepts/layout-model.md %}).
 - Bind documents and toolboxes cleanly using view models and DI in [MVVM Integration]({{ site.baseurl }}{% link guides/mvvm.md %}) and [Dependency Injection]({{ site.baseurl }}{% link guides/dependency-injection.md %}).
-- Persist user layouts across sessions with XML or JSON in [Layout Serialization]({{ site.baseurl }}{% link guides/serialization.md %}).
-- Explore all 7 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
+- Persist user layouts across sessions with XML in [Layout Serialization]({{ site.baseurl }}{% link guides/serialization.md %}).
+- Explore all 5 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).

@@ -19,7 +19,7 @@ A powerful WPF Document and Tool Window layout container for building Visual Stu
 
 ## What is AvalonDock?
 
-AvalonDock is a mature, actively maintained WPF docking layout system for arranging tabbed documents and dockable tool windows. Version 5 modernizes the entire framework with a modular NuGet package architecture, first-class MVVM and `Microsoft.Extensions.DependencyInjection` support, a VS Code / Rider-style `ToggleDockingManager` sidebar control, DTO-based XML and JSON layout serialization, standalone detached top-level tool windows, and modern Visual Studio (`.vstheme` and VS2026 JSON) and Arc themes.
+AvalonDock is a mature, actively maintained WPF docking layout system for arranging tabbed documents and dockable tool windows. Version 5 modernizes the entire framework with a modular NuGet package architecture, first-class MVVM and `Microsoft.Extensions.DependencyInjection` support, a VS Code / Rider-style `ToggleDockingManager` sidebar control, DTO-based XML layout serialization with zero third-party serializer dependencies, standalone detached top-level tool windows, and modern Arc dark and light themes.
 
 ![AvalonDock v5 ToggleDockingManager with Arc Dark Theme]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Welcome.png)
 
@@ -34,11 +34,11 @@ AvalonDock is used by [many open source and commercial projects](https://github.
 | **Classic & Toggle Docking** | Choose between classic Visual Studio-style `DockingManager` (auto-hide flyouts) or VS Code / Rider-style `ToggleDockingManager` (6-zone sidebar buttons). |
 | **Tabbed Documents** | Organize documents in tabbed groups, split horizontally or vertically, with optional tab icons and overflow menus. |
 | **Floating & Standalone Windows** | Tear off panels into owned floating windows or detach tool windows into independent top-level OS windows with taskbar entries. |
-| **DTO Layout Serialization** | Save and restore layouts via XML (`XmlLayoutSerializer`) or JSON (`JsonLayoutSerializer`), with backward-compatible reading of v4 XML layouts. |
+| **DTO Layout Serialization** | Save and restore layouts via XML (`XmlLayoutSerializer`) with backward-compatible reading of v4 XML layouts and extensible `LayoutSerializerBase` DTO hooks. |
 | **First-Class MVVM** | Bind view-model trees via `AvalonDock.Mvvm` (zero external dependencies) or `AvalonDock.Mvvm.CommunityToolkit` (`[ObservableProperty]` / `[RelayCommand]` support). |
 | **Dependency Injection** | Register `IDockLayoutService`, toolboxes, and docking options cleanly via `Microsoft.Extensions.DependencyInjection`. |
-| **7 Theme Packages** | Modern `Arc`, `.vstheme` / JSON-based `VS` (VS2015, VS2022, VS2026), `VS2013`, `VS2010`, `Expression`, `Metro`, and `Aero` themes, plus runtime switching. |
-| **Broad .NET Support** | Targets `.NET 8`, `.NET 9`, `.NET 10`, `.NET 11` *(v5.1+)*, and `.NET Framework 4.8`, with `netstandard2.0` core/MVVM/DI/serializer packages. |
+| **5 Theme Packages + `GenericTheme`** | Modern `Arc` (Dark & Light), `VS2010`, `Expression` (Dark & Light), `Metro`, and `Aero` themes, plus live runtime switching and `DictionaryTheme` customization. |
+| **Broad .NET Support** | Targets `.NET 8`, `.NET 9`, `.NET 10`, `.NET 11` *(v5.1+)*, and `.NET Framework 4.8` (Windows 7 SP1 through Windows 11 with zero `System.Text.Json` dependencies), plus `netstandard2.0` core/MVVM/DI/serializer packages. |
 
 ---
 
@@ -81,7 +81,7 @@ AvalonDock is used by [many open source and commercial projects](https://github.
 
 ## NuGet Packages
 
-AvalonDock ships as **14 modular NuGet packages** (all with embedded XML IntelliSense documentation) so your application only references what it needs.
+AvalonDock ships as **11 modular NuGet packages** (all with embedded XML IntelliSense documentation) so your application only references what it needs.
 
 ### Core, MVVM & Dependency Injection
 
@@ -93,24 +93,21 @@ AvalonDock ships as **14 modular NuGet packages** (all with embedded XML Intelli
 | [Dirkster.AvalonDock.Mvvm.CommunityToolkit](https://www.nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | `netstandard2.0` | `CommunityToolkit.Mvvm` `ObservableObject`-based classes (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDocument`, `ObservableTool`) |
 | [Dirkster.AvalonDock.DependencyInjection](https://www.nuget.org/packages/Dirkster.AvalonDock.DependencyInjection) | `netstandard2.0` | `IServiceCollection` builder extensions (`AddDockLayoutService`, `DockLayoutBuilder`, `DockingOptions`, `ToggleDockOptions`) |
 
-### Layout Serializers
+### Layout Serializer
 
 | Package | Target | Description |
 |:--------|:-------|:------------|
-| [Dirkster.AvalonDock.Serializer.Xml](https://www.nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | `netstandard2.0` | XML layout persistence (`XmlLayoutSerializer`) with backward-compatible v4 layout loading |
-| [Dirkster.AvalonDock.Serializer.Json](https://www.nuget.org/packages/Dirkster.AvalonDock.Serializer.Json) | `netstandard2.0` | `System.Text.Json`-based layout persistence (`JsonLayoutSerializer`) |
+| [Dirkster.AvalonDock.Serializer.Xml](https://www.nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | `netstandard2.0` | XML layout persistence (`XmlLayoutSerializer`) with backward-compatible v4 layout loading and zero external dependencies |
 
 ### Theme Packages
 
 | Package | Variants | Description |
 |:--------|:---------|:------------|
 | [Dirkster.AvalonDock.Themes.Arc](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Arc) | Dark, Light | Modern compact IDE theme with rounded corners (`ArcDarkTheme`, `ArcLightTheme`) |
-| [Dirkster.AvalonDock.Themes.VS](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.VS) | VS2015, VS2022, VS2026 (Dark, Light, Blue) + Custom | Visual Studio theme engine supporting `.vstheme`, `.vstheme.gz`, and VS2026 JSON override palettes |
-| [Dirkster.AvalonDock.Themes.VS2013](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.VS2013) | Dark, Light, Blue | Visual Studio 2013 theme built on compressed `.vstheme.gz` palettes |
-| [Dirkster.AvalonDock.Themes.VS2010](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | Single | Classic Visual Studio 2010 theme |
-| [Dirkster.AvalonDock.Themes.Expression](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | Dark, Light | Expression Blend-inspired dark and light themes |
-| [Dirkster.AvalonDock.Themes.Metro](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | Single | Flat Metro / WinUI style theme |
-| [Dirkster.AvalonDock.Themes.Aero](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | Single | Classic Windows Aero theme |
+| [Dirkster.AvalonDock.Themes.VS2010](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | Single | Classic Visual Studio 2010 theme (`VS2010Theme`) |
+| [Dirkster.AvalonDock.Themes.Expression](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | Dark, Light | Expression Blend-inspired dark and light themes (`ExpressionDarkTheme`, `ExpressionLightTheme`) |
+| [Dirkster.AvalonDock.Themes.Metro](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | Single | Flat Metro / WinUI style theme (`MetroTheme`) |
+| [Dirkster.AvalonDock.Themes.Aero](https://www.nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | Single | Classic Windows Aero theme (`AeroTheme`) |
 
 ---
 
@@ -122,17 +119,17 @@ AvalonDock ships as **14 modular NuGet packages** (all with embedded XML Intelli
 | `.NET 10` (`net10.0-windows`) | ✅ Supported | Supported since `v5.0.0` |
 | `.NET 9` (`net9.0-windows`) | ✅ Supported | Supported since `v5.0.0` |
 | `.NET 8` (`net8.0-windows`) | ✅ Supported | Supported since `v5.0.2` |
-| `.NET Framework 4.8` (`net48`) | ✅ Supported | Supported since `v5.0.0` |
-| `.NET Standard 2.0` (`netstandard2.0`) | ✅ Supported | UI-agnostic packages (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.*`) |
+| `.NET Framework 4.8` (`net48`) | ✅ Supported | Supported from Windows 7 SP1 64-bit to Windows 11 |
+| `.NET Standard 2.0` (`netstandard2.0`) | ✅ Supported | UI-agnostic packages (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`) |
 
 {: .note }
-`Dirkster.AvalonDock` and `Dirkster.AvalonDock.Themes.*` are WPF packages and run on Windows (`-windows` TFM on .NET 8+). Your UI-agnostic ViewModel and service projects can reference `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm*`, `Dirkster.AvalonDock.DependencyInjection`, and `Dirkster.AvalonDock.Serializer.*` via `netstandard2.0` without a WPF dependency.
+`Dirkster.AvalonDock` and `Dirkster.AvalonDock.Themes.*` are WPF packages and run on Windows (`-windows` TFM on .NET 8+). Your UI-agnostic ViewModel and service projects can reference `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm*`, `Dirkster.AvalonDock.DependencyInjection`, and `Dirkster.AvalonDock.Serializer.Xml` via `netstandard2.0` without a WPF dependency.
 
 ---
 
 ## Upgrading from v4?
 
-If you are migrating from AvalonDock v4.x, read the [Migration Guide]({{ site.baseurl }}{% link migration/index.md %}) and [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) for step-by-step upgrade instructions covering separated serializer packages, DTO serialization, target framework updates, and new v5 capabilities.
+If you are migrating from AvalonDock v4.x, read the [Migration Guide]({{ site.baseurl }}{% link migration/index.md %}) and [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) for step-by-step upgrade instructions covering separated serializer packages, DTO serialization, theme updates, target framework changes, and new v5 capabilities.
 
 ---
 

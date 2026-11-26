@@ -22,7 +22,6 @@
         <ProjectReference Include="..\Components\AvalonDock.DependencyInjection\AvalonDock.DependencyInjection.csproj" />
         <ProjectReference Include="..\Components\AvalonDock.Serializer.Xml\AvalonDock.Serializer.Xml.csproj" />
         <ProjectReference Include="..\Components\AvalonDock.Themes.Arc\AvalonDock.Themes.Arc.csproj" />
-        <ProjectReference Include="..\Components\AvalonDock.Themes.VS\AvalonDock.Themes.VS.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.3.1.120" />

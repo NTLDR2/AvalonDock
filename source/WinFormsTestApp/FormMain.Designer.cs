@@ -35,9 +35,6 @@ namespace AvalonDock.WinFormsTestApp
             this.menuItemGeneric = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemExpressionDark = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemExpressionLight = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemVs2013 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemVS2013Dark = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemVS2013Blue = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemAero = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -73,9 +70,6 @@ namespace AvalonDock.WinFormsTestApp
             this.menuItemGeneric,
             this.menuItemExpressionDark,
             this.menuItemExpressionLight,
-            this.menuItemVs2013,
-            this.menuItemVS2013Dark,
-            this.menuItemVS2013Blue,
             this.menuItemAero});
             this.themeToolStripMenuItem.Name = "themeToolStripMenuItem";
             this.themeToolStripMenuItem.Size = new System.Drawing.Size(121, 48);
@@ -83,6 +77,8 @@ namespace AvalonDock.WinFormsTestApp
             // 
             // menuItemVS2010
             // 
+            this.menuItemVS2010.Checked = true;
+            this.menuItemVS2010.CheckState = System.Windows.Forms.CheckState.Checked;
             this.menuItemVS2010.Name = "menuItemVS2010";
             this.menuItemVS2010.Size = new System.Drawing.Size(396, 46);
             this.menuItemVS2010.Text = "VS2010";
@@ -116,29 +112,6 @@ namespace AvalonDock.WinFormsTestApp
             this.menuItemExpressionLight.Text = "Expression Light";
             this.menuItemExpressionLight.Click += new System.EventHandler(this.menuItemExpressionLight_Click);
             // 
-            // menuItemVs2013
-            // 
-            this.menuItemVs2013.Checked = true;
-            this.menuItemVs2013.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.menuItemVs2013.Name = "menuItemVs2013";
-            this.menuItemVs2013.Size = new System.Drawing.Size(396, 46);
-            this.menuItemVs2013.Text = "VS2013";
-            this.menuItemVs2013.Click += new System.EventHandler(this.vS2013ToolStripMenuItem_Click);
-            // 
-            // menuItemVS2013Dark
-            // 
-            this.menuItemVS2013Dark.Name = "menuItemVS2013Dark";
-            this.menuItemVS2013Dark.Size = new System.Drawing.Size(396, 46);
-            this.menuItemVS2013Dark.Text = "VS 2013 Dark";
-            this.menuItemVS2013Dark.Click += new System.EventHandler(this.menuItemAero_Vs2013Dark);
-            // 
-            // menuItemVS2013Blue
-            // 
-            this.menuItemVS2013Blue.Name = "menuItemVS2013Blue";
-            this.menuItemVS2013Blue.Size = new System.Drawing.Size(396, 46);
-            this.menuItemVS2013Blue.Text = "VS 2013 Blue";
-            this.menuItemVS2013Blue.Click += new System.EventHandler(this.menuItemAero_Vs2013Blue);
-            // 
             // menuItemAero
             // 
             this.menuItemAero.Name = "menuItemAero";
@@ -168,15 +141,11 @@ namespace AvalonDock.WinFormsTestApp
         private System.Windows.Forms.Integration.ElementHost dockingManagerHost;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem menuItemVS2013Dark;
-        private System.Windows.Forms.ToolStripMenuItem menuItemVS2013Blue;
         private System.Windows.Forms.ToolStripMenuItem menuItemVS2010;
         private System.Windows.Forms.ToolStripMenuItem menuItemGeneric;
         private System.Windows.Forms.ToolStripMenuItem menuItemExpressionDark;
         private System.Windows.Forms.ToolStripMenuItem menuItemMetro;
         private System.Windows.Forms.ToolStripMenuItem menuItemExpressionLight;
-        private System.Windows.Forms.ToolStripMenuItem menuItemVs2013;
         private System.Windows.Forms.ToolStripMenuItem menuItemAero;
     }
 }
-

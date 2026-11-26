@@ -83,7 +83,7 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 Examples:
 - `[Fix] #696 - [Serializer] Relink LayoutAnchorGroup.PreviousContainer on layout restore`
 - `[Feature] #673 - [Build] Added net8.0-windows target to NuGet packages`
-- `[Fix] #683 - [Themes] VS themes fully support ToggleDockingManager without Arc resources`
+- `[Fix] #683 - [Themes] VS2010 theme supports ToggleDockingManager without Arc resources`
 
 ---
 

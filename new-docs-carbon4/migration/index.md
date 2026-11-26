@@ -11,15 +11,15 @@ permalink: /migration/
 {: .label .label-yellow }
 v4 → v5
 
-This guide walks through every step required to upgrade an existing WPF application from AvalonDock v4.x (such as `v4.74.1`) to AvalonDock v5 (`v5.0.2+`).
+This guide walks through every step required to upgrade an existing WPF application from AvalonDock v4.x (such as `v4.74.1`) to AvalonDock v5 (`v5.1.0+`).
 
 ---
 
 ## Overview
 
-AvalonDock v5 modernizes the core architecture: layout persistence is decoupled into a plain DTO layer with separate XML and JSON serializer packages, Dependency Injection and MVVM are first-class citizens, floating and standalone detached windows were reworked from the ground up, and the theme stack gained Arc and modern Visual Studio (`.vstheme` and VS2026 JSON) support.
+AvalonDock v5 modernizes the core architecture: layout persistence is decoupled into a plain DTO layer with a dedicated `Dirkster.AvalonDock.Serializer.Xml` package (with zero external dependencies), Dependency Injection and MVVM are first-class citizens, floating and standalone detached windows were reworked from the ground up, and the theme stack adds the modern `Dirkster.AvalonDock.Themes.Arc` package while dropping packages that pulled out-of-band `System.Text.Json` dependencies onto `.NET Framework 4.8`.
 
-Most classic v4 applications upgrade with only a few `PackageReference` and `using` updates, while custom `IXmlSerializable` hooks or direct VS2013 XAML dictionary merges require targeted adjustments.
+Most classic v4 applications upgrade with only a few `PackageReference` and `using` updates, while custom `IXmlSerializable` hooks or `Themes.VS2013` references require targeted adjustments.
 
 {: .important }
 Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) reference before starting your upgrade.
@@ -29,11 +29,11 @@ Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{%
 ## Quick Upgrade Checklist
 
 - [ ] Ensure your WPF project targets `.NET 8+` (`-windows`), or `.NET Framework 4.8`
-- [ ] Update `Dirkster.AvalonDock` and theme `PackageReference` entries to `5.0.2` (or latest `5.x`)
-- [ ] Add `Dirkster.AvalonDock.Serializer.Xml` (or `Serializer.Json`) if you persist layouts
+- [ ] Update `Dirkster.AvalonDock` and theme `PackageReference` entries to `5.1.0` (or latest `5.x`)
+- [ ] Add `Dirkster.AvalonDock.Serializer.Xml` if you persist layouts
 - [ ] Update serializer namespaces (`AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` + `AvalonDock.Core`)
 - [ ] Migrate any custom `IXmlSerializable` layout hooks to `LayoutSerializerBase` / DTOs
-- [ ] Replace any direct `/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml` dictionary merges
+- [ ] Migrate `Dirkster.AvalonDock.Themes.VS2013` usages to `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme` / `ArcLightTheme`), `Themes.Expression`, or `Themes.VS2010`
 - [ ] Check unresolved anchorable handling (`UnresolvedContentHandling.Hide`) if late-loaded plugins rely on `LayoutRoot.Hidden`
 - [ ] Rebuild and test layout round-trips, floating/detached windows, and theme switching
 
@@ -46,7 +46,7 @@ AvalonDock v5 drops out-of-support legacy frameworks (`.NET Framework 4.0`, `4.5
 | v4.x Target | v5 Status |
 |:------------|:----------|
 | `.NET Framework 4.0` / `4.5.2` | ❌ Dropped — upgrade to `net48` |
-| `.NET Framework 4.8` (`net48`) | ✅ Supported |
+| `.NET Framework 4.8` (`net48`) | ✅ Supported (Windows 7 SP1 64-bit to Windows 11) |
 | `.NET Core 3.0` / `3.1`, `.NET 5` | ❌ Dropped — upgrade to `net8.0-windows` or newer |
 | `.NET 8` (`net8.0-windows`) | ✅ Supported since `v5.0.2` |
 | `.NET 9` (`net9.0-windows`) | ✅ Supported since `v5.0.0` |
@@ -57,7 +57,7 @@ AvalonDock v5 drops out-of-support legacy frameworks (`.NET Framework 4.0`, `4.5
 
 ## Step 2: Update NuGet Packages
 
-In v4, XML serialization was bundled inside `Dirkster.AvalonDock`. In v5, serializers, MVVM helpers, and DI extensions ship in dedicated packages:
+In v4, XML serialization was bundled inside `Dirkster.AvalonDock`. In v5, the XML serializer, MVVM helpers, and DI extensions ship in dedicated packages:
 
 ### Before (v4.x)
 
@@ -69,33 +69,30 @@ In v4, XML serialization was bundled inside `Dirkster.AvalonDock`. In v5, serial
 ### After (v5)
 
 ```xml
-<PackageReference Include="Dirkster.AvalonDock" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="5.0.2" />
+<PackageReference Include="Dirkster.AvalonDock" Version="5.1.0" />
+<PackageReference Include="Dirkster.AvalonDock.Themes.Arc" Version="5.1.0" />
 
 <!-- REQUIRED if you use XmlLayoutSerializer -->
-<PackageReference Include="Dirkster.AvalonDock.Serializer.Xml" Version="5.0.2" />
+<PackageReference Include="Dirkster.AvalonDock.Serializer.Xml" Version="5.1.0" />
 
 <!-- OPTIONAL new v5 packages -->
-<PackageReference Include="Dirkster.AvalonDock.Serializer.Json" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.Mvvm" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.Mvvm.CommunityToolkit" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.DependencyInjection" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.Themes.Arc" Version="5.0.2" />
-<PackageReference Include="Dirkster.AvalonDock.Themes.VS" Version="5.0.2" />
+<PackageReference Include="Dirkster.AvalonDock.Mvvm" Version="5.1.0" />
+<PackageReference Include="Dirkster.AvalonDock.Mvvm.CommunityToolkit" Version="5.1.0" />
+<PackageReference Include="Dirkster.AvalonDock.DependencyInjection" Version="5.1.0" />
 ```
 
 ### Package Architecture Mapping
 
 | v4.x Package | v5 Package | Action Required |
 |:-------------|:-----------|:----------------|
-| `Dirkster.AvalonDock` (included XML serializer) | `Dirkster.AvalonDock` (WPF controls & layout model) | Keep; add serializer package separately if saving layouts |
+| `Dirkster.AvalonDock` (included XML serializer) | `Dirkster.AvalonDock` (WPF controls & layout model) | Keep; add `Dirkster.AvalonDock.Serializer.Xml` separately if saving layouts |
 | — | `Dirkster.AvalonDock.Core` | Automatically referenced by `AvalonDock` (install directly only in UI-agnostic `netstandard2.0` libraries) |
 | *(bundled in `AvalonDock`)* | `Dirkster.AvalonDock.Serializer.Xml` | **Install explicitly** if using `XmlLayoutSerializer` |
-| — | `Dirkster.AvalonDock.Serializer.Json` | Optional new `System.Text.Json` layout serializer |
 | — | `Dirkster.AvalonDock.Mvvm` | Optional zero-dependency MVVM base classes & `DockLayoutService` |
 | — | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | Optional `CommunityToolkit.Mvvm` (`ObservableObject`) base classes |
 | — | `Dirkster.AvalonDock.DependencyInjection` | Optional `IServiceCollection` & `DockLayoutBuilder` integration |
-| `Dirkster.AvalonDock.Themes.*` | `Dirkster.AvalonDock.Themes.*` (+ new `Arc` & `VS`) | Update version; consider adopting `Themes.Arc` or `Themes.VS` |
+| `Dirkster.AvalonDock.Themes.VS2013` | `Dirkster.AvalonDock.Themes.Arc` *(recommended)* | Replace `Vs2013DarkTheme` / `Vs2013LightTheme` with `ArcDarkTheme` / `ArcLightTheme` (or `Expression` / `VS2010`) |
+| `Dirkster.AvalonDock.Themes.{VS2010,Expression,Metro,Aero}` | `Dirkster.AvalonDock.Themes.{VS2010,Expression,Metro,Aero}` | Update version |
 
 ---
 
@@ -129,22 +126,13 @@ serializer.Serialize("layout.xml");
 3. **Unresolved anchorables are removed by default:** Set `serializer.UnresolvedContentHandling = UnresolvedContentHandling.Hide` if late-loaded plugins expect unresolved anchorables to remain in `LayoutRoot.Hidden`.
 4. **`ToolTip` is no longer written to layout files:** Bind or assign tooltips on your view or view model instead.
 
-### Optional: Switch to JSON Serialization
-
-```csharp
-using AvalonDock.Serializer.Json;
-
-var serializer = new JsonLayoutSerializer(dockManager);
-serializer.Serialize("layout.json");
-```
-
 ---
 
 ## Step 4: Review Theme & Custom Dictionary Usage
 
-- **Standard theme instantiation is unchanged:** `new Vs2013DarkTheme()`, `new VS2010Theme()`, `new ExpressionDarkTheme()`, `new MetroTheme()`, and `new AeroTheme()` continue to work as in v4.
-- **Custom themes merging `VS2013` XAML dictionaries:** In v5, `Dirkster.AvalonDock.Themes.VS2013` was migrated onto compressed `.vstheme.gz` resources (`#572`). If your application merged `/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml` or `DarkTheme.xaml` directly in XAML, switch to merging `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` or build a palette using `VsTheme` / `VsThemeColorPalette` from `Dirkster.AvalonDock.Themes.VS`.
-- **New v5 Themes:** Explore `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`) and `Dirkster.AvalonDock.Themes.VS` (`VS2015*`, `VS2022*`, `VS2026*`, plus custom `.vstheme` and VS2026 JSON override files) in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
+- **`VS2010`, `Expression`, `Metro`, `Aero`, and `GenericTheme` instantiation is unchanged:** `new VS2010Theme()`, `new ExpressionDarkTheme()`, `new MetroTheme()`, and `new AeroTheme()` continue to work as in v4.
+- **Migrating from `Themes.VS2013`:** `Dirkster.AvalonDock.Themes.VS2013` (and `Themes.VS` / `Serializer.Json`) were removed so that AvalonDock's core, serializer, and theme packages remain 100% free of `System.Text.Json` binding-redirect / DLL conflicts on `.NET Framework 4.8`. Switch to `Dirkster.AvalonDock.Themes.Arc` (`new ArcDarkTheme()` or `new ArcLightTheme()`), and base custom XAML brush overrides on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) using `AvalonDock.Themes.Arc.Themes.ResourceKeys`.
+- Explore all 5 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
 
 ---
 

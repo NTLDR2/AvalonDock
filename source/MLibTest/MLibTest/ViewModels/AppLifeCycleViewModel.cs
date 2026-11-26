@@ -115,12 +115,7 @@ namespace MLibTest.ViewModels
 		{
 			settings.Themes.RemoveAllThemeInfos();
 			settings.Themes.AddThemeInfo("Generic", new List<Uri> { });
-			settings.Themes.AddThemeInfo("VS 2013 Blue", new List<Uri> { });
-			settings.Themes.AddThemeInfo("VS 2013 Dark", new List<Uri> { });
-			settings.Themes.AddThemeInfo("VS 2013 Light", new List<Uri> { });
-
 			settings.Themes.AddThemeInfo("Metro", new List<Uri> { });
-
 			settings.Themes.AddThemeInfo("Expression Dark", new List<Uri> { });
 			settings.Themes.AddThemeInfo("Expression Light", new List<Uri> { });
 
@@ -136,78 +131,6 @@ namespace MLibTest.ViewModels
 
 					,new Uri("/MLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				}, settings.Themes);
-			}
-			catch (Exception exp)
-			{
-				Debug.WriteLine(exp);
-			}
-
-			try
-			{
-				// Adding Generic theme (which is really based on Light theme in MLib)
-				// but other components may have another theme definition for Generic
-				// so this is how it can be tested ...
-				appearance.AddThemeResources("VS 2013 Blue", new List<Uri>
-				{
-				   new Uri("/AvalonDock.Themes.VS2013;component/Themes/generic.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/AvalonDock.Themes.VS2013;component/BlueBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MWindowLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-////				  ,new Uri("/MLibTest;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				}, settings.Themes);
-			}
-			catch (Exception exp)
-			{
-				Debug.WriteLine(exp);
-			}
-
-			try
-			{
-				// Add additional Dark and Light resources to those theme resources added above
-				appearance.AddThemeResources("VS 2013 Dark", new List<Uri>
-				{
-				   new Uri("/AvalonDock.Themes.VS2013;component/Themes/generic.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/ColorPickerLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/NumericUpDownLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MWindowLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/ColorPickerLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/NumericUpDownLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				}, settings.Themes);
-			}
-			catch (Exception exp)
-			{
-				Debug.WriteLine(exp);
-			}
-
-			try
-			{
-				appearance.AddThemeResources("VS 2013 Light", new List<Uri>
-				{
-				   new Uri("/AvalonDock.Themes.VS2013;component/Themes/generic.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/AvalonDock.Themes.VS2013;component/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/ColorPickerLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/NumericUpDownLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MWindowLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-				  ,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/ColorPickerLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-				  ,new Uri("/MLibTest;component/BindToMLib/NumericUpDownLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
 				}, settings.Themes);
 			}
@@ -280,7 +203,7 @@ namespace MLibTest.ViewModels
 				Debug.WriteLine(exp);
 			}
 
-			appearance.SetDefaultTheme(settings.Themes, "VS 2013 Dark");
+			appearance.SetDefaultTheme(settings.Themes, "Expression Dark");
 
 			try
 			{

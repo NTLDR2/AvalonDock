@@ -1,4 +1,4 @@
-﻿<MWindow:MetroWindow
+<MWindow:MetroWindow
     x:Class="MLibTest.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -110,9 +110,6 @@
                         IsVirtualizingAnchorable="True"
                         IsVirtualizingDocument="True"
                         Visibility="Hidden">
-                        <!-- avalonDock:DockingManager.Theme>
-						<avalonDock:Vs2013LightTheme/>
-					</avalonDock:DockingManager.Theme-->
                         <DockingManager.LayoutItemTemplateSelector>
                             <demos:PanesTemplateSelector>
                                 <demos:PanesTemplateSelector.FileViewTemplate>

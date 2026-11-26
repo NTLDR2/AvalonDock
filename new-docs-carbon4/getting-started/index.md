@@ -27,5 +27,5 @@ Get up and running with AvalonDock v5 in minutes. This section covers NuGet pack
 
 - **Windows** — AvalonDock's UI controls use WPF and run on Windows.
 - **Supported Application Runtimes:** **.NET 8** (`net8.0-windows`), **.NET 9** (`net9.0-windows`), **.NET 10** (`net10.0-windows`), **.NET 11** (`net11.0-windows`, `v5.1.0+`), or **.NET Framework 4.8** (`net48`).
-- **UI-Agnostic Class Libraries:** View-model and service projects can target **`.NET Standard 2.0`** (`netstandard2.0`) when referencing `AvalonDock.Core`, `AvalonDock.Mvvm*`, `AvalonDock.DependencyInjection`, or `AvalonDock.Serializer.*`.
+- **UI-Agnostic Class Libraries:** View-model and service projects can target **`.NET Standard 2.0`** (`netstandard2.0`) when referencing `AvalonDock.Core`, `AvalonDock.Mvvm*`, `AvalonDock.DependencyInjection`, or `AvalonDock.Serializer.Xml`.
 - **IDE / Tooling:** Visual Studio 2022 or later (recommended), JetBrains Rider, or VS Code with the .NET SDK CLI.

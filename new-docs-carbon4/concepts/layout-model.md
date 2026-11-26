@@ -275,4 +275,4 @@ public sealed class NamedPaneUpdateStrategy : ILayoutUpdateStrategy
 
 - [Documents & Anchorables]({{ site.baseurl }}{% link concepts/documents-and-anchorables.md %}) — Detailed comparison of `LayoutDocument` and `LayoutAnchorable`.
 - [Layout Classes API Reference]({{ site.baseurl }}{% link api-reference/layout-classes.md %}) — Complete class hierarchy, properties, methods, and interfaces in `AvalonDock.Layout`.
-- [Layout Serialization Guide]({{ site.baseurl }}{% link guides/serialization.md %}) — How `LayoutRoot` maps to and from `LayoutRootDto` for XML and JSON persistence.
+- [Layout Serialization Guide]({{ site.baseurl }}{% link guides/serialization.md %}) — How `LayoutRoot` maps to and from `LayoutRootDto` for XML and custom DTO persistence.

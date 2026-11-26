@@ -3,68 +3,23 @@ title: Custom Themes
 layout: default
 parent: Guides
 nav_order: 6
-description: "Create custom AvalonDock themes using VS2026 JSON palettes, DictionaryTheme subclasses, or Arc XAML ResourceKeys overrides."
+description: "Create custom AvalonDock themes using DictionaryTheme subclasses or Arc XAML ResourceKeys overrides."
 ---
 
 # Custom Themes
 
-AvalonDock gives you three progressively deeper ways to create a custom theme—ranging from a 10-line JSON color override file to a reusable custom `Theme` package with tailored control templates.
+AvalonDock gives you two clean ways to create a custom theme—ranging from a runtime C# `DictionaryTheme` accent override to a reusable compiled XAML `Theme` class with tailored brushes or control templates.
 
 | Approach | Effort | Best When You Want To… |
 |:---------|:-------|:-----------------------|
-| **1. VS2026 JSON or `.vstheme` Palette (`VsTheme`)** | Lowest (zero XAML) | Re-color headers, tabs, borders, and accents on top of Visual Studio 2015/2022/2026 templates |
-| **2. `DictionaryTheme` Subclass in C#** | Low | Override specific `ComponentResourceKey` brushes dynamically at runtime (e.g., user-chosen accent colors) |
-| **3. Custom `Theme` Subclass + XAML ResourceDictionary** | Medium | Ship a reusable XAML theme class across projects or customize control templates |
+| **1. `DictionaryTheme` Subclass in C#** | Low (zero XAML) | Override specific `ComponentResourceKey` brushes dynamically at runtime (e.g., user-chosen accent colors) |
+| **2. Custom `Theme` Subclass + XAML ResourceDictionary** | Medium | Ship a reusable XAML theme class across projects or customize control templates |
 
 ---
 
-## Approach 1: Custom Palette via VS2026 JSON or `.vstheme` (Zero XAML)
+## Approach 1: Dynamic Brush Overrides with `DictionaryTheme`
 
-The fastest way to build a custom dark or light theme without writing any WPF XAML is [`VsTheme`]({{ site.baseurl }}{% link themes/vs.md %}) from `Dirkster.AvalonDock.Themes.VS`.
-
-### Layering a JSON Override on Top of VS2022 / VS2026 Templates
-
-Create a JSON file (for example, `brand-dark.json`) listing only the Visual Studio color tokens you want to override in 8-digit `AARRGGBB` hex format:
-
-```json
-[
-  { "Name": "EnvironmentBackground",   "Background": "FF181A1F" },
-  { "Name": "EnvironmentHeader",       "Background": "FF21252B" },
-  { "Name": "EnvironmentTab",          "Background": "FF21252B" },
-  { "Name": "EnvironmentTabInactive",  "Background": "FF1B1D23" },
-  { "Name": "FileTabSelectedBorder",   "Background": "FF00B4D8" },
-  { "Name": "FileTabSelectedText",     "Background": "FFFFFFFF" },
-  { "Name": "ToolWindowTabSelectedTab","Background": "FF00B4D8" },
-  { "Name": "ToolWindowBorder",        "Background": "FF2C313A" },
-  { "Name": "TitleBarActiveBorder",    "Background": "FF00B4D8" },
-  { "Name": "TitleBarActiveText",      "Background": "FFFFFFFF" }
-]
-```
-
-Load it with `VsTheme.FromJson(...)`, optionally specifying the VS2022 rounded-tab `Generic.xaml` template dictionary:
-
-```csharp
-using System;
-using AvalonDock.Themes.VS;
-
-var vs2022Templates = new Uri(
-    "/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml",
-    UriKind.Relative);
-
-dockManager.Theme = VsTheme.FromJson(
-    filePath: "Themes/brand-dark.json",
-    basePalette: null,
-    genericXamlUri: vs2022Templates);
-```
-
-{: .tip }
-If you already have a Visual Studio `.vstheme` file exported from the Visual Studio Color Theme Designer (or a `.vstheme.gz` compressed stream), pass it directly to `new VsTheme("Themes/custom.vstheme")` or `{vs:VsTheme Path=Themes/custom.vstheme}` in XAML. See [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) for all `VsTheme` and `VsThemeColorPalette` overloads.
-
----
-
-## Approach 2: Dynamic Brush Overrides with `DictionaryTheme`
-
-When you want to start from an existing theme (such as `ArcDarkTheme` or `Vs2013DarkTheme`) and override brushes in C#—for example, applying a user-picked accent color at runtime—subclass `DictionaryTheme`.
+When you want to start from an existing theme (such as `ArcDarkTheme` or `ArcLightTheme`) and override brushes in C#—for example, applying a user-picked accent color at runtime—subclass `DictionaryTheme`.
 
 {: .important }
 `DictionaryTheme` is an **`abstract`** class (`public abstract class DictionaryTheme : Theme`). Always define a small concrete subclass that passes your `ResourceDictionary` to `base(dictionary)`.
@@ -141,12 +96,9 @@ dockManager.Theme = new AccentedArcDarkTheme(Color.FromRgb(0x10, 0xB9, 0x81));
 
 ---
 
-## Approach 3: Reusable XAML `Theme` Subclass
+## Approach 2: Reusable XAML `Theme` Subclass
 
-To package a custom theme as compiled XAML resources (either inside your application or in a dedicated class library), create a XAML `ResourceDictionary` and a `Theme` subclass returning its pack URI.
-
-{: .warning }
-In AvalonDock v5, `Dirkster.AvalonDock.Themes.VS2013` migrated from loose XAML brush files (`DarkBrushs.xaml` and `DarkTheme.xaml`) to embedded `.vstheme.gz` resources (`#572`). Do **not** merge those removed `AvalonDock.Themes.VS2013` XAML files—they no longer exist and will throw `IOException` at runtime. For XAML-merged custom themes, base your dictionary on **`AvalonDock.Themes.Arc`** (`DarkBrushs.xaml` + `Themes/Generic.xaml`), **`AvalonDock.Themes.Expression`**, **`AvalonDock.Themes.Metro`**, or **`AvalonDock.Themes.Aero`**.
+To package a custom theme as compiled XAML resources (either inside your application or in a dedicated class library), create a XAML `ResourceDictionary` and a `Theme` subclass returning its pack URI. For modern flat styling, base your dictionary on **`AvalonDock.Themes.Arc`** (`DarkBrushs.xaml` + `Themes/Generic.xaml`), or use **`AvalonDock.Themes.Expression`**, **`AvalonDock.Themes.Metro`**, or **`AvalonDock.Themes.Aero`**.
 
 ### Step 1: Create the Theme `ResourceDictionary`
 
@@ -240,9 +192,9 @@ public sealed class BrandDarkTheme : Theme
 
 ---
 
-## Key `ResourceKeys` Reference (`Arc`, `VS`, `VS2013`)
+## Key `ResourceKeys` Reference (`AvalonDock.Themes.Arc`)
 
-`AvalonDock.Themes.Arc.Themes.ResourceKeys`, `AvalonDock.Themes.VS.Themes.ResourceKeys`, and `AvalonDock.Themes.VS2013.Themes.ResourceKeys` share a consistent set of `ComponentResourceKey` names grouped by UI area:
+`AvalonDock.Themes.Arc.Themes.ResourceKeys` exposes a comprehensive set of `ComponentResourceKey` properties grouped by UI area:
 
 | UI Area | Key Properties on `ResourceKeys` | Value Type |
 |:--------|:---------------------------------|:-----------|
@@ -258,9 +210,6 @@ public sealed class BrandDarkTheme : Theme
 | **Floating Windows** | `FloatingDocumentWindowBackground`, `FloatingDocumentWindowBorder`, `FloatingToolWindowBackground`, `FloatingToolWindowBorder` | `Brush` |
 | **Ctrl+Tab Navigator** | `NavigatorWindowBackground`, `NavigatorWindowForeground`, `NavigatorWindowSelectedBackground`, `NavigatorWindowSelectedText` | `Brush` |
 | **Docking Drop Indicators** | `DockingButtonWidthKey` (`double`), `DockingButtonHeightKey` (`double`), `DockingButtonForegroundBrushKey`, `DockingButtonForegroundArrowBrushKey`, `DockingButtonStarBorderBrushKey`, `DockingButtonStarBackgroundBrushKey`, `PreviewBoxBorderBrushKey`, `PreviewBoxBackgroundBrushKey` | `double` / `Brush` |
-
-{: .important }
-Each assembly's `ComponentResourceKey` is scoped to its own `typeof(ResourceKeys)` (`Arc.Themes.ResourceKeys`, `VS.Themes.ResourceKeys`, or `VS2013.Themes.ResourceKeys`). Always reference the `ResourceKeys` class from the **same** assembly whose `Generic.xaml` control templates you merged.
 
 ---
 
@@ -301,5 +250,4 @@ Before shipping a custom theme, verify every visual state:
 
 - [Theming Guide]({{ site.baseurl }}{% link guides/theming.md %}) — Applying and switching built-in themes.
 - [Arc Theme]({{ site.baseurl }}{% link themes/arc.md %}) — Pack URIs and `ResourceKeys` details for `Dirkster.AvalonDock.Themes.Arc`.
-- [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) — `.vstheme`, `.vstheme.gz`, and VS2026 JSON theme reference.
 - [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) — Step-by-step walkthrough building a multi-theme app with custom corporate branding.

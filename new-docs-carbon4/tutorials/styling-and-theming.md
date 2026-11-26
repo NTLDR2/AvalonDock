@@ -3,12 +3,12 @@ title: "Tutorial: Styling & Theming"
 layout: default
 parent: Tutorials
 nav_order: 3
-description: "Build a WPF docking application with live switching across all seven theme packages, persisted user theme preferences, and a custom corporate theme."
+description: "Build a WPF docking application with live switching across all five theme packages, persisted user theme preferences, and custom corporate themes."
 ---
 
 # Tutorial: Styling & Theming
 
-In this tutorial you will build a WPF application that switches live across **all seven** AvalonDock theme packages (plus `GenericTheme`), synchronizes the host window chrome with light and dark themes, persists the user's selected theme across restarts, and adds both a XAML-based corporate theme and a JSON-based custom palette theme.
+In this tutorial you will build a WPF application that switches live across **all five** AvalonDock theme packages (plus `GenericTheme`), synchronizes the host window chrome with light and dark themes, persists the user's selected theme across restarts, and adds both a XAML-based corporate theme and a runtime C# `DictionaryTheme` accent override.
 
 ---
 
@@ -22,8 +22,6 @@ cd AvalonDockThemeDemo
 
 dotnet add package Dirkster.AvalonDock
 dotnet add package Dirkster.AvalonDock.Themes.Arc
-dotnet add package Dirkster.AvalonDock.Themes.VS
-dotnet add package Dirkster.AvalonDock.Themes.VS2013
 dotnet add package Dirkster.AvalonDock.Themes.VS2010
 dotnet add package Dirkster.AvalonDock.Themes.Expression
 dotnet add package Dirkster.AvalonDock.Themes.Metro
@@ -35,24 +33,12 @@ dotnet add package CommunityToolkit.Mvvm
 
 ## Step 1: Review All Built-in Theme Classes
 
-Across the seven theme packages and `Dirkster.AvalonDock`, 20 ready-to-use `Theme` classes are available:
+Across the five theme packages and `Dirkster.AvalonDock`, 8 ready-to-use `Theme` classes are available:
 
 | Theme Class | Namespace | NuGet Package | Palette |
 |:------------|:----------|:--------------|:--------|
 | `ArcDarkTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Arc` | Dark |
 | `ArcLightTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Arc` | Light |
-| `VS2026DarkTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Dark |
-| `VS2026LightTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Light |
-| `VS2026BlueTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Blue / Light |
-| `VS2022DarkTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Dark |
-| `VS2022LightTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Light |
-| `VS2022BlueTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Blue / Light |
-| `VS2015DarkTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Dark |
-| `VS2015LightTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Light |
-| `VS2015BlueTheme` | `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | Blue / Light |
-| `Vs2013DarkTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.VS2013` | Dark |
-| `Vs2013LightTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.VS2013` | Light |
-| `Vs2013BlueTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.VS2013` | Blue / Light |
 | `VS2010Theme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.VS2010` | Blue-Gray |
 | `ExpressionDarkTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Expression` | Dark |
 | `ExpressionLightTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Expression` | Light |
@@ -65,9 +51,6 @@ Across the seven theme packages and `Dirkster.AvalonDock`, 20 ready-to-use `Them
 ## Step 2: Create a Custom Corporate XAML Theme
 
 Before building the theme selector, let's add a custom corporate theme (`CorporateTheme`) built on top of `Dirkster.AvalonDock.Themes.Arc` using verified `AvalonDock.Themes.Arc.Themes.ResourceKeys` overrides.
-
-{: .warning }
-Do **not** merge the v4 `DarkBrushs.xaml` or `DarkTheme.xaml` files from `AvalonDock.Themes.VS2013` as shown in older v4 samples—those loose XAML files were replaced by embedded `.vstheme.gz` resources in v5 (`#572`). Use `AvalonDock.Themes.Arc` for XAML dictionary inheritance, or `VsTheme.FromJson` (shown in Step 3) for Visual Studio palette overrides.
 
 ### `Themes/BrandOverrides.xaml`
 
@@ -159,37 +142,60 @@ public sealed class CorporateTheme : Theme
 
 ---
 
-## Step 3: Add a Custom JSON Palette Option (`VsTheme`)
+## Step 3: Add a Dynamic C# Palette Theme (`DictionaryTheme`)
 
-You can also create a custom Visual Studio 2026-style theme directly from JSON without any XAML file using `VsJsonThemeParser` and `VsTheme`:
+You can also create a custom accent theme purely in C# without writing an extra XAML file by subclassing `DictionaryTheme`:
 
 ```csharp
 using System;
-using AvalonDock.Themes.VS;
+using System.Windows;
+using System.Windows.Media;
+using AvalonDock.Themes;
+using ArcKeys = AvalonDock.Themes.Arc.Themes.ResourceKeys;
 
 namespace AvalonDockThemeDemo.Themes;
 
-public static class CustomVsPaletteFactory
+public sealed class NordFrostTheme : DictionaryTheme
 {
-    private const string NordJson = """
-        [
-          { "Name": "EnvironmentBackground",    "Background": "FF2E3440" },
-          { "Name": "EnvironmentHeader",        "Background": "FF3B4252" },
-          { "Name": "EnvironmentTab",           "Background": "FF3B4252" },
-          { "Name": "EnvironmentTabInactive",   "Background": "FF2E3440" },
-          { "Name": "FileTabSelectedBorder",    "Background": "FF88C0D0" },
-          { "Name": "FileTabSelectedText",      "Background": "FF2E3440" },
-          { "Name": "ToolWindowTabSelectedTab", "Background": "FF88C0D0" },
-          { "Name": "ToolWindowBorder",         "Background": "FF434C5E" },
-          { "Name": "TitleBarActiveBorder",     "Background": "FF5E81AC" },
-          { "Name": "TitleBarActiveText",       "Background": "FFECEFF4" }
-        ]
-        """;
-
-    public static VsTheme CreateNordTheme()
+    public NordFrostTheme()
+        : base(BuildDictionary())
     {
-        var palette = VsJsonThemeParser.Parse(NordJson);
-        return new VsTheme(palette);
+    }
+
+    public override string Name => "Nord Frost";
+
+    private static ResourceDictionary BuildDictionary()
+    {
+        var dict = new ResourceDictionary();
+        dict.MergedDictionaries.Add(new ResourceDictionary
+        {
+            Source = new Uri("/AvalonDock.Themes.Arc;component/DarkTheme.xaml", UriKind.Relative)
+        });
+
+        var accent = Color.FromRgb(0x88, 0xC0, 0xD0);
+        var accentBrush = Frozen(accent);
+        var darkText = Frozen(Color.FromRgb(0x2E, 0x34, 0x40));
+
+        dict[ArcKeys.ControlAccentColorKey] = accent;
+        dict[ArcKeys.ControlAccentBrushKey] = accentBrush;
+        dict[ArcKeys.Background] = Frozen(Color.FromRgb(0x2E, 0x34, 0x40));
+        dict[ArcKeys.TabBackground] = Frozen(Color.FromRgb(0x3B, 0x42, 0x52));
+        dict[ArcKeys.PanelBorderBrush] = Frozen(Color.FromRgb(0x43, 0x4C, 0x5E));
+        dict[ArcKeys.DocumentWellTabSelectedActiveBackground] = accentBrush;
+        dict[ArcKeys.DocumentWellTabSelectedActiveText] = darkText;
+        dict[ArcKeys.ToolWindowCaptionActiveBackground] = accentBrush;
+        dict[ArcKeys.ToolWindowCaptionActiveText] = darkText;
+        dict[ArcKeys.DockingButtonForegroundBrushKey] = accentBrush;
+        dict[ArcKeys.PreviewBoxBorderBrushKey] = accentBrush;
+
+        return dict;
+    }
+
+    private static SolidColorBrush Frozen(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
     }
 }
 ```
@@ -204,7 +210,6 @@ Create `Models/ThemeOption.cs` to describe each selectable theme along with whet
 using System;
 using System.Collections.Generic;
 using AvalonDock.Themes;
-using AvalonDock.Themes.VS;
 using AvalonDockThemeDemo.Themes;
 
 namespace AvalonDockThemeDemo.Models;
@@ -219,38 +224,26 @@ public sealed record ThemeOption(
     {
         new("arc-dark",       "Arc Dark",               IsDark: true,  () => new ArcDarkTheme()),
         new("arc-light",      "Arc Light",              IsDark: false, () => new ArcLightTheme()),
-        new("vs2026-dark",    "Visual Studio 2026 Dark",  IsDark: true,  () => new VS2026DarkTheme()),
-        new("vs2026-light",   "Visual Studio 2026 Light", IsDark: false, () => new VS2026LightTheme()),
-        new("vs2026-blue",    "Visual Studio 2026 Blue",  IsDark: false, () => new VS2026BlueTheme()),
-        new("vs2022-dark",    "Visual Studio 2022 Dark",  IsDark: true,  () => new VS2022DarkTheme()),
-        new("vs2022-light",   "Visual Studio 2022 Light", IsDark: false, () => new VS2022LightTheme()),
-        new("vs2022-blue",    "Visual Studio 2022 Blue",  IsDark: false, () => new VS2022BlueTheme()),
-        new("vs2015-dark",    "Visual Studio 2015 Dark",  IsDark: true,  () => new VS2015DarkTheme()),
-        new("vs2015-light",   "Visual Studio 2015 Light", IsDark: false, () => new VS2015LightTheme()),
-        new("vs2015-blue",    "Visual Studio 2015 Blue",  IsDark: false, () => new VS2015BlueTheme()),
-        new("vs2013-dark",    "Visual Studio 2013 Dark",  IsDark: true,  () => new Vs2013DarkTheme()),
-        new("vs2013-light",   "Visual Studio 2013 Light", IsDark: false, () => new Vs2013LightTheme()),
-        new("vs2013-blue",    "Visual Studio 2013 Blue",  IsDark: false, () => new Vs2013BlueTheme()),
-        new("vs2010",         "Visual Studio 2010",       IsDark: false, () => new VS2010Theme()),
+        new("vs2010",         "Visual Studio 2010",     IsDark: false, () => new VS2010Theme()),
         new("expr-dark",      "Expression Dark",        IsDark: true,  () => new ExpressionDarkTheme()),
         new("expr-light",     "Expression Light",       IsDark: false, () => new ExpressionLightTheme()),
         new("metro",          "Metro",                  IsDark: false, () => new MetroTheme()),
         new("aero",           "Aero",                   IsDark: false, () => new AeroTheme()),
         new("generic",        "Generic (System)",       IsDark: false, () => new GenericTheme()),
         new("corporate-teal", "Corporate Teal (XAML)",  IsDark: true,  () => new CorporateTheme()),
-        new("nord-json",      "Nord Frost (JSON)",      IsDark: true,  CustomVsPaletteFactory.CreateNordTheme)
+        new("nord-frost",     "Nord Frost (C#)",        IsDark: true,  () => new NordFrostTheme())
     };
 
     public override string ToString() => DisplayName;
 }
 ```
 
-Create `Services/UserSettingsService.cs` to persist the user's choice in `%LOCALAPPDATA%`:
+Create `Services/UserSettingsService.cs` to persist the user's choice in `%LOCALAPPDATA%` using standard XML (`System.Xml.Linq`):
 
 ```csharp
 using System;
 using System.IO;
-using System.Text.Json;
+using System.Xml.Linq;
 
 namespace AvalonDockThemeDemo.Services;
 
@@ -264,7 +257,7 @@ public static class UserSettingsService
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "AvalonDockThemeDemo",
-        "settings.json");
+        "settings.xml");
 
     public static UserSettings Load()
     {
@@ -272,13 +265,17 @@ public static class UserSettingsService
         {
             if (File.Exists(SettingsPath))
             {
-                return JsonSerializer.Deserialize<UserSettings>(File.ReadAllText(SettingsPath))
-                       ?? new UserSettings();
+                var doc = XDocument.Load(SettingsPath);
+                var themeId = doc.Root?.Attribute("ThemeId")?.Value;
+                if (!string.IsNullOrWhiteSpace(themeId))
+                {
+                    return new UserSettings { ThemeId = themeId };
+                }
             }
         }
         catch
         {
-            // Fall back to default settings if settings.json is unreadable
+            // Fall back to default settings if settings.xml is unreadable
         }
 
         return new UserSettings();
@@ -287,9 +284,9 @@ public static class UserSettingsService
     public static void Save(UserSettings settings)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
-        File.WriteAllText(
-            SettingsPath,
-            JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
+        var doc = new XDocument(
+            new XElement("UserSettings", new XAttribute("ThemeId", settings.ThemeId)));
+        doc.Save(SettingsPath);
     }
 }
 ```
@@ -494,14 +491,14 @@ Run the application:
 dotnet run
 ```
 
-1. Switch between **Arc Dark**, **Visual Studio 2026 Dark**, **Visual Studio 2013 Blue**, **Expression Dark**, **Corporate Teal (XAML)**, and **Nord Frost (JSON)**—notice how tabs, headers, splitters, and host surfaces update immediately without losing open documents or docking positions.
+1. Switch between **Arc Dark**, **Arc Light**, **Visual Studio 2010**, **Expression Dark**, **Corporate Teal (XAML)**, and **Nord Frost (C#)**—notice how tabs, headers, splitters, and host surfaces update immediately without losing open documents or docking positions.
 2. Drag **Solution Explorer** out into a floating window and switch themes again—floating windows receive the new theme dictionary automatically.
-3. Close and relaunch the app—your last chosen theme is restored from `%LOCALAPPDATA%\AvalonDockThemeDemo\settings.json`.
+3. Close and relaunch the app—your last chosen theme is restored from `%LOCALAPPDATA%\AvalonDockThemeDemo\settings.xml`.
 
 ---
 
 ## Next Steps
 
-- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all seven theme packages.
+- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all five theme packages.
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Full `ResourceKeys` reference and `DictionaryTheme` customization patterns.
-- [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Combine persisted theme settings with XML or JSON docking layout save/restore.
+- [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Combine persisted theme settings with XML docking layout save/restore.

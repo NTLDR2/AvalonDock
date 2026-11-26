@@ -126,9 +126,6 @@ namespace AvalonDock.Tools
                         ////                        Application.Current.Resources[MLib.Themes.ResourceKeys.ControlAccentColorKey] = accentColor;
                         ////                        Application.Current.Resources[MLib.Themes.ResourceKeys.ControlAccentBrushKey] = new SolidColorBrush(accentColor);
                         ////
-                        ////                        Application.Current.Resources[AvalonDock.Themes.VS2013.Themes.ResourceKeys.ControlAccentColorKey] = accentColor;
-                        ////                        Application.Current.Resources[AvalonDock.Themes.VS2013.Themes.ResourceKeys.ControlAccentBrushKey] = new SolidColorBrush(accentColor);
-                        ////
                         ////                        Application.Current.Resources[NumericUpDownLib.Themes.ResourceKeys.ControlAccentColorKey] = accentColor;
                         ////                        Application.Current.Resources[NumericUpDownLib.Themes.ResourceKeys.ControlAccentBrushKey] = new SolidColorBrush(accentColor);
 

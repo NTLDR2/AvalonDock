@@ -1,54 +1,40 @@
 namespace AvalonDockTest
 {
-	using System;
-	using System.Collections.Generic;
 	using System.Windows;
 	using System.Windows.Controls;
+	using System.Windows.Media;
 
 	using NUnit.Framework;
 
 	using AvalonDock;
 	using AvalonDock.Controls;
 	using AvalonDock.Themes;
-	using AvalonDock.Themes.VS;
 
 	/// <summary>
-	/// Regression tests for #683: every VS theme must provide the <see cref="ToggleDockingManager"/>
-	/// specific styles and must not depend on resources from other theme assemblies.
+	/// Regression tests for #683: <see cref="VS2010Theme"/> must provide the
+	/// <see cref="ToggleDockingManager"/> specific styles and resolve control templates cleanly.
 	/// </summary>
 	[TestFixture]
 	[Apartment(System.Threading.ApartmentState.STA)]
 	public class VsThemeToggleDockingManagerTests
 	{
-		private static IEnumerable<TestCaseData> VsThemes()
+		[Test]
+		public void VS2010Theme_ProvidesToggleDockingManagerStyles()
 		{
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015BlueTheme())).SetName("VS2015Blue");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015DarkTheme())).SetName("VS2015Dark");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015LightTheme())).SetName("VS2015Light");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022BlueTheme())).SetName("VS2022Blue");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022DarkTheme())).SetName("VS2022Dark");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022LightTheme())).SetName("VS2022Light");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026BlueTheme())).SetName("VS2026Blue");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026DarkTheme())).SetName("VS2026Dark");
-			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026LightTheme())).SetName("VS2026Light");
-		}
-
-		[TestCaseSource(nameof(VsThemes))]
-		public void Theme_ProvidesToggleDockingManagerStyles(Func<DictionaryTheme> createTheme)
-		{
-			var dict = createTheme().ThemeResourceDictionary;
+			_ = new Border();
+			var dict = new ResourceDictionary { Source = new VS2010Theme().GetResourceUri() };
 
 			Assert.That(dict["ToggleAnchorablePaneControlStyle"], Is.InstanceOf<Style>());
-			Assert.That(dict[typeof(ToggleAnchorablePaneTitle)], Is.InstanceOf<Style>());
+			Assert.That(dict[ToggleDockButton.ForegroundBrushKey], Is.InstanceOf<Brush>());
 			Assert.That(dict[typeof(ToggleDockButton)], Is.InstanceOf<Style>());
 			Assert.That(dict[typeof(ToggleDockingManager)], Is.InstanceOf<Style>());
 		}
 
-		[TestCaseSource(nameof(VsThemes))]
-		public void ToggleAnchorablePaneTitle_TemplateResolvesAllResources(Func<DictionaryTheme> createTheme)
+		[Test]
+		public void VS2010Theme_ToggleAnchorablePaneTitle_TemplateResolvesAllResources()
 		{
 			var host = new Border();
-			host.Resources.MergedDictionaries.Add(createTheme().ThemeResourceDictionary);
+			host.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new VS2010Theme().GetResourceUri() });
 			var title = new ToggleAnchorablePaneTitle();
 			host.Child = title;
 

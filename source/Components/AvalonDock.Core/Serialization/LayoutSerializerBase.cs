@@ -184,7 +184,7 @@ namespace AvalonDock.Core
 			Deserialize(stream);
 		}
 
-		/// <summary>Writes the layout DTO to the stream in the concrete format (XML, JSON, etc.).</summary>
+		/// <summary>Writes the layout DTO to the stream in the concrete format (e.g., XML).</summary>
 		/// <param name="stream">The stream to write to.</param>
 		/// <param name="dto">The layout root DTO to serialize.</param>
 		protected abstract void SerializeCore(Stream stream, LayoutRootDto dto);

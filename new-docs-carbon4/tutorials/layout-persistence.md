@@ -3,13 +3,13 @@ title: "Tutorial: Layout Persistence"
 layout: default
 parent: Tutorials
 nav_order: 4
-description: "Save and restore AvalonDock v5 layouts with XML or JSON across code-behind, ToggleDockingManager + IDockLayoutService, and classic MVVM."
+description: "Save and restore AvalonDock v5 layouts with XmlLayoutSerializer across code-behind, ToggleDockingManager + IDockLayoutService, and classic MVVM."
 ---
 
 # Tutorial: Layout Persistence
 {: .no_toc }
 
-In this tutorial you will add reliable layout persistence to an AvalonDock v5 application so panel sizes, splits, floating windows, standalone detached windows, and sidebar toggle states are saved on exit and restored on startup.
+In this tutorial you will add reliable XML layout persistence to an AvalonDock v5 application so panel sizes, splits, floating windows, standalone detached windows, and sidebar toggle states are saved on exit and restored on startup.
 {: .fs-6 .fw-300 }
 
 {: .tip }
@@ -29,19 +29,17 @@ The patterns in this tutorial are modeled directly on the `AvalonDockCodeApp` (`
 - **Part 1:** Basic code-behind persistence for XAML-defined `DockingManager` layouts
 - **Part 2A:** Modern v5 MVVM persistence for `ToggleDockingManager` + `IDockLayoutService` (continuing directly from [Tutorial: Build an MVVM IDE]({{ site.baseurl }}{% link tutorials/mvvm-ide.md %}))
 - **Part 2B:** Classic MVVM persistence for `DockingManager` with `DocumentsSource` and `AnchorablesSource`
-- **Part 3:** Compact and indented JSON persistence with `JsonLayoutSerializer`
-- **Part 4–6:** Detached/floating window behavior, runtime **Reset Layout**, and defensive error recovery
+- **Part 3–5:** Detached/floating window behavior, runtime **Reset Layout**, and defensive error recovery
 
 ---
 
 ## Prerequisites
 
-Install `Dirkster.AvalonDock` plus either (or both) serializer packages:
+Install `Dirkster.AvalonDock` plus `Dirkster.AvalonDock.Serializer.Xml`:
 
 ```bash
 dotnet add package Dirkster.AvalonDock
 dotnet add package Dirkster.AvalonDock.Serializer.Xml
-dotnet add package Dirkster.AvalonDock.Serializer.Json
 ```
 
 ---
@@ -72,7 +70,7 @@ private static void EnsureParentDirectory(string filePath)
 
 ### Step 2: Save on Window Close
 
-`XmlLayoutSerializer` (and `JsonLayoutSerializer`) exposes `Serialize(string filepath)` directly via `ILayoutSerializer` / `LayoutSerializerBase`, as well as `Serialize(Stream)` when writing to memory or custom streams:
+`XmlLayoutSerializer` exposes `Serialize(string filepath)` directly via `ILayoutSerializer` / `LayoutSerializerBase`, as well as `Serialize(Stream)` when writing to memory or custom streams:
 
 ```csharp
 using System.ComponentModel;
@@ -502,45 +500,7 @@ public partial class MainWindow : Window
 
 ---
 
-## Part 3: JSON Serialization
-
-`JsonLayoutSerializer` uses the exact same `ILayoutSerializer` methods and `LayoutSerializationCallback` contract as `XmlLayoutSerializer`, writing compact, human-readable JSON with `System.Text.Json`:
-
-```csharp
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using AvalonDock.Serializer.Json;
-
-// Save indented JSON (default options)
-new JsonLayoutSerializer(DockManager).Serialize("layout.json");
-
-// Or customize formatting while preserving AvalonDock's polymorphic "_type" resolver
-var compactOptions = new JsonSerializerOptions
-{
-    WriteIndented = false,
-    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-};
-new JsonLayoutSerializer(DockManager, compactOptions).Serialize("layout.min.json");
-
-// Restore JSON
-var readerSerializer = new JsonLayoutSerializer(DockManager);
-readerSerializer.LayoutSerializationCallback += OnLayoutCallback;
-readerSerializer.Deserialize("layout.json");
-```
-
-### XML vs JSON Comparison
-
-| Aspect | `XmlLayoutSerializer` | `JsonLayoutSerializer` |
-|:-------|:----------------------|:-----------------------|
-| **Package** | `Dirkster.AvalonDock.Serializer.Xml` | `Dirkster.AvalonDock.Serializer.Json` |
-| **Output size** | Larger (XML elements & attributes) | Smaller (nulls omitted, compact syntax) |
-| **Polymorphism** | XML element names (`<LayoutDocument>`, `<LayoutAnchorable>`) | `"_type"` discriminator where base DTO is abstract |
-| **Legacy v4 files** | Reads v4 XML layouts (BOM & `"True"`/`"False"` normalization) | v5+ JSON layouts |
-| **Formatting options** | Clean namespace-free XML | Configurable via `JsonSerializerOptions` |
-
----
-
-## Part 4: What Gets Serialized (Including Floating & Detached Windows)
+## Part 3: What Gets Serialized (Including Floating & Detached Windows)
 
 ### Serialized Layout State
 
@@ -557,12 +517,12 @@ readerSerializer.Deserialize("layout.json");
 | Application State | Recommended Persistence Strategy |
 |:------------------|:---------------------------------|
 | **Document contents & dirty state** | Save open file paths/contents in your application session file and reload in `LayoutSerializationCallback` |
-| **ViewModel filter/scroll/tree state** | Persist ViewModel settings in JSON/SQLite keyed by `IDockable.Id` |
+| **ViewModel filter/scroll/tree state** | Persist ViewModel settings in XML/SQLite keyed by `IDockable.Id` |
 | **`IconSource` & `ToolTip`** | Bind via `DataTemplate` or `LayoutItemContainerStyleSelector` |
 
 ---
 
-## Part 5: Reset to Default Layout
+## Part 4: Reset to Default Layout
 
 Give users a **Window → Reset Layout** menu command using one of three patterns:
 
@@ -572,7 +532,7 @@ Capture the initial layout into a `MemoryStream` in `Loaded` before deserializin
 
 ### Approach B: Restore from an Embedded Resource
 
-Ship a curated `DefaultLayout.xml` (or `.json`) as an `<EmbeddedResource>` in your `.csproj`:
+Ship a curated `DefaultLayout.xml` as an `<EmbeddedResource>` in your `.csproj`:
 
 ```csharp
 using System.Reflection;
@@ -604,7 +564,7 @@ if (File.Exists(LayoutFilePath))
 
 ---
 
-## Part 6: Defensive Error Handling & The `ContentId` Contract
+## Part 5: Defensive Error Handling & The `ContentId` Contract
 
 User-edited or truncated layout files should never crash application startup. Always guard `Deserialize` with a `try`/`catch` that deletes or renames unreadable layout files:
 

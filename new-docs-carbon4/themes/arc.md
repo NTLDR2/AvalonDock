@@ -86,7 +86,7 @@ dockManager.Theme = new ArcLightTheme();
 
 ## Compiled XAML Pack URIs
 
-Unlike `VS` and `VS2013` (which generate brushes at runtime from `.vstheme` palettes), `AvalonDock.Themes.Arc` ships compiled XAML `ResourceDictionary` files, making it ideal as a base for XAML-merged [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}):
+`AvalonDock.Themes.Arc` ships compiled XAML `ResourceDictionary` files, making it ideal as a base for XAML-merged [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}):
 
 | Pack URI | Contents |
 |:---------|:---------|

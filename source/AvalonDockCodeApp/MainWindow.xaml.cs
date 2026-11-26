@@ -12,7 +12,6 @@ using AvalonDock.Core;
 using AvalonDock.DependencyInjection;
 using AvalonDock.Serializer.Xml;
 using AvalonDock.Themes;
-using AvalonDock.Themes.VS;
 using ToggleTestApp.ViewModels;
 
 namespace ToggleTestApp
@@ -59,29 +58,11 @@ namespace ToggleTestApp
 		{
 			menuArcDark.IsChecked = sender == menuArcDark;
 			menuArcLight.IsChecked = sender == menuArcLight;
-			menuVs2015Dark.IsChecked = sender == menuVs2015Dark;
-			menuVs2015Light.IsChecked = sender == menuVs2015Light;
-			menuVs2015Blue.IsChecked = sender == menuVs2015Blue;
 
 			Theme theme;
 			bool isDark;
 
-			if (sender == menuVs2015Dark)
-			{
-				theme = new VS2015DarkTheme();
-				isDark = true;
-			}
-			else if (sender == menuVs2015Light)
-			{
-				theme = new VS2015LightTheme();
-				isDark = false;
-			}
-			else if (sender == menuVs2015Blue)
-			{
-				theme = new VS2015BlueTheme();
-				isDark = true;
-			}
-			else if (sender == menuArcLight)
+			if (sender == menuArcLight)
 			{
 				theme = new ArcLightTheme();
 				isDark = false;

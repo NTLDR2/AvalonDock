@@ -16,7 +16,6 @@ ECHO.
 ECHO Components\AvalonDock
 ECHO Components\AvalonDock.Themes.Aero
 ECHO Components\AvalonDock.Themes.Expression
-ECHO Components\AvalonDock.Themes.VS2013
 ECHO Components\AvalonDock.Themes.VS2010
 ECHO Components\AvalonDock.Themes.Metro
 ECHO.
@@ -88,11 +87,6 @@ ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS2010
 ECHO.
 RMDIR /S /Q Components\AvalonDock.Themes.VS2010\bin
 RMDIR /S /Q Components\AvalonDock.Themes.VS2010\obj
-
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS2013
-ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.VS2013\bin
-RMDIR /S /Q Components\AvalonDock.Themes.VS2013\obj
 
 ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Metro
 ECHO.

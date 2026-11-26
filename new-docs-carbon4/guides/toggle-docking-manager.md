@@ -57,8 +57,7 @@ dockManager.LayoutPriority = DockLayoutPriority.BottomFullWidth;
 
 `ToggleDockingManager` works out of the box with **every** AvalonDock theme package:
 - `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`)
-- `Dirkster.AvalonDock.Themes.VS` (`VS2015*`, `VS2022*`, `VS2026*`, and custom `.vstheme` / JSON themes — natively styled without requiring `Themes.Arc` resources since `v5.0.2`)
-- `Dirkster.AvalonDock.Themes.VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, and built-in `GenericTheme`
+- `Dirkster.AvalonDock.Themes.VS2010`, `Expression`, `Metro`, `Aero`, and built-in `GenericTheme`
 
 | Arc Dark | Arc Light |
 |:---------|:----------|

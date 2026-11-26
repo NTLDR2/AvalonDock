@@ -37,12 +37,11 @@ Be sure to check out the [Wiki](https://github.com/Dirkster99/AvalonDock/wiki) a
 | [Dirkster.AvalonDock.Mvvm.CommunityToolkit](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Mvvm.CommunityToolkit.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | CommunityToolkit.Mvvm integration (`ObservableDockableBase`, `ObservableToolboxBase`) with `[ObservableProperty]` support |
 | [Dirkster.AvalonDock.DependencyInjection](http://nuget.org/packages/Dirkster.AvalonDock.DependencyInjection) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.DependencyInjection.svg)](http://nuget.org/packages/Dirkster.AvalonDock.DependencyInjection) | `IServiceCollection` extensions for DI registration |
 
-### Serializers
+### Serializer
 
 | Package | Downloads | Description |
 |:--------|:----------|:------------|
 | [Dirkster.AvalonDock.Serializer.Xml](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Serializer.Xml.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | XML layout serialization |
-| [Dirkster.AvalonDock.Serializer.Json](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Json) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Serializer.Json.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Json) | JSON layout serialization (**new in v5**) |
 
 ### Themes
 
@@ -52,9 +51,7 @@ Be sure to check out the [Wiki](https://github.com/Dirkster99/AvalonDock/wiki) a
 | [Dirkster.AvalonDock.Themes.Aero](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Aero.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | Aero theme |
 | [Dirkster.AvalonDock.Themes.Expression](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Expression.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | Expression theme |
 | [Dirkster.AvalonDock.Themes.Metro](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Metro.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | Metro theme |
-| [Dirkster.AvalonDock.Themes.VS](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.VS.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS) | Visual Studio Themes (2015, 2022) incl. .vstheme support |
-| [Dirkster.AvalonDock.Themes.VS2010](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.VS2010.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | Visual Studio 2010 theme (Legacy) |
-| [Dirkster.AvalonDock.Themes.VS2013](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2013) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.VS2013.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2013) | Visual Studio 2013 theme (Legacy) |
+| [Dirkster.AvalonDock.Themes.VS2010](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.VS2010.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | Visual Studio 2010 theme |
 
 ---
 
@@ -98,7 +95,7 @@ The `AvalonDock.DependencyInjection` package provides `IServiceCollection` exten
 | `AddDockLayoutService(configure)` | Register `IDockLayoutService` with a builder to configure toolboxes and toggle dock options in a single call |
 | `AddDockLayoutService()` | Register `IDockLayoutService` without builder configuration |
 | `AddAvalonDock<TFactory>()` | Register a custom `IFactory` implementation |
-| `AddAvalonDockSerializer<T>()` | Register an `ILayoutSerializer` (XML or JSON) |
+| `AddAvalonDockSerializer<T>()` | Register an `ILayoutSerializer` (such as `XmlLayoutSerializer`) |
 | `AddAvalonDockThemeManager<T>()` | Register a theme manager |
 | `AddDockingManager(factory)` | Register an `IDockingManager` wrapper |
 | `AddAutoHideManager<T>()` | Register an auto-hide manager |
@@ -336,8 +333,7 @@ AvalonDock                 WPF docking library (DockingManager, ToggleDockingMan
   └── net48
 
 AvalonDock.Serializer.Xml  XML layout persistence (extracted from core in v5)
-AvalonDock.Serializer.Json JSON layout persistence (new in v5)
-AvalonDock.Themes.*        Theme packages (Arc, Aero, Expression, Metro, VS2010, VS2013)
+AvalonDock.Themes.*        Theme packages (Arc, Aero, Expression, Metro, VS2010)
 ```
 
 ## Theming
@@ -349,16 +345,6 @@ Modern theme with compact tabs, rounded corners, and semi-transparent design ele
 ```csharp
 dockManager.Theme = new ArcDarkTheme();  // Dark mode
 dockManager.Theme = new ArcLightTheme(); // Light mode
-```
-
-### VS2013 Theme
-
-Classic Visual Studio 2013 look with Dark, Light, and Blue variants:
-
-```csharp
-dockManager.Theme = new Vs2013DarkTheme();
-dockManager.Theme = new Vs2013LightTheme();
-dockManager.Theme = new Vs2013BlueTheme();
 ```
 
 ### Other Themes

@@ -8,30 +8,38 @@ description: "Complete reference of breaking and behavioral changes between Aval
 
 # Breaking Changes in v5
 
-This page catalogs every source, binary, package, target-framework, and behavioral breaking change between AvalonDock v4.x and v5 (`v5.0.0`–`v5.0.2+`), along with new non-breaking capabilities.
+This page catalogs every source, binary, package, target-framework, and behavioral breaking change between AvalonDock v4.x and v5 (`v5.1.0`), along with new non-breaking capabilities.
 
 ---
 
 ## 1. Package & Namespace Changes
 
-### Serializers Extracted to Separate NuGet Packages
+### XML Serializer Extracted to a Separate NuGet Package
 
 **Impact:** High — affects every project that saves or restores layouts.
 
-`XmlLayoutSerializer` is no longer bundled inside `Dirkster.AvalonDock`. XML and JSON serializers now live in dedicated `netstandard2.0` packages:
+`XmlLayoutSerializer` is no longer bundled inside `Dirkster.AvalonDock`. It now lives in a dedicated zero-dependency `netstandard2.0` package:
 
 | Change | Details |
 |:-------|:--------|
 | **Removed from** | `Dirkster.AvalonDock` |
-| **Moved to** | `Dirkster.AvalonDock.Serializer.Xml` (and new `Dirkster.AvalonDock.Serializer.Json`) |
+| **Moved to** | `Dirkster.AvalonDock.Serializer.Xml` |
 | **Old namespace** | `AvalonDock.Layout.Serialization` |
-| **New namespaces** | `AvalonDock.Serializer.Xml` / `AvalonDock.Serializer.Json` + `AvalonDock.Core` (for `LayoutSerializationCallbackEventArgs` and `UnresolvedContentHandling`) |
+| **New namespaces** | `AvalonDock.Serializer.Xml` + `AvalonDock.Core` (for `LayoutSerializationCallbackEventArgs` and `UnresolvedContentHandling`) |
 
 ```diff
 - using AvalonDock.Layout.Serialization;
 + using AvalonDock.Core;
 + using AvalonDock.Serializer.Xml;
 ```
+
+### Removal of `System.Text.Json`-Dependent Packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`)
+
+**Impact:** High if referencing `Themes.VS2013` from v4 (or `Serializer.Json` / `Themes.VS` from early v5.0).
+
+To guarantee clean, binding-redirect-free deployment on `.NET Framework 4.8` from Windows 7 SP1 64-bit through Windows 11 without out-of-band `System.Text.Json` assemblies, three packages are not shipped:
+- `Dirkster.AvalonDock.Serializer.Json` — use `Dirkster.AvalonDock.Serializer.Xml` (`XmlLayoutSerializer`), or implement a custom `LayoutSerializerBase` subclass in your own project if JSON persistence is required.
+- `Dirkster.AvalonDock.Themes.VS` & `Dirkster.AvalonDock.Themes.VS2013` — migrate to `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`), `Dirkster.AvalonDock.Themes.Expression` (`ExpressionDarkTheme`, `ExpressionLightTheme`), or `Dirkster.AvalonDock.Themes.VS2010` (`VS2010Theme`). Base custom XAML themes on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) with `AvalonDock.Themes.Arc.Themes.ResourceKeys`.
 
 ### UI-Agnostic Core Package Extracted
 
@@ -49,19 +57,9 @@ This page catalogs every source, binary, package, target-framework, and behavior
 
 All layout model classes (`LayoutRoot`, `LayoutPanel`, `LayoutGroup<T>`, `LayoutPositionableGroup<T>`, `LayoutContent`, `LayoutDocument`, `LayoutAnchorable`, `LayoutDocumentPane`, `LayoutAnchorablePane`, `LayoutAnchorSide`, `LayoutAnchorGroup`, `LayoutFloatingWindow`, etc.) **no longer implement `IXmlSerializable`**.
 
-- **Why:** Coupling WPF layout elements directly to `IXmlSerializable` prevented non-XML formats (such as `System.Text.Json`), caused `XmlSerializer` assembly-probing issues on modern .NET, and tied serialization to UI types.
+- **Why:** Coupling WPF layout elements directly to `IXmlSerializable` prevented custom formats, caused `XmlSerializer` assembly-probing issues on modern .NET, and tied serialization to UI types.
 - **Backward Compatibility:** `XmlLayoutSerializer` **continues to read existing v4 XML layout files** (normalizing v4 `"True"`/`"False"` booleans and mismatched XML encoding declarations). However, **files saved by v5 are not guaranteed to load in v4**.
-- **Fix for Custom Serializers:** Subclass `AvalonDock.Core.Serialization.LayoutSerializerBase` and override `SerializeCore(Stream, LayoutRootDto)` and `DeserializeCore(Stream)` against the plain DTO types in `AvalonDock.Core.Serialization.Dto` (see [Layout Serialization]({{ site.baseurl }}{% link guides/serialization.md %})).
-
-### VS2013 Theme Migrated to `.vstheme.gz` (`#572`)
-
-**Impact:** Medium — affects custom XAML dictionaries merging internal `VS2013` XAML files.
-
-`Dirkster.AvalonDock.Themes.VS2013` now builds its brush palettes dynamically at runtime from compressed `.vstheme.gz` resources via `Dirkster.AvalonDock.Themes.VS`.
-
-- `new Vs2013DarkTheme()`, `new Vs2013LightTheme()`, and `new Vs2013BlueTheme()` **continue to work unchanged**.
-- However, root `/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml`, `LightBrushs.xaml`, `BlueBrushs.xaml`, and `DarkTheme.xaml` **no longer exist** and will throw an `IOException` if merged directly in custom XAML dictionaries.
-- **Fix:** Base custom XAML themes on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`), or construct custom Visual Studio palettes with `VsTheme` / `VsTheme.FromJson` from `Dirkster.AvalonDock.Themes.VS`.
+- **Fix for Custom Serializers:** Subclass `AvalonDock.Core.LayoutSerializerBase` and override `SerializeCore(Stream, LayoutRootDto)` and `DeserializeCore(Stream)` against the plain DTO types in `AvalonDock.Core.Serialization.Dto` (see [Layout Serialization]({{ site.baseurl }}{% link guides/serialization.md %})).
 
 ### Dependency Injection Builder Consolidation (`#584`)
 
@@ -103,12 +101,12 @@ Both `IDockingManager` and `IRootDock` added `bool AllowFloatingWindows { get; s
 | `.NET Core 3.0` / `3.1` | ❌ **Removed** |
 | `.NET 5.0` | ❌ **Removed** |
 | `.NET 6.0` / `7.0` | ❌ **Not targeted** (out of Microsoft support) |
-| `.NET Framework 4.8` (`net48`) | ✅ **Supported** (`v5.0.0+`) |
+| `.NET Framework 4.8` (`net48`) | ✅ **Supported** (`v5.0.0+`, Win7 SP1–Win11) |
 | `.NET 8.0` (`net8.0-windows`) | ✅ **Supported** (added in `v5.0.2`, `#673`) |
 | `.NET 9.0` (`net9.0-windows`) | ✅ **Supported** (`v5.0.0+`) |
 | `.NET 10.0` (`net10.0-windows`) | ✅ **Supported** (`v5.0.0+`) |
 | `.NET 11.0` (`net11.0-windows`) | ✅ **Supported** (added in `v5.1.0`) |
-| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.*` |
+| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` |
 
 ---
 
@@ -178,14 +176,12 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 
 | Feature | Package | Description |
 |:--------|:--------|:------------|
-| `ToggleDockingManager` | `Dirkster.AvalonDock` | VS Code / JetBrains Rider-style 6-zone sidebar toggle docking control (supported across all 7 theme packages). |
+| `ToggleDockingManager` | `Dirkster.AvalonDock` | VS Code / JetBrains Rider-style 6-zone sidebar toggle docking control (supported across all 5 theme packages and `GenericTheme`). |
 | Standalone Windows | `Dirkster.AvalonDock` | `DetachAnchorableToWindow` detaches a tool window into a top-level OS window with its own taskbar entry (**View Mode → Window**), persisted via `LayoutAnchorable.IsDetached`. |
 | Window Policy Switches | `Dirkster.AvalonDock` | `AllowFloatingWindows` and `AllowDetachedWindows` on `DockingManager`, `IRootDock`, and `DockingOptions` disable floating and/or standalone windows manager-wide. |
 | Toolbox Shortcuts | `Dirkster.AvalonDock` | `IToolbox.Shortcut` registers a host-window `KeyBinding` to toggle a toolbox and appends the shortcut to its sidebar tooltip. |
 | Tab KeyBinding Bypass | `Dirkster.AvalonDock` | `DockingManager.IgnoreTabControlKeyBindings` (`#508`) prevents `TabControlEx` from intercepting `Home`/`End` and other shortcuts needed by inner controls. |
-| Arc Theme | `Dirkster.AvalonDock.Themes.Arc` | Modern compact dark and light themes (`ArcDarkTheme`, `ArcLightTheme`). |
-| VS Theme Engine | `Dirkster.AvalonDock.Themes.VS` | Built-in `VS2015*`, `VS2022*`, and `VS2026*` themes plus runtime loading of custom `.vstheme`, `.vstheme.gz`, and VS2026 JSON override files. |
-| JSON Serializer | `Dirkster.AvalonDock.Serializer.Json` | `System.Text.Json`-based `JsonLayoutSerializer` with polymorphic DTO round-tripping. |
+| Arc Theme | `Dirkster.AvalonDock.Themes.Arc` | Modern compact dark and light themes (`ArcDarkTheme`, `ArcLightTheme`) with `ResourceKeys` brush customization. |
 | MVVM Packages | `AvalonDock.Mvvm` & `.CommunityToolkit` | Zero-dependency (`DockableBase`, `ToolboxBase`, `DockLayoutService`, `SideToggleManager`) and `CommunityToolkit.Mvvm` (`ObservableDockableBase`, `ObservableToolboxBase`) view-model bases. |
 | DI Builder | `AvalonDock.DependencyInjection` | `AddDockLayoutService(dock => ...)` builder and `AddAvalonDock<TFactory>()` service extensions. |
 
@@ -195,10 +191,10 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 
 | Category | Change | Impact | Required Action |
 |:---------|:-------|:-------|:----------------|
-| **Packages** | Serializers split into `Serializer.Xml` / `Serializer.Json` | High | Install serializer package |
+| **Packages** | XML serializer extracted to `Dirkster.AvalonDock.Serializer.Xml` | High | Install `Dirkster.AvalonDock.Serializer.Xml` |
+| **Packages** | `Themes.VS2013`, `Themes.VS`, and `Serializer.Json` removed (no `System.Text.Json`) | Medium–High | Switch to `Themes.Arc` (or `Expression` / `VS2010`) and `Serializer.Xml` |
 | **Namespaces** | `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | High | Update `using` statements |
 | **Serialization** | `IXmlSerializable` replaced by DTOs & `LayoutSerializerBase` | Medium | Move custom `ReadXml`/`WriteXml` logic to DTOs |
-| **Themes** | `Themes.VS2013` moved from XAML brush files to `.vstheme.gz` | Medium | Base custom XAML merges on `Themes.Arc` or `Themes.VS` |
 | **Frameworks** | `.NET < 4.8` and `.NET Core 3.x / .NET 5` dropped | High | Target `net8.0-windows`–`net11.0-windows` or `net48` |
 | **DI** | `AddDockLayoutService(dock => ...)` builder pattern | Low | Move `AddToolbox` / options inside builder |
 | **Interfaces** | `AllowFloatingWindows` / `AllowDetachedWindows` on `IDockingManager` & `IRootDock` | Low | Implement on custom interface implementations |

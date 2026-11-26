@@ -119,15 +119,12 @@ jobs:
             "source/Components/AvalonDock.DependencyInjection/AvalonDock.DependencyInjection.csproj"
             "source/Components/AvalonDock.Mvvm/AvalonDock.Mvvm.csproj"
             "source/Components/AvalonDock.Mvvm.CommunityToolkit/AvalonDock.Mvvm.CommunityToolkit.csproj"
-            "source/Components/AvalonDock.Serializer.Json/AvalonDock.Serializer.Json.csproj"
             "source/Components/AvalonDock.Serializer.Xml/AvalonDock.Serializer.Xml.csproj"
             "source/Components/AvalonDock.Themes.Aero/AvalonDock.Themes.Aero.csproj"
             "source/Components/AvalonDock.Themes.Arc/AvalonDock.Themes.Arc.csproj"
             "source/Components/AvalonDock.Themes.Metro/AvalonDock.Themes.Metro.csproj"
             "source/Components/AvalonDock.Themes.Expression/AvalonDock.Themes.Expression.csproj"
             "source/Components/AvalonDock.Themes.VS2010/AvalonDock.Themes.VS2010.csproj"
-            "source/Components/AvalonDock.Themes.VS2013/AvalonDock.Themes.VS2013.csproj"
-            "source/Components/AvalonDock.Themes.VS/AvalonDock.Themes.VS.csproj"
           )
           
           for project in "${projects[@]}"; do
@@ -183,15 +180,12 @@ jobs:
             "Dirkster.AvalonDock.DependencyInjection"
             "Dirkster.AvalonDock.Mvvm"
             "Dirkster.AvalonDock.Mvvm.CommunityToolkit"
-            "Dirkster.AvalonDock.Serializer.Json"
             "Dirkster.AvalonDock.Serializer.Xml"
             "Dirkster.AvalonDock.Themes.Aero"
             "Dirkster.AvalonDock.Themes.Arc"
             "Dirkster.AvalonDock.Themes.Expression"
             "Dirkster.AvalonDock.Themes.Metro"
-            "Dirkster.AvalonDock.Themes.VS"
             "Dirkster.AvalonDock.Themes.VS2010"
-            "Dirkster.AvalonDock.Themes.VS2013"
           )
 
           for package in "${packages[@]}"; do

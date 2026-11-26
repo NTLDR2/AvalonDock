@@ -677,5 +677,5 @@ dotnet run
 ## Next Steps
 
 - Explore advanced DI options and NUnit ViewModel testing in [Tutorial: Dependency Injection App]({{ site.baseurl }}{% link tutorials/dependency-injection-app.md %}).
-- Persist open documents, JSON layouts, and lazy plugin panels in [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}).
-- Add runtime theme switching across `Arc` and `VS2026` themes in [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}).
+- Persist open documents, XML layouts, and lazy plugin panels in [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}).
+- Add runtime theme switching across `Arc` and classic themes in [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}).

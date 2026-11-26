@@ -27,11 +27,10 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 ├───────────────────────────────────┴───────────────────────────────┤
 │                     AvalonDock  (WPF UI)                          │
 │  ┌────────────────────┐ ┌────────────────┐ ┌───────────────────┐  │
-│  │ Controls & Managers│ │ Themes (7 pkgs)│ │ Serializers (2)   │  │
-│  │ (DockingManager,   │ │ (Arc, VS,      │ │ (Serializer.Xml,  │  │
-│  │  ToggleDockingMgr, │ │  VS2013/2010,  │ │  Serializer.Json, │  │
-│  │  LayoutSyncBridge) │ │  Expr/Metro/   │ │  netstandard2.0)  │  │
-│  │                    │ │  Aero)         │ │                   │  │
+│  │ Controls & Managers│ │ Themes (5 pkgs)│ │ Serializer (1 pkg)│  │
+│  │ (DockingManager,   │ │ (Arc, VS2010,  │ │ (Serializer.Xml,  │  │
+│  │  ToggleDockingMgr, │ │  Expression,   │ │  netstandard2.0)  │  │
+│  │  LayoutSyncBridge) │ │  Metro, Aero)  │ │                   │  │
 │  └─────────┬──────────┘ └───────┬────────┘ └─────────┬─────────┘  │
 │            │                    │                    │            │
 │  ┌─────────┴────────────────────┴────────────────────┴─────────┐  │
@@ -48,36 +47,33 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 
 ## Package Architecture
 
-AvalonDock v5 ships as **14 focused NuGet packages** with strict dependency boundaries:
+AvalonDock v5 ships as **11 focused NuGet packages** with strict dependency boundaries:
 
 ### Core & WPF Host Packages
 
 | Package | Target Frameworks | Purpose |
 |:--------|:------------------|:--------|
 | `Dirkster.AvalonDock.Core` | `netstandard2.0` | UI-agnostic interfaces (`IDockable`, `IDock`, `IRootDock`, `IToolbox`, `IDockLayoutService`, `IDockingManager`, `IFactory`, `ILayoutSerializer`), enums, `FactoryBase`, and serialization DTOs. Zero external or WPF dependencies. |
-| `Dirkster.AvalonDock` | `net8.0-windows`–`net11.0-windows`, `net48` | Main WPF docking library containing `DockingManager`, `ToggleDockingManager`, `LayoutSyncBridge`, all layout model classes, WPF controls, and `GenericTheme`. Depends on `AvalonDock.Core`. |
+| `Dirkster.AvalonDock` | `net8.0-windows`–`net11.0-windows`, `net48` | Main WPF docking library containing `DockingManager`, `ToggleDockingManager`, `LayoutSyncBridge`, all layout model classes, WPF controls, `DictionaryTheme`, and `GenericTheme`. Depends only on `AvalonDock.Core`. |
 
 ### MVVM, DI & Serializer Extension Packages
 
-All five extension packages target **`netstandard2.0`**, allowing your ViewModel, application service, and persistence layers to remain completely decoupled from WPF:
+All four extension packages target **`netstandard2.0`**, allowing your ViewModel, application service, and persistence layers to remain completely decoupled from WPF:
 
 | Package | Target Frameworks | Purpose |
 |:--------|:------------------|:--------|
 | `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | Zero-dependency MVVM base classes (`DockableBase`, `ToolboxBase`, `DockBase`, `RootDock`, `DocumentDock`, `ToolDock`, `Document`, `Tool`), `DockLayoutService`, `SideToggleManager`, and `Factory`. |
 | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | `CommunityToolkit.Mvvm` `ObservableObject`-backed equivalents (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDockBase`, `ObservableDocument`, `ObservableTool`) supporting `[ObservableProperty]` and `[RelayCommand]` source generators. |
 | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `Microsoft.Extensions.DependencyInjection` extensions (`AddDockLayoutService`, `DockLayoutBuilder`, `DockingOptions`, `ToggleDockOptions`, `AddAvalonDock<TFactory>`). |
-| `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | XML layout persistence via `XmlLayoutSerializer` (reads both v5 DTO XML and legacy v4 XML layouts). |
-| `Dirkster.AvalonDock.Serializer.Json` | `netstandard2.0` | `System.Text.Json` layout persistence via `JsonLayoutSerializer`. |
+| `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | Zero-dependency XML layout persistence via `XmlLayoutSerializer` (reads both v5 DTO XML and legacy v4 XML layouts). |
 
 ### Theme Packages
 
-Each of the **7 theme packages** targets `net8.0-windows`–`net11.0-windows` and `net48`, so you only ship the visual themes your application uses:
+Each of the **5 theme packages** targets `net8.0-windows`–`net11.0-windows` and `net48` with zero third-party dependencies, so you only ship the visual themes your application uses:
 
 | Package | Theme Classes & Capabilities |
 |:--------|:-----------------------------|
 | `Dirkster.AvalonDock.Themes.Arc` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE aesthetic with rounded corners |
-| `Dirkster.AvalonDock.Themes.VS` | `VS2015*`, `VS2022*`, and `VS2026*` (`Dark`, `Light`, `Blue`), plus `VsTheme` for loading custom `.vstheme`, `.vstheme.gz`, and VS2026 JSON override files |
-| `Dirkster.AvalonDock.Themes.VS2013` | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` (backed by embedded `.vstheme.gz` palettes via `Themes.VS`) |
 | `Dirkster.AvalonDock.Themes.VS2010` | `VS2010Theme` |
 | `Dirkster.AvalonDock.Themes.Expression` | `ExpressionDarkTheme`, `ExpressionLightTheme` |
 | `Dirkster.AvalonDock.Themes.Metro` | `MetroTheme` |
@@ -92,7 +88,7 @@ Each of the **7 theme packages** targets `net8.0-windows`–`net11.0-windows` an
 AvalonDock uses a **model-first** design: the docking workspace is represented as an observable tree of layout objects (`LayoutRoot`, `LayoutPanel`, `LayoutDocumentPane`, `LayoutAnchorablePane`, `LayoutDocument`, `LayoutAnchorable`). WPF visual controls (`LayoutPanelControl`, `LayoutDocumentPaneControl`, etc.) are generated from—and kept synchronized with—this model. This enables:
 
 - Programmatic layout inspection and restructuring
-- DTO-based XML and JSON serialization decoupled from live WPF visual trees
+- DTO-based serialization decoupled from live WPF visual trees
 - Clean separation between content (views/view models) and layout chrome
 
 ### 2. Two-Way MVVM Synchronization (`LayoutSyncBridge`)
@@ -106,11 +102,11 @@ When you bind `DockingManager.DockLayout` (or `ToggleDockingManager.DockLayout`)
 ### 3. Pluggable Layout Engine & DTO Serialization
 
 - **`ILayoutEngine`:** Layout tree restructuring is abstracted behind `ILayoutEngine` (`DefaultLayoutEngine` for classic Visual Studio docking; `ToggleLayoutEngine` for VS Code / Rider-style `DockLayoutPriority` restructuring).
-- **DTO Serialization (`LayoutSerializerBase`):** Layout persistence maps `ISerializableLayoutRoot` ↔ plain DTOs (`LayoutRootDto`, `LayoutPanelDto`, `LayoutDocumentDto`, `LayoutAnchorableDto`, etc.) via `ILayoutDtoMapper`, allowing any format (`XmlLayoutSerializer`, `JsonLayoutSerializer`, or custom serializers) to share identical content-reconnection and fixup logic.
+- **DTO Serialization (`LayoutSerializerBase`):** Layout persistence maps `ISerializableLayoutRoot` ↔ plain DTOs (`LayoutRootDto`, `LayoutPanelDto`, `LayoutDocumentDto`, `LayoutAnchorableDto`, etc.) via `ILayoutDtoMapper`, allowing `XmlLayoutSerializer` and any custom `LayoutSerializerBase` subclass to share identical content-reconnection and fixup logic.
 
 ### 4. Runtime-Switchable Theme Isolation
 
-Themes supply XAML `ResourceDictionary` styles and brushes (or dynamically generated `.vstheme` / JSON dictionaries in `Themes.VS` and `Themes.VS2013`). Setting `DockingManager.Theme` at design time or runtime swaps all docking chrome, tab strips, floating windows, and `ToggleDockingManager` sidebars immediately without restarting the application.
+Themes supply XAML `ResourceDictionary` styles and brushes (or dynamically constructed `DictionaryTheme` dictionaries). Setting `DockingManager.Theme` at design time or runtime swaps all docking chrome, tab strips, floating windows, detached windows, and `ToggleDockingManager` sidebars immediately without restarting the application.
 
 ### 5. Event-Driven Lifecycle Control
 
@@ -150,7 +146,7 @@ AvalonDock provides two root controls in `Dirkster.AvalonDock`:
 LayoutRoot layout = dockManager.Layout;
 
 // Switch themes dynamically at runtime
-dockManager.Theme = new VS2026DarkTheme();
+dockManager.Theme = new ArcLightTheme();
 
 // Query layout elements using AvalonDock.Layout.Extensions
 var explorer = layout.Descendents()

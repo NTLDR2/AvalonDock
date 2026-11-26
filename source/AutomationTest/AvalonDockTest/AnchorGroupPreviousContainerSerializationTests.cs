@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using AvalonDock;
 using AvalonDock.Layout;
-using AvalonDock.Serializer.Json;
 using AvalonDock.Serializer.Xml;
 using NUnit.Framework;
 
@@ -55,21 +54,6 @@ namespace AvalonDockTest
 			new XmlLayoutSerializer(manager).Serialize(writer);
 
 			var serializer = new XmlLayoutSerializer(manager);
-			serializer.LayoutSerializationCallback += (_, a) => a.Content ??= "restored";
-			serializer.Deserialize(new StringReader(writer.ToString()));
-
-			AssertDocksBackIntoOriginalPane(manager);
-		}
-
-		[Test]
-		public void JsonRoundTrip_AutoHiddenPane_DocksBackAtStoredWidth()
-		{
-			var manager = CreateManagerWithAutoHiddenPane(out _);
-
-			var writer = new StringWriter();
-			new JsonLayoutSerializer(manager).Serialize(writer);
-
-			var serializer = new JsonLayoutSerializer(manager);
 			serializer.LayoutSerializationCallback += (_, a) => a.Content ??= "restored";
 			serializer.Deserialize(new StringReader(writer.ToString()));
 

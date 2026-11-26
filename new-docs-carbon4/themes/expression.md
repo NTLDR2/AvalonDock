@@ -2,7 +2,7 @@
 title: Expression Theme
 layout: default
 parent: Themes
-nav_order: 5
+nav_order: 3
 description: "Expression Blend-inspired Dark and Light themes for creative, media, and design tools."
 ---
 

@@ -1,4 +1,4 @@
-﻿namespace AvalonDock.WinFormsTestApp
+namespace AvalonDock.WinFormsTestApp
 {
     using System;
     using System.IO;
@@ -21,7 +21,7 @@
         DockingManager _dockingManager = new DockingManager();
         protected override void OnLoad(EventArgs e)
         {
-            _dockingManager.Theme = new Vs2013LightTheme();
+            _dockingManager.Theme = new VS2010Theme();
             XmlLayoutSerializer serializer = new XmlLayoutSerializer(_dockingManager);
 
             serializer.LayoutSerializationCallback += (s, args) =>
@@ -89,31 +89,14 @@
             this.SetChecked(menuItemExpressionLight);
         }
 
-        private void vS2013ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _dockingManager.Theme = new AvalonDock.Themes.Vs2013LightTheme();
-            this.SetChecked(menuItemVs2013);
-        }
-
-        private void menuItemAero_Vs2013Dark(object sender, EventArgs e)
-        {
-            _dockingManager.Theme = new AvalonDock.Themes.Vs2013DarkTheme();
-            this.SetChecked(menuItemVS2013Dark);
-        }
-
-        private void menuItemAero_Vs2013Blue(object sender, EventArgs e)
-        {
-            _dockingManager.Theme = new AvalonDock.Themes.Vs2013BlueTheme();
-            this.SetChecked(menuItemVS2013Dark);
-        }
-
         private void SetChecked(ToolStripMenuItem toCheck)
         {
-            menuItemVS2013Dark.Checked = false;
             menuItemGeneric.Checked = false;
             menuItemVS2010.Checked = false;
             menuItemExpressionDark.Checked = false;
+            menuItemExpressionLight.Checked = false;
             menuItemMetro.Checked = false;
+            menuItemAero.Checked = false;
 
             toCheck.Checked = true;
         }

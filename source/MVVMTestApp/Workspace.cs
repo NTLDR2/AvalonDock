@@ -39,9 +39,6 @@ namespace AvalonDock.MVVMTestApp
 				new Tuple<string, Theme>(nameof(ExpressionLightTheme),new ExpressionLightTheme()),
 				new Tuple<string, Theme>(nameof(MetroTheme),new MetroTheme()),
 				new Tuple<string, Theme>(nameof(VS2010Theme),new VS2010Theme()),
-				new Tuple<string, Theme>(nameof(Vs2013BlueTheme),new Vs2013BlueTheme()),
-				new Tuple<string, Theme>(nameof(Vs2013DarkTheme),new Vs2013DarkTheme()),
-				new Tuple<string, Theme>(nameof(Vs2013LightTheme),new Vs2013LightTheme()),
 			};
 			this.SelectedTheme = Themes.First();
 		}

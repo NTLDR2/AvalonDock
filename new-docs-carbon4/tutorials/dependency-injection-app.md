@@ -48,7 +48,7 @@ dotnet add package CommunityToolkit.Mvvm
 | `AddDockLayoutService()` | Registers `IDockLayoutService` and `SideToggleManager` without a builder callback |
 | `AddDockLayoutService<TService>()` | Registers a custom `IDockLayoutService` implementation |
 | `AddAvalonDock<TFactory>(ServiceLifetime)` | Registers a custom `IFactory` implementation (`Singleton` by default) |
-| `AddAvalonDockSerializer<TSerializer>()` | Registers an `ILayoutSerializer` (`XmlLayoutSerializer` or `JsonLayoutSerializer`) |
+| `AddAvalonDockSerializer<TSerializer>()` | Registers an `ILayoutSerializer` (such as `XmlLayoutSerializer` or a custom `LayoutSerializerBase` implementation) |
 | `AddAvalonDockState<TState>()` | Registers an `IDockState` layout state service |
 | `AddAvalonDockThemeManager<TThemeManager>()` | Registers an `IThemeManager` service |
 | `AddDockingManager(factory)` | Registers an `IDockingManager` instance factory |
@@ -379,6 +379,6 @@ public class MainViewModelDockTests
 ## Next Steps
 
 - Build a complete multi-panel application from scratch in [Tutorial: MVVM IDE Application]({{ site.baseurl }}{% link tutorials/mvvm-ide.md %}).
-- Persist and restore your layout with XML or JSON in [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}).
+- Persist and restore your layout with `XmlLayoutSerializer` in [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}).
 - Customize themes and branding in [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}).
 - Browse all interfaces, base classes, and builder types in [Core, MVVM & DI Reference]({{ site.baseurl }}{% link api-reference/core-and-mvvm.md %}).
