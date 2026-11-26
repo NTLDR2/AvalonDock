@@ -6,7 +6,7 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 > **Documentation & Internals Sources of Truth:**
 > - **v5.1.0 Fork User & API Docs (`documentation/`):** Authoritative 38-page documentation site deployed by `.github/workflows/docs.yml`. Explicitly distinguishes `Upstream v5.0.0`–`v5.1.0` changes from `NTLDR2 Fork v5.1.0` changes.
 > - **Engine Internals Skill (`.agents/skills/avalondock-internals/SKILL.md`):** Complete 9-part deep dive into AvalonDock's internal architecture and invariants—always read before editing `source/Components/*`.
-> - **Fork Roadmap & Caliburn.Micro AI Reference (`ROADMAP.md`):** Vendoring roadmap for [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) and architectural spec for `AvalonDock.Mvvm.CaliburnMicro`, paired with the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro).
+> - **Fork Roadmap & Caliburn.Micro AI Reference (`ROADMAP.md`):** Vendoring roadmap for [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD), architectural spec for `AvalonDock.Mvvm.CaliburnMicro` (paired with [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)), and planned **`AvalonDox`** rebranding.
 
 ---
 

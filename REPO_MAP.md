@@ -56,7 +56,7 @@ AvalonDock-V5-NEW/
 ├── LICENSE                            # Open-source license packed into all 11 NuGet packages
 ├── README.md                          # Repository landing page & fork Quick Start
 ├── REPO_MAP.md                        # This repository map
-├── ROADMAP.md                         # SomaFrameQD vendoring, Caliburn.Micro BCL spec & sample modernization
+├── ROADMAP.md                         # SomaFrameQD vendoring, Caliburn.Micro BCL, sample audit & AvalonDox rebrand
 └── SLOC_Report.md                     # Detailed SLOC metrics
 ```
 

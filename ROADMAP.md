@@ -1,6 +1,6 @@
 # Roadmap — NTLDR2/AvalonDock Fork
 
-This document tracks the engineering roadmap for **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)** (forked from [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)), covering completed foundation work, downstream vendoring into **[NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)**, sample application modernization, and the architectural blueprint for a **Caliburn.Micro** Base Class Library / MVVM bridge (`AvalonDock.Mvvm.CaliburnMicro`).
+This document tracks the engineering roadmap for **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)** (forked from [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)), covering completed foundation work, downstream vendoring into **[NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)**, the architectural blueprint for a **Caliburn.Micro** Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`), sample application modernization, and planned fork rebranding from **`AvalonDock` to `AvalonDox`** to eliminate NuGet and CLR assembly naming collisions.
 
 ---
 
@@ -9,16 +9,18 @@ This document tracks the engineering roadmap for **[NTLDR2/AvalonDock](https://g
 ```mermaid
 flowchart LR
     M1["Phase 1: Zero System.Text.Json & v5 Docs (Completed)"] --> M2["Phase 2: SomaFrameQD Vendoring & net48 Hardening"]
-    M2 --> M3["Phase 3: AvalonDock.Mvvm.CaliburnMicro BCL"]
-    M3 --> M4["Phase 4: CaliburnDockTestApp & Sample Modernization"]
+    M2 --> M3["Phase 3: Caliburn.Micro BCL Bridge"]
+    M3 --> M4["Phase 4: Sample Modernization"]
+    M4 --> M5["Phase 5: Rebrand to AvalonDox (NuGet & Assembly Isolation)"]
 ```
 
 | Phase | Focus Area | Status |
 |:------|:-----------|:-------|
-| **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `documentation/` documentation, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
+| **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `documentation/` site, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
 | **Phase 2** | `.NET Framework 4.8` transitive-dependency audit, build/props isolation, and vendored integration into [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) | **Planned (Next)** |
 | **Phase 3** | Design & implementation of `AvalonDock.Mvvm.CaliburnMicro` (`netstandard2.0` BCL equivalent to `AvalonDock.Mvvm.CommunityToolkit`) + STA unit tests | **Proposed / Design Ready** |
 | **Phase 4** | Modernize dated sample applications—starting with `source/CaliburnDockTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **Planned** |
+| **Phase 5** | Full fork rebranding (**`AvalonDock` → `AvalonDox`**) across NuGet `<PackageId>`s, assembly names, WPF `pack://` URIs, namespaces, and CI release workflows | **Planned** |
 
 ---
 
@@ -170,3 +172,53 @@ Our audit of `source/CaliburnDockTestApp/` identified the following dated artifa
 | **`WinFormsTestApp`** | `ElementHost` / `WindowsFormsHost` airspace interop test targeting `net9.0-windows;net48` | Align TFMs with current test matrix and verify `net48` interop focus behavior |
 | **`MLibTest`** | Targets `net9.0-windows;net48`, retains dead MSBuild conditions (`net5.0-windows`, `netcoreapp3.0`, `net40`), and references non-SDK `Settings.csproj` (`v4.5.2`) | Prune dead pre-v5 MSBuild conditions and upgrade or retire legacy `v4.5.2` helper project |
 | **`AvalonDocPanelMemoryLeaks`** | Legacy non-SDK `.csproj` targeting `.NET Framework v4.6.1` | Migrate leak regression scenarios into `AvalonDockTest` (`net48` + modern `.NET`) or convert to SDK-style `net48` |
+
+---
+
+## Phase 5: Rebranding & Identity Isolation (`AvalonDock` → `AvalonDox`)
+
+### Why Rebranding Is Necessary
+
+As this repository diverges architecturally from upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) (permanent `System.Text.Json` removal, 11-library topology, `.NET Framework 4.8` prioritization, and the planned Caliburn.Micro BCL), continuing to use the `AvalonDock` / `Dirkster.AvalonDock*` identity creates two concrete technical conflicts:
+
+1. **NuGet Package ID Ownership Collision:** Every `.csproj` under `source/Components/*` currently retains `<PackageId>Dirkster.AvalonDock*</PackageId>` (and `.github/workflows/release.yml` still points to those upstream IDs). Publishing standalone packages from this fork to `nuget.org` requires a distinct, non-colliding package namespace.
+2. **`.NET Framework 4.8` CLR Assembly Fusion Collision:** On `net48`, if a host application or third-party plugin loads upstream `AvalonDock.dll` in the same `AppDomain` as a diverged fork also compiled as `AvalonDock.dll`, the CLR assembly loader will collide on assembly short name / strong-name identity.
+
+### Proposed Brand & Package Naming: `AvalonDox`
+
+Rebrand the diverged project to **`AvalonDox`** (preserving full open-source `Ms-PL` attribution and lineage credit to `Dirkster99/AvalonDock` and the original Xceed/AvalonDock authors):
+
+| Current Project / Package (`v5.1.0` Fork) | Planned Rebranded Identity (`AvalonDox`) |
+|:------------------------------------------|:-----------------------------------------|
+| `Dirkster.AvalonDock` (`AvalonDock.dll`) | **`AvalonDox`** (`AvalonDox.dll`) |
+| `Dirkster.AvalonDock.Core` | **`AvalonDox.Core`** |
+| `Dirkster.AvalonDock.Mvvm` | **`AvalonDox.Mvvm`** |
+| `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | **`AvalonDox.Mvvm.CommunityToolkit`** |
+| `AvalonDock.Mvvm.CaliburnMicro` *(Phase 3)* | **`AvalonDox.Mvvm.CaliburnMicro`** |
+| `Dirkster.AvalonDock.DependencyInjection` | **`AvalonDox.DependencyInjection`** |
+| `Dirkster.AvalonDock.Serializer.Xml` | **`AvalonDox.Serializer.Xml`** |
+| `Dirkster.AvalonDock.Themes.{Arc,VS2010,Expression,Metro,Aero}` | **`AvalonDox.Themes.{Arc,VS2010,Expression,Metro,Aero}`** |
+
+*(Optional NuGet prefixing such as `NTLDR2.AvalonDox*` vs. top-level `AvalonDox*` will be finalized when registering package IDs on `nuget.org`.)*
+
+### Atomic Technical Checklist for the `AvalonDox` Cutover
+
+Executing a WPF control-library rename cleanly requires updating seven coupled surfaces in a single coordinated change:
+
+1. **Solution, Project Directories & MSBuild Metadata (`source/Directory.Build.props`):**
+   - Rename `source/AvalonDock.sln` → `source/AvalonDox.sln` and `source/Components/AvalonDock*` → `source/Components/AvalonDox*`.
+   - Update `<AssemblyName>`, `<PackageId>`, `<Product>`, `<PackageProjectUrl>`, `<RepositoryUrl>`, and `<Authors>` while preserving historical copyright notices and `LICENSE` (`Ms-PL`) attribution.
+2. **WPF `pack://application:,,,` Resource URIs *(Critical Runtime Invariant)*:**
+   - Every `Theme.GetResourceUri()` implementation (`GenericTheme`, `ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `Expression*Theme`, `MetroTheme`, `AeroTheme`) and every XAML `<ResourceDictionary Source="/AvalonDock...;component/...">` merge embeds the exact `<AssemblyName>`.
+   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests across `net48` and `.NET 8–11`.
+3. **C# Root Namespaces & XAML `[XmlnsDefinition]` Mapping:**
+   - Transition C# namespaces from `AvalonDock.*` → `AvalonDox.*` and introduce the new primary XAML namespace URI (`https://github.com/NTLDR2/AvalonDox` with `[assembly: XmlnsPrefix(..., "avalonDox")]`) in `Properties/AssemblyInfo.cs`.
+   - Optionally retain secondary `[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", ...)]` attributes in `AssemblyInfo.cs` so existing XAML views migrate with minimal friction.
+4. **Strong-Name Signing & `InternalsVisibleTo`:**
+   - Audit `sn.snk` strong-name signing policy and update any `[assembly: InternalsVisibleTo(...)]` declarations referenced by `AvalonDoxTest`.
+5. **Zero-Breakage XML Layout Compatibility (`XmlLayoutSerializer`):**
+   - Keep `[XmlRoot("LayoutRoot")]` and existing DTO XML element/attribute names in `AvalonDox.Core.Serialization.Dto` unchanged so saved `.xml` user layouts from `AvalonDock` v4.x and v5.x deserialize seamlessly in `AvalonDox`.
+6. **CI/CD & NuGet Release Workflow (`.github/workflows/release.yml` & `docs.yml`):**
+   - Update `release.yml` project/package arrays from `Dirkster.AvalonDock*` to `AvalonDox*` (or gate `nuget.org` publishing behind the completed `AvalonDox` cutover) and update GitHub Pages site metadata in `documentation/_config.yml`.
+7. **Documentation & AI Agent Skills:**
+   - Update all 38 pages in `documentation/`, `README.md`, `AGENTS.md`, `REPO_MAP.md`, and `.agents/skills/avalondock-internals/SKILL.md` in lockstep so AI coding agents emit `AvalonDox` namespaces and package names accurately.

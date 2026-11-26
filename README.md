@@ -40,6 +40,7 @@ Before installing or migrating code from upstream tutorials, note the deliberate
 | **Layout Persistence** | XML (`Serializer.Xml`) + JSON (`Serializer.Json`) | **XML DTO persistence (`AvalonDock.Serializer.Xml`)** using inbox `System.Xml.Serialization` (backward-compatible with v4 XML) + `LayoutSerializerBase` for custom formats |
 | **Available Themes** | `Arc`, `VS` (2015/2022), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **`Arc` (Dark/Light), `VS2010`, `Expression` (Dark/Light), `Metro`, `Aero`, `GenericTheme`**, plus `DictionaryTheme` custom XAML themes |
 | **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **`.NET Framework 4.8` + WPF prioritized**, built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)), while supporting `.NET 8`–`11` |
+| **Package & Brand Identity** | `Dirkster.AvalonDock*` on `nuget.org` | Retains `Dirkster.AvalonDock*` assembly/package names temporarily for vendored compatibility; **planned rebrand to `AvalonDox`** ([ROADMAP.md](ROADMAP.md)) prior to any standalone NuGet publishing |
 | **Documentation & AI Tooling** | Docs site & GitHub Wiki | **38-page [documentation/](documentation/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
 
 ### Step 1: Consume This Fork (Vendored Source or Local NuGet Feed)
@@ -536,7 +537,7 @@ See [Building from Source](documentation/getting-started/building-from-source.md
 ## Documentation, Internals & Roadmap
 
 - **[v5 Documentation Suite (`documentation/`)](documentation/index.md)** — 38-page user guide, tutorials, theme gallery, migration checklist, and API reference
-- **[Fork Roadmap & Caliburn.Micro Bridge (`ROADMAP.md`)](ROADMAP.md)** — Planned `AvalonDock.Mvvm.CaliburnMicro` BCL design, sample app modernization, and [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) vendoring plan
+- **[Fork Roadmap, Caliburn.Micro Bridge & `AvalonDox` Rebrand (`ROADMAP.md`)](ROADMAP.md)** — [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) vendoring plan, `AvalonDock.Mvvm.CaliburnMicro` BCL design, sample modernization, and planned **`AvalonDox`** rebranding
 - **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
 - **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map
 - **[Engine Internals Deep Dive (`SKILL.md`)](.agents/skills/avalondock-internals/SKILL.md)** — Inside-out explanation of the 3 parallel trees, `LayoutItem` depth ordering, `LayoutSyncBridge`, 6-zone sidebars, windowing/airspace, and DTO fixup

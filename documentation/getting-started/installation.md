@@ -11,9 +11,10 @@ description: "Install AvalonDock v5 NuGet packages and configure target framewor
 **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **11 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, with **zero `System.Text.Json` dependencies** across `.NET Framework 4.8` and modern `.NET`.
 
 {: .important }
-**Fork vs. Upstream Distribution Scope:**
+**Fork vs. Upstream Distribution & Planned `AvalonDox` Rebrand:**
 - **Consuming `NTLDR2 Fork v5.1.0` (Recommended for Zero-`System.Text.Json` / Vendored Hosts):** Reference the projects under `source/Components/*` directly via `ProjectReference` (submodule/vendored source) or pack local `.nupkg` artifacts (`dotnet pack source/AvalonDock.sln -c Release -o ./artifacts/nupkgs`) and install from your local NuGet feed.
 - **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including the 3 `System.Text.Json`-dependent packages removed in this fork: `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`).
+- **Planned Rebrand (`AvalonDox`):** Assembly and `<PackageId>` names temporarily remain `Dirkster.AvalonDock*` during initial vendoring stabilization; a full rebrand to **`AvalonDox`** is scheduled on the fork `ROADMAP.md` before any standalone NuGet publication to eliminate package and CLR assembly name collisions.
 
 ---
 
