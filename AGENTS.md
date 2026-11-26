@@ -6,6 +6,7 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 > **Documentation & Internals Sources of Truth:**
 > - **v5 User & API Docs (`new-docs-carbon4/`):** Fresh 38-page v5 documentation site. **Ignore** legacy `docs/` and `AGENTS.md.old`.
 > - **Engine Internals Skill (`.agents/skills/avalondock-internals/SKILL.md`):** Complete 9-part deep dive into AvalonDock's internal architecture and invariants—always read before editing `source/Components/*`.
+> - **Fork Roadmap & Caliburn.Micro AI Reference (`ROADMAP.md`):** Vendoring roadmap for [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) and architectural spec for `AvalonDock.Mvvm.CaliburnMicro`, paired with the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro).
 
 ---
 
@@ -189,6 +190,7 @@ Examples:
 | **XML Serialization & DTO mapping** | `Components/AvalonDock.Core/Serialization/*.cs`, `Dto/*.cs`, `Components/AvalonDock/Serialization/LayoutDtoMapper.cs`, `Components/AvalonDock.Serializer.Xml/XmlLayoutSerializer.cs` | `guides/serialization.md`, `tutorials/layout-persistence.md` |
 | **Themes (`Arc`, `VS2010`, `Expression`, `Metro`, `Aero`, custom themes)** | `Components/AvalonDock/Themes/*.cs`, `Components/AvalonDock.Themes.Arc/`, `Components/AvalonDock.Themes.*` | `guides/theming.md`, `guides/custom-themes.md`, `themes/index.md`, `themes/arc.md` |
 | **Migrating v4 apps & breaking changes** | — | `migration/index.md`, `migration/breaking-changes.md` |
+| **Caliburn.Micro BCL (`AvalonDock.Mvvm.CaliburnMicro`) & fork roadmap** | `CaliburnDockTestApp/`, `Components/AvalonDock.Mvvm*/*.cs` | Root `ROADMAP.md` + AI-ready internals repo: `https://github.com/NTLDR2/Caliburn.Micro` |
 | **Unit tests & FlaUI UI automation tests** | `AutomationTest/AvalonDockTest/*.cs`, `TestHelpers/*.cs`, `FlaUI/*.cs` | `getting-started/building-from-source.md`, `contributing.md` |
 
 ---

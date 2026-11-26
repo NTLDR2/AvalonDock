@@ -1,125 +1,232 @@
-# AvalonDock
+# AvalonDock (NTLDR2 Fork)
 
-[![CI](https://github.com/Dirkster99/AvalonDock/actions/workflows/release.yml/badge.svg)](https://github.com/Dirkster99/AvalonDock/actions/workflows/release.yml)
-[![Release](https://img.shields.io/github/release/Dirkster99/avalondock.svg)](https://github.com/Dirkster99/avalondock/releases/latest)
-[![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.svg)](http://nuget.org/packages/Dirkster.AvalonDock)
+![Net48](https://badgen.net/badge/Primary%20Target/.NET%20Framework%204.8/0078D4) ![WPF](https://badgen.net/badge/UI/WPF/512BD4) ![ZeroSTJ](https://badgen.net/badge/System.Text.Json/Zero%20Dependencies/2EA043) ![NetStd20](https://badgen.net/badge/Core/.NET%20Standard%202.0/blue) ![Net8_11](https://badgen.net/badge/Modern%20.NET/8%20%7C%209%20%7C%2010%20%7C%2011/blue) [![License: Ms-PL](https://badgen.net/badge/License/Ms-PL/green)](LICENSE)
 
-![Net48](https://badgen.net/badge/Framework/.NET&nbsp;4.8/blue) ![Net8](https://badgen.net/badge/Framework/.NET&nbsp;8/blue) ![Net9](https://badgen.net/badge/Framework/.NET&nbsp;9/blue) ![Net10](https://badgen.net/badge/Framework/.NET&nbsp;10/blue) ![Net11](https://badgen.net/badge/Framework/.NET&nbsp;11/blue)
+AvalonDock is a WPF Document and Tool Window docking layout container used to arrange tabbed documents, split panes, floating windows, and auto-hidden or sidebar-toggled tool windows—powering IDE-style workspaces similar to Visual Studio, JetBrains Rider, Eclipse, and VS Code.
 
-Support this project with a :star: — report an issue, or even better, place a pull request :mailbox: :blush:
+> [!NOTE]
+> **Upstream Attribution:** This repository ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)) is a specialized fork of **[Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)** (`v5.1.0`), building on Dirkster99's modular v5 architecture (first-class MVVM, `IServiceCollection` dependency injection, `ToggleDockingManager`, DTO persistence, and modern theming).
 
-AvalonDock is a WPF Document and Tool Window layout container that is used to arrange documents and tool windows in similar ways to many well known IDEs, such as Visual Studio, Eclipse, JetBrains Rider, and more. **Version 5.0** introduces first-class MVVM support, dependency injection integration, and a modular package architecture.
-
-AvalonDock is used by [many open source and commercial projects](https://github.com/search?p=4&q=%22dirkster.avalondock%22&type=Code), including:
-
-- [Stride](https://github.com/stride3d/stride) — Free and open-source cross-platform C# game engine
-- [Optick](https://github.com/bombomby/optick) — C++ Profiler for Games
-- [RoslynPad](https://github.com/roslynpad/roslynpad) — A cross-platform C# editor based on Roslyn and AvalonEdit
-- [WpfDesigner](https://github.com/icsharpcode/WpfDesigner) — The WPF Designer from SharpDevelop
-- [DaxStudio](https://github.com/DaxStudio/DaxStudio) — DAX query tool for Power BI and Analysis Services
-- [Macad3D](https://github.com/Macad3D/Macad3D) — Free and open-source 3D Construction Tool
-- [Edi](https://dirkster99.github.io/Edi/) — Open source text editor IDE based on AvalonDock and AvalonEdit
-- [Profile Explorer](https://github.com/microsoft/profile-explorer) — Microsoft CPU profiling trace viewer
-
-Be sure to check out the [Wiki](https://github.com/Dirkster99/AvalonDock/wiki) and the [documentation site](https://dirkster99.github.io/AvalonDock/) for tutorials and API reference.
+Across the broader ecosystem, AvalonDock powers [many open-source and commercial applications](https://github.com/search?p=4&q=%22dirkster.avalondock%22&type=Code), including [Stride](https://github.com/stride3d/stride), [Optick](https://github.com/bombomby/optick), [RoslynPad](https://github.com/roslynpad/roslynpad), [WpfDesigner](https://github.com/icsharpcode/WpfDesigner), [DaxStudio](https://github.com/DaxStudio/DaxStudio), [Macad3D](https://github.com/Macad3D/Macad3D), [Edi](https://dirkster99.github.io/Edi/), and Microsoft's [Profile Explorer](https://github.com/microsoft/profile-explorer).
 
 ---
 
-## NuGet Packages
+## Fork Philosophy, Mission & Goals
 
-### Core
+This fork ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)) refines [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) for long-lived Windows desktop applications that require deterministic assembly loading, zero transitive binding-redirect surprises, and crystal-clear architectural documentation.
 
-| Package | Downloads | Description |
-|:--------|:----------|:------------|
-| [Dirkster.AvalonDock](http://nuget.org/packages/Dirkster.AvalonDock) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.svg)](http://nuget.org/packages/Dirkster.AvalonDock) | Main WPF docking framework package |
-| [Dirkster.AvalonDock.Core](http://nuget.org/packages/Dirkster.AvalonDock.Core) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Core.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Core) | UI-agnostic interfaces and models |
-| [Dirkster.AvalonDock.Mvvm](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Mvvm.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm) | MVVM base classes (`DockableBase`, `ToolboxBase`, `DockLayoutService`) — no external dependencies |
-| [Dirkster.AvalonDock.Mvvm.CommunityToolkit](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Mvvm.CommunityToolkit.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Mvvm.CommunityToolkit) | CommunityToolkit.Mvvm integration (`ObservableDockableBase`, `ObservableToolboxBase`) with `[ObservableProperty]` support |
-| [Dirkster.AvalonDock.DependencyInjection](http://nuget.org/packages/Dirkster.AvalonDock.DependencyInjection) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.DependencyInjection.svg)](http://nuget.org/packages/Dirkster.AvalonDock.DependencyInjection) | `IServiceCollection` extensions for DI registration |
+**Vision:** Deliver a rock-solid, zero-drama WPF docking engine that compiles cleanly from source, runs reliably from Windows 7 SP1 64-bit through Windows 11, and gives both human developers and AI coding agents complete visibility into every engine invariant.
 
-### Serializer
+**Mission & Core Goals:**
 
-| Package | Downloads | Description |
-|:--------|:----------|:------------|
-| [Dirkster.AvalonDock.Serializer.Xml](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Serializer.Xml.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Serializer.Xml) | XML layout serialization |
+- **Eliminate `System.Text.Json` DLL Hell:** Never reference or transitively import `System.Text.Json`. On `.NET Framework 4.8`, `System.Text.Json` drags in out-of-band `System.Memory`, `System.Buffers`, `System.Runtime.CompilerServices.Unsafe`, and `Microsoft.Bcl.AsyncInterfaces` packages—a notorious source of runtime `FileLoadException` binding-redirect conflicts in complex desktop hosts. Three upstream packages that depended on `System.Text.Json` have already been surgically removed in favor of inbox XML DTO persistence.
+- **Prioritize `.NET Framework 4.8` & WPF:** Treat `net48` and Windows Presentation Foundation as primary, first-class targets—never legacy afterthoughts—while maintaining full multi-target support for `.NET 8.0` through `.NET 11.0` (`-windows`) and `netstandard2.0` UI-agnostic contracts.
+- **Vendored Docking Dependency for SomaFrameQD:** Maintain a self-contained, warning-free (`--warnaserror`) component tree engineered to serve as the vendored docking engine inside [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD).
+- **Caliburn.Micro MVVM Comfort:** Explore a first-class **Caliburn.Micro** bridge / Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`) analogous to `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, guided by the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) so Caliburn.Micro developers feel at home. Full details live in [ROADMAP.md](ROADMAP.md).
+- **Inside-Out Documentation for AI Agents & Engineers:** Ship a complete 38-page v5 documentation suite ([new-docs-carbon4/](new-docs-carbon4/index.md)), always-loaded agent guardrails ([AGENTS.md](AGENTS.md)), and a deep engine-invariants reference ([SKILL.md](.agents/skills/avalondock-internals/SKILL.md)) so AI coding agents produce accurate v5 code without legacy v4 hallucinations.
+
+---
+
+## Quick Start & Technical Differences from Upstream
+
+### How This Fork Differs from `Dirkster99/AvalonDock`
+
+Before installing or migrating code from upstream tutorials, note the deliberate architectural differences in `NTLDR2/AvalonDock`:
+
+| Area | Upstream (`Dirkster99/AvalonDock`) | This Fork (`NTLDR2/AvalonDock`) |
+|:-----|:-----------------------------------|:--------------------------------|
+| **Shipped Libraries** | 14 packages | **11 packages** — `Dirkster.AvalonDock.Serializer.Json`, `Dirkster.AvalonDock.Themes.VS`, and `Dirkster.AvalonDock.Themes.VS2013` (plus `VS2013Test`) are **permanently removed** |
+| **`System.Text.Json` Policy** | Used by JSON serializer and `.vstheme` / VS2013 theme loaders | **Zero `System.Text.Json` anywhere** across all library, sample, and test projects to prevent `net48` DLL hell |
+| **Layout Persistence** | XML (`Serializer.Xml`) + JSON (`Serializer.Json`) | **XML DTO persistence (`AvalonDock.Serializer.Xml`)** using inbox `System.Xml.Serialization` (backward-compatible with v4 XML) + `LayoutSerializerBase` for custom formats |
+| **Available Themes** | `Arc`, `VS` (2015/2022), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **`Arc` (Dark/Light), `VS2010`, `Expression` (Dark/Light), `Metro`, `Aero`, `GenericTheme`**, plus `DictionaryTheme` custom XAML themes |
+| **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **`.NET Framework 4.8` + WPF prioritized**, built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)), while supporting `.NET 8`–`11` |
+| **Documentation & AI Tooling** | Docs site & GitHub Wiki | **38-page [new-docs-carbon4/](new-docs-carbon4/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
+
+### Step 1: Consume This Fork (Vendored Source or Local NuGet Feed)
+
+Because this fork removes upstream `System.Text.Json` modules and targets vendored/source integration, consume it by referencing the projects under `source/Components/` (submodule, subtree, or vendored folder) or packing local `.nupkg` artifacts:
+
+```powershell
+# Clone this fork (or add as a submodule in your host repository)
+git clone https://github.com/NTLDR2/AvalonDock.git
+cd AvalonDock
+
+# Build all 11 libraries (net48 + net8.0/9.0/10.0/11.0-windows + netstandard2.0)
+dotnet restore source/AvalonDock.sln
+dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnaserror
+
+# Optional: pack clean local NuGet packages into ./artifacts/nupkgs
+dotnet pack source/AvalonDock.sln --configuration Release --no-build --output ./artifacts/nupkgs
+```
+
+In a `.NET Framework 4.8` (`net48`) or `.NET 8–11` (`net10.0-windows`) WPF host project, reference only the modules your app needs:
+
+```xml
+<!-- Direct vendored ProjectReference example (works identically on net48 and net8.0–net11.0-windows) -->
+<ItemGroup>
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Core\AvalonDock.Core.csproj" />
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Mvvm\AvalonDock.Mvvm.csproj" />
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Serializer.Xml\AvalonDock.Serializer.Xml.csproj" />
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Themes.Arc\AvalonDock.Themes.Arc.csproj" />
+</ItemGroup>
+```
+
+*(If consuming from a local NuGet feed, the package IDs remain `Dirkster.AvalonDock`, `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm`, `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, `Dirkster.AvalonDock.DependencyInjection`, `Dirkster.AvalonDock.Serializer.Xml`, and `Dirkster.AvalonDock.Themes.{Arc,VS2010,Expression,Metro,Aero}`.)*
+
+### Step 2: Declare a Docking Layout in XAML
+
+The XAML namespace URI (`https://github.com/Dirkster99/AvalonDock`) is preserved for full compatibility with existing XAML views:
+
+```xml
+<Window x:Class="MyDockingApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
+        xmlns:themes="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Arc"
+        Title="My WPF Docking Workspace" Height="600" Width="960">
+
+    <avalonDock:DockingManager x:Name="dockManager">
+        <avalonDock:DockingManager.Theme>
+            <themes:ArcDarkTheme />
+        </avalonDock:DockingManager.Theme>
+
+        <avalonDock:LayoutRoot>
+            <avalonDock:LayoutPanel Orientation="Horizontal">
+                <!-- Left Docked Tool Window -->
+                <avalonDock:LayoutAnchorablePane DockWidth="240">
+                    <avalonDock:LayoutAnchorable Title="Explorer"
+                                                  ContentId="explorer"
+                                                  CanClose="False">
+                        <TextBlock Text="Solution Explorer" Margin="8" />
+                    </avalonDock:LayoutAnchorable>
+                </avalonDock:LayoutAnchorablePane>
+
+                <!-- Center Tabbed Document Area -->
+                <avalonDock:LayoutDocumentPane>
+                    <avalonDock:LayoutDocument Title="Welcome.md" ContentId="welcome">
+                        <TextBox AcceptsReturn="True"
+                                 FontFamily="Consolas"
+                                 Text="Ready on .NET Framework 4.8 and modern .NET!" />
+                    </avalonDock:LayoutDocument>
+                </avalonDock:LayoutDocumentPane>
+            </avalonDock:LayoutPanel>
+        </avalonDock:LayoutRoot>
+    </avalonDock:DockingManager>
+</Window>
+```
+
+### Step 3: Save & Restore Layouts via XML (Zero External Dependencies)
+
+In v5, layout persistence lives in `AvalonDock.Serializer.Xml` (`using AvalonDock.Serializer.Xml;`) and maps `LayoutRoot` through plain DTOs (`AvalonDock.Core.Serialization.Dto`), maintaining backward compatibility with v4 XML layout files:
+
+```csharp
+using System.IO;
+using AvalonDock.Serializer.Xml;
+
+// Save layout
+new XmlLayoutSerializer(dockManager).Serialize("layout.xml");
+
+// Restore layout
+if (File.Exists("layout.xml"))
+{
+    var serializer = new XmlLayoutSerializer(dockManager);
+    serializer.LayoutSerializationCallback += (_, args) =>
+    {
+        // args.Model is UI-agnostic ISerializableLayoutContent; unresolved items are removed by default
+        if (args.Model.ContentId == "explorer")
+        {
+            args.Content = myExplorerViewOrViewModel;
+        }
+    };
+    serializer.Deserialize("layout.xml");
+}
+```
+
+For the full walkthrough, see [Quick Start](new-docs-carbon4/getting-started/quick-start.md) and [Layout Serialization](new-docs-carbon4/guides/serialization.md).
+
+---
+
+## Modular Component Packages (11 Libraries)
+
+All 11 libraries ship with embedded XML IntelliSense documentation (`CS1591` enforced under `--warnaserror`) and strong-name assembly signing.
+
+### Core, MVVM & Dependency Injection
+
+| Project / Package ID | Target Frameworks | Description |
+|:---------------------|:------------------|:------------|
+| `Dirkster.AvalonDock` | `net48`, `net8.0-windows`–`net11.0-windows` | Core WPF docking controls (`DockingManager`, `ToggleDockingManager`, layout model, floating & detached windows, `GenericTheme`) |
+| `Dirkster.AvalonDock.Core` | `netstandard2.0` | UI-agnostic interfaces (`IDockable`, `IRootDock`, `IToolbox`, `IDockLayoutService`), enums, and 17 serialization DTOs — zero WPF or external dependencies |
+| `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | Ready-to-use MVVM base classes (`DockableBase`, `ToolboxBase`, `Document`, `Tool`, `DockLayoutService`, `SideToggleManager`) — **zero external dependencies** |
+| `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | Optional `CommunityToolkit.Mvvm` (`ObservableObject`) base classes (`ObservableDockableBase`, `ObservableToolboxBase`, `ObservableDocument`, `ObservableTool`) supporting `[ObservableProperty]` and `[RelayCommand]` |
+| `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `IServiceCollection` registration extensions (`AddDockLayoutService`, `DockLayoutBuilder`, `DockingOptions`, `ToggleDockOptions`) |
+
+> [!TIP]
+> **Using Caliburn.Micro?** For maximum zero-dependency simplicity on `net48`, `Dirkster.AvalonDock.Mvvm` has zero third-party package dependencies today, and a native **Caliburn.Micro** bridge (`AvalonDock.Mvvm.CaliburnMicro`)—paired with the AI-ready Caliburn.Micro internals reference at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro)—is detailed in [ROADMAP.md](ROADMAP.md).
+
+### Layout Serializer
+
+| Project / Package ID | Target Frameworks | Description |
+|:---------------------|:------------------|:------------|
+| `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | XML layout serializer (`XmlLayoutSerializer`) backed by inbox `System.Xml.Serialization` with v4 XML layout compatibility — **zero external dependencies** |
 
 ### Themes
 
-| Package | Downloads | Description |
-|:--------|:----------|:------------|
-| [Dirkster.AvalonDock.Themes.Arc](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Arc) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Arc.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Arc) | Arc theme **NEW!** |
-| [Dirkster.AvalonDock.Themes.Aero](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Aero.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Aero) | Aero theme |
-| [Dirkster.AvalonDock.Themes.Expression](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Expression.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Expression) | Expression theme |
-| [Dirkster.AvalonDock.Themes.Metro](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.Metro.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.Metro) | Metro theme |
-| [Dirkster.AvalonDock.Themes.VS2010](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | [![NuGet](https://img.shields.io/nuget/dt/Dirkster.AvalonDock.Themes.VS2010.svg)](http://nuget.org/packages/Dirkster.AvalonDock.Themes.VS2010) | Visual Studio 2010 theme |
+| Project / Package ID | Target Frameworks | Variants & Style |
+|:---------------------|:------------------|:-----------------|
+| `Dirkster.AvalonDock.Themes.Arc` | `net48`, `net8.0-windows`–`net11.0-windows` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE theme with rounded tabs |
+| `Dirkster.AvalonDock.Themes.VS2010` | `net48`, `net8.0-windows`–`net11.0-windows` | `VS2010Theme` — classic Visual Studio 2010 gradient docking theme |
+| `Dirkster.AvalonDock.Themes.Expression` | `net48`, `net8.0-windows`–`net11.0-windows` | `ExpressionDarkTheme`, `ExpressionLightTheme` — Expression Blend-inspired studio themes |
+| `Dirkster.AvalonDock.Themes.Metro` | `net48`, `net8.0-windows`–`net11.0-windows` | `MetroTheme` — clean, flat Metro / WinUI style |
+| `Dirkster.AvalonDock.Themes.Aero` | `net48`, `net8.0-windows`–`net11.0-windows` | `AeroTheme` — classic Windows Aero appearance |
 
 ---
 
-## Quick Start
+## Root Controls: `DockingManager` & `ToggleDockingManager`
 
-Install the packages you need:
+AvalonDock v5 provides two root WPF docking controls:
 
-```bash
-dotnet add package Dirkster.AvalonDock
-dotnet add package Dirkster.AvalonDock.Mvvm
-dotnet add package Dirkster.AvalonDock.Mvvm.CommunityToolkit  # optional, for [ObservableProperty] support
-dotnet add package Dirkster.AvalonDock.DependencyInjection
-dotnet add package Dirkster.AvalonDock.Themes.Arc
-```
+### 1. Classic `DockingManager`
+`DockingManager` delivers the traditional Visual Studio docking experience: 4-edge auto-hide flyout pins, nested horizontal/vertical proportional splitters, tabbed document groups, tear-off owned floating windows (`AllowFloatingWindows`), and standalone top-level OS tool windows with taskbar entries (`AllowDetachedWindows`).
+
+<img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/Document.png" alt="Classic DockingManager" width="800">
+
+### 2. `ToggleDockingManager` (6-Zone IDE Sidebars)
+`ToggleDockingManager` subclasses `DockingManager` and adds left and right vertical sidebar rails segmented into **6 `DockZone` button bars** (`LeftTop`, `LeftBottom`, `RightTop`, `RightBottom`, `BottomLeft`, `BottomRight`) modeled after VS Code and JetBrains Rider—complete with click-to-toggle panels, keyboard shortcut bindings (`IToolbox.Shortcut`), and a 6-zone drag-and-drop overlay.
+
+<img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Welcome.png" alt="ToggleDockingManager with Arc Dark Theme" width="800">
 
 ---
-
-## Docking Manager
-The `DockingManager` control is the main entry point for using AvalonDock in your WPF application. It provides the core docking functionality, including layout management, drag-and-drop support, and theme integration.
-AvalonDock also includes a `ToggleDockingManager` which adds a built-in sidebar for toggling tool windows, similar to VS Code's or Jetbrains IDE's behavior.
-
-### DockingManager
-
-The standard `DockingManager` provides a blank canvas for custom layouts and is ideal for applications that require full control over the docking behavior and UI.
-
-<img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/Document.png" alt="ClassicDockingManager" width="800">
-
-### ToggleDockingManager
-
-The `ToggleDockingManager` includes a built-in sidebar that automatically populates with registered tool windows (anchorable view models). This is perfect for applications that want a modern, out-of-the-box docking experience without manual layout management.
-<img src="docs/images/AvalonDockCodeApp_Dark_Welcome.png" alt="AvalonDockCodeApp Dark Welcome" width="800">
 
 ## Dependency Injection
 
-The `AvalonDock.DependencyInjection` package provides `IServiceCollection` extension methods to wire up the entire docking system through your DI container. This replaces manual `DocumentsSource`/`AnchorablesSource` binding with a clean, service-oriented composition root.
+`AvalonDock.DependencyInjection` wires `IDockLayoutService`, `SideToggleManager`, window policies, and `IToolbox` singletons through `Microsoft.Extensions.DependencyInjection`, replacing manual `DocumentsSource` / `AnchorablesSource` collection plumbing with a clean composition root.
 
-### Extension Methods
-
-| Method | Purpose |
-|:-------|:--------|
-| `AddDockLayoutService(configure)` | Register `IDockLayoutService` with a builder to configure toolboxes and toggle dock options in a single call |
-| `AddDockLayoutService()` | Register `IDockLayoutService` without builder configuration |
-| `AddAvalonDock<TFactory>()` | Register a custom `IFactory` implementation |
-| `AddAvalonDockSerializer<T>()` | Register an `ILayoutSerializer` (such as `XmlLayoutSerializer`) |
-| `AddAvalonDockThemeManager<T>()` | Register a theme manager |
-| `AddDockingManager(factory)` | Register an `IDockingManager` wrapper |
-| `AddAutoHideManager<T>()` | Register an auto-hide manager |
-| `AddFloatingWindowService<T>()` | Register a floating window service |
-| `AddDragDropHandler<T>()` | Register a custom drag-and-drop handler |
-
-#### DockLayoutBuilder Methods
+### `IServiceCollection` & `DockLayoutBuilder` Reference
 
 | Method | Purpose |
 |:-------|:--------|
-| `ConfigureToggleDock(configure)` | Configure sidebar button size, default dock dimensions, and layout priority |
-| `AddToolbox<T>()` | Register a toolbox (anchorable) view model as a singleton |
-| `AddToolbox<T>(factory)` | Register a toolbox with a custom factory for constructor parameters |
+| `AddDockLayoutService(configure)` | Registers `IDockLayoutService` (`DockLayoutService`), `SideToggleManager`, `DockingOptions`, and `ToggleDockOptions` via `DockLayoutBuilder` |
+| `AddDockLayoutService()` / `AddDockLayoutService<T>()` | Registers default or custom `IDockLayoutService` without inline builder configuration |
+| `dock.ConfigureDocking(configure)` | *(Builder)* Configures window policies (`AllowFloatingWindows`, `AllowDetachedWindows`) on `IRootDock` |
+| `dock.ConfigureToggleDock(configure)` | *(Builder)* Configures sidebar button size, default dock dimensions, header buttons, and `LayoutPriority` |
+| `dock.AddToolbox<T>()` / `dock.AddToolbox<T>(factory)` | *(Builder)* Registers an `IToolbox` ViewModel singleton in sidebar registration order |
+| `AddAvalonDock<TFactory>()` | Registers a custom `IFactory` implementation |
+| `AddAvalonDockSerializer<T>()` | Registers an `ILayoutSerializer` singleton (such as `XmlLayoutSerializer`) |
+| `AddAvalonDockThemeManager<T>()` | Registers an `IThemeManager` singleton |
+| `AddDockingManager(factory)` | Registers an `IDockingManager` wrapper |
+| `AddAutoHideManager<T>()` / `AddFloatingWindowService<T>()` / `AddDragDropHandler<T>()` | Registers pluggable auto-hide, floating-window, or drag-and-drop services |
 
 ### Composition Root Example
 
 ```csharp
-using AvalonDock.Core;
+using AvalonDock;
 using AvalonDock.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 public partial class App : Application
 {
-    private IServiceProvider? _serviceProvider;
+    private ServiceProvider? _serviceProvider;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -127,7 +234,6 @@ public partial class App : Application
 
         var services = new ServiceCollection();
 
-        // Configure dock layout: toggle dock options + toolboxes in one call
         services.AddDockLayoutService(dock =>
         {
             dock.ConfigureToggleDock(opts =>
@@ -135,7 +241,9 @@ public partial class App : Application
                 opts.ButtonSize = 28;
                 opts.DefaultDockWidth = 280;
                 opts.DefaultDockHeight = 220;
-                opts.LayoutPriority = nameof(AvalonDock.DockLayoutPriority.BottomFullWidth);
+                opts.LayoutPriority = nameof(DockLayoutPriority.BottomFullWidth);
+                opts.AllowFloatingWindows = true;
+                opts.AllowDetachedWindows = true;
             });
 
             dock.AddToolbox<ExplorerToolbox>();
@@ -152,57 +260,39 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
-        (_serviceProvider as IDisposable)?.Dispose();
+        _serviceProvider?.Dispose();
         base.OnExit(e);
     }
 }
 ```
 
-### Layout Priority Options
+### Layout Priority Modes (`ToggleDockingManager`)
 
-The `LayoutPriority` setting controls how panels are arranged when multiple panels are docked:
+| Priority | Panel Arrangement | IDE Equivalent |
+|:---------|:------------------|:---------------|
+| `BottomFullWidth` | Bottom panel spans the full window width; left/right panels sit above it | JetBrains Rider |
+| `SidesFullHeight` | Left and right sidebars span the full window height; bottom panel sits between them | VS Code |
+| `Default` | Preserves standard split tree order without automatic restructuring | Classic AvalonDock |
 
-| Priority | Behavior | Similar To |
-|:---------|:---------|:-----------|
-| `BottomFullWidth` | Bottom panel spans the full window width | JetBrains Rider |
-| `SidesFullHeight` | Side panels span the full window height | VS Code |
-| `Default` | No automatic restructuring | Classic AvalonDock |
-
-For a complete walkthrough, see the [Dependency Injection tutorial](docs/tutorials/dependency-injection-app.md).
+See the [Dependency Injection Guide](new-docs-carbon4/guides/dependency-injection.md) and [Dependency Injection App Tutorial](new-docs-carbon4/tutorials/dependency-injection-app.md) for complete examples.
 
 ---
 
-## MVVM
+## MVVM Integration
 
-The `AvalonDock.Mvvm` package provides ready-to-use view model base classes with zero external dependencies. These classes implement the core interfaces from `AvalonDock.Core` and handle property change notifications, serialization attributes, and docking behavior out of the box.
+`AvalonDock.Mvvm` (zero external dependencies) and `AvalonDock.Mvvm.CommunityToolkit` (`ObservableObject`-backed) both implement the `AvalonDock.Core` contracts (`IDockable`, `IToolbox`, `IDock`) on `netstandard2.0` so ViewModel assemblies never reference WPF:
 
-For projects using [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) source generators (`[ObservableProperty]`, `[RelayCommand]`), install the optional `AvalonDock.Mvvm.CommunityToolkit` package which provides `ObservableObject`-based equivalents.
+| Role | `AvalonDock.Mvvm` *(zero external deps)* | `AvalonDock.Mvvm.CommunityToolkit` *(`ObservableObject`)* | Core Contract |
+|:-----|:-----------------------------------------|:----------------------------------------------------------|:--------------|
+| Abstract dockable base | `DockableBase` | `ObservableDockableBase` | `IDockable` |
+| Abstract toolbox base | `ToolboxBase` | `ObservableToolboxBase` | `IToolbox` |
+| Abstract dock container | `DockBase` | `ObservableDockBase` | `IDock` |
+| Leaf document / tool | `Document` / `Tool` | `ObservableDocument` / `ObservableTool` | `IDockable` |
+| Layout container VMs | `RootDock`, `DocumentDock`, `ToolDock` | *(managed by `DockLayoutService` via `AvalonDock.Mvvm`)* | `IRootDock`, `IDocumentDock`, `IToolDock` |
 
-### Base Classes
+### Defining a Toolbox ViewModel
 
-**`AvalonDock.Mvvm`** (no external dependencies):
-
-| Class | Purpose |
-|:------|:--------|
-| `DockableBase` | Base for all dockable view models — provides `Id`, `Title`, `CanClose`, `CanFloat`, `CanPin`, `IsModified`, `DockState`, and more |
-| `ToolboxBase` | Base for toolbox (anchorable) view models — adds `Zone`, `IsOpenByDefault`, `ToolTipText`, and `Icon` |
-| `DockBase` | Container for multiple dockables — manages `VisibleDockables`, `ActiveDockable`, and navigation |
-| `RootDock` | Root of the layout tree — manages floating and pinned dockables |
-| `DocumentDock` | Container for document tabs |
-| `ToolDock` | Container for tool windows with `Alignment` and `AutoHide` support |
-
-**`AvalonDock.Mvvm.CommunityToolkit`** (requires CommunityToolkit.Mvvm):
-
-| Class | Purpose |
-|:------|:--------|
-| `ObservableDockableBase` | `ObservableObject`-based equivalent of `DockableBase` — supports `[ObservableProperty]` and `[RelayCommand]` |
-| `ObservableToolboxBase` | `ObservableObject`-based equivalent of `ToolboxBase` |
-| `ObservableDockBase` | `ObservableObject`-based equivalent of `DockBase` |
-| `ObservableDocument` / `ObservableTool` | Leaf dockable classes for documents and tools |
-
-### Creating a Toolbox View Model
-
-Using `AvalonDock.Mvvm` (no external dependencies):
+Zero-dependency (`AvalonDock.Mvvm`):
 
 ```csharp
 using AvalonDock.Core;
@@ -214,14 +304,15 @@ public class ExplorerToolbox : ToolboxBase
     {
         Id = "Explorer";
         Title = "Explorer";
-        Zone = DockZone.LeftTop;        // Sidebar placement zone
-        IsOpenByDefault = true;          // Open when app starts
+        Zone = DockZone.LeftTop;
+        Shortcut = "Ctrl+Shift+E";
+        IsOpenByDefault = true;
         ToolTipText = "Solution Explorer";
     }
 }
 ```
 
-Using `AvalonDock.Mvvm.CommunityToolkit` (with `[ObservableProperty]` support):
+With `CommunityToolkit.Mvvm` source generators (`AvalonDock.Mvvm.CommunityToolkit`):
 
 ```csharp
 using AvalonDock.Core;
@@ -243,21 +334,21 @@ public partial class ExplorerToolbox : ObservableToolboxBase
 }
 ```
 
-### Dock Zones
+### Sidebar `DockZone` Placement
 
-Toolboxes declare their sidebar placement using `DockZone`:
+| `DockZone` | Sidebar Rail & Group |
+|:-----------|:---------------------|
+| `LeftTop` / `LeftBottom` | Left sidebar (upper / lower group) |
+| `RightTop` / `RightBottom` | Right sidebar (upper / lower group) |
+| `BottomLeft` / `BottomRight` | Bottom panel toggles (docked on left / right rail bottom) |
 
-| Zone | Position |
-|:-----|:---------|
-| `LeftTop` / `LeftBottom` | Left sidebar |
-| `RightTop` / `RightBottom` | Right sidebar |
-| `BottomLeft` / `BottomRight` | Bottom panel |
-
-### IDockLayoutService
-
-`IDockLayoutService` is the central service for managing documents and toolboxes at runtime:
+### Driving Layouts with `IDockLayoutService`
 
 ```csharp
+using System.Collections.Generic;
+using System.IO;
+using AvalonDock.Core;
+
 public class MainViewModel
 {
     private readonly IDockLayoutService _dockService;
@@ -267,209 +358,188 @@ public class MainViewModel
         _dockService = dockService;
     }
 
-    // Open a new document
     public void OpenFile(string filePath)
     {
         _dockService.OpenOrActivateDocument(
-            existing => existing.FilePath == filePath,
-            () => new EditorTabViewModel { Title = Path.GetFileName(filePath) });
+            existing => existing.Id == filePath,
+            () => new EditorTabViewModel { Id = filePath, Title = Path.GetFileName(filePath) });
     }
 
-    // Close a document
     public void CloseFile(IDockable document) => _dockService.CloseDocument(document);
 
-    // Access a registered toolbox by type
     public ExplorerToolbox? Explorer => _dockService.GetAnchorable<ExplorerToolbox>();
 
-    // Iterate all open documents
     public IEnumerable<IDockable> Documents => _dockService.Documents;
 
-    // Bind this to ToggleDockingManager.DockLayout in XAML
+    // Bind to ToggleDockingManager.DockLayout or DockingManager.DockLayout
     public IRootDock DockLayout => _dockService.Layout;
 }
 ```
 
-### XAML Binding
+### Binding `DockLayout` in XAML
 
-For the `ToggleDockingManager`, bind the `DockLayout` property to your view model:
+Both `ToggleDockingManager` and classic `DockingManager` bind `IRootDock` via the **`DockLayout`** dependency property (whereas `Layout` holds the WPF `LayoutRoot` visual model). Map `LayoutItem.ContentId` to `Model.Id` in `LayoutItemContainerStyle`:
 
 ```xml
+<!-- VS Code / Rider-style ToggleDockingManager -->
 <avalonDock:ToggleDockingManager x:Name="dockManager"
+    DockLayout="{Binding DockLayout}"
+    LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}" />
+
+<!-- Classic Visual Studio-style DockingManager -->
+<avalonDock:DockingManager x:Name="dockManager"
     DockLayout="{Binding DockLayout}"
     LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}" />
 ```
 
-For the classic `DockingManager`, bind the `DockLayout` to the `Layout` property:
+See the [MVVM Integration Guide](new-docs-carbon4/guides/mvvm.md) and [MVVM IDE Tutorial](new-docs-carbon4/tutorials/mvvm-ide.md) for complete style selector and template examples.
 
-```xml
-<avalonDock:DockingManager x:Name="dockManager"
-    Layout="{Binding DockLayout}"
-    LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}" />
-```
 ---
 
-## Architecture (v5.0)
+## Architecture & Supported Frameworks
 
-AvalonDock v5 is organized into modular packages with clear separation of concerns:
-
+```text
+AvalonDock.Core                       UI-agnostic contracts & 17 serialization DTOs (netstandard2.0)
+├── AvalonDock.Mvvm                   Zero-dependency MVVM base classes & DockLayoutService (netstandard2.0)
+│   └── AvalonDock.DependencyInjection  IServiceCollection & DockLayoutBuilder extensions (netstandard2.0)
+├── AvalonDock.Mvvm.CommunityToolkit  CommunityToolkit.Mvvm ObservableObject bridge (netstandard2.0)
+├── AvalonDock.Serializer.Xml         Inbox XML DTO layout persistence (netstandard2.0, zero external deps)
+└── AvalonDock                        WPF DockingManager, ToggleDockingManager, Layout*, Controls*
+    │                                 (net48; net8.0-windows; net9.0-windows; net10.0-windows; net11.0-windows)
+    └── AvalonDock.Themes.*           Arc, VS2010, Expression, Metro, Aero WPF theme libraries
 ```
-AvalonDock.Core            UI-agnostic interfaces (IDockable, IDock, IFactory, IToolbox, etc.)
-  └── netstandard2.0       Cross-platform abstractions
 
-AvalonDock.Mvvm            MVVM base classes (DockableBase, ToolboxBase, etc.) — no external deps
-  └── netstandard2.0
+| Target Framework | Role in This Fork | OS Support |
+|:-----------------|:------------------|:-----------|
+| **`.NET Framework 4.8` (`net48`)** | **Primary prioritized desktop target** (WPF controls, themes, tests) | Windows 7 SP1 64-bit – Windows 11 |
+| **`.NET Standard 2.0` (`netstandard2.0`)** | UI-agnostic `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | Shared across `net48` and `.NET 8`–`11` |
+| **`.NET 8.0` – `.NET 11.0` (`-windows`)** | Modern .NET desktop WPF support (`net8.0`, `net9.0`, `net10.0`, `net11.0-windows`) | Windows 10 / Windows 11 |
 
-AvalonDock.Mvvm.CommunityToolkit  CommunityToolkit.Mvvm integration ([ObservableProperty] support)
-  └── netstandard2.0
-
-AvalonDock.DependencyInjection  IServiceCollection extensions
-  └── netstandard2.0
-
-AvalonDock                 WPF docking library (DockingManager, ToggleDockingManager)
-  ├── net8.0-windows
-  ├── net9.0-windows
-  ├── net10.0-windows
-  ├── net11.0-windows
-  └── net48
-
-AvalonDock.Serializer.Xml  XML layout persistence (extracted from core in v5)
-AvalonDock.Themes.*        Theme packages (Arc, Aero, Expression, Metro, VS2010)
-```
+---
 
 ## Theming
 
-### Arc Theme (NEW!)
-
-Modern theme with compact tabs, rounded corners, and semi-transparent design elements:
+Switch themes in XAML or live at runtime in C#:
 
 ```csharp
-dockManager.Theme = new ArcDarkTheme();  // Dark mode
-dockManager.Theme = new ArcLightTheme(); // Light mode
+dockManager.Theme = new ArcDarkTheme();         // Modern compact dark theme
+dockManager.Theme = new ArcLightTheme();        // Modern compact light theme
+dockManager.Theme = new VS2010Theme();          // Classic Visual Studio 2010 style
+dockManager.Theme = new ExpressionDarkTheme();  // Expression Blend dark style
+dockManager.Theme = new MetroTheme();           // Flat Metro style
+dockManager.Theme = new AeroTheme();            // Classic Windows Aero style
 ```
 
-### Other Themes
-
-- **VS2010** — Visual Studio 2010 style
-- **Expression Dark/Light** — Expression Blend inspired
-- **Metro** — Modern Metro/WinUI style
-- **Aero** — Classic Windows Aero theme
+For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](new-docs-carbon4/guides/theming.md) and [Custom Themes](new-docs-carbon4/guides/custom-themes.md).
 
 ---
 
 ## Migrating from v4.x
 
-Version 5.0.0 includes several breaking changes. See the full [Breaking Changes](docs/migration/breaking-changes.md) guide.
+Upgrading from AvalonDock v4.x involves key structural updates—plus the `System.Text.Json`-free constraints of this fork:
 
-### Key Changes
+| Change | Impact | Required Action |
+|:-------|:-------|:----------------|
+| XML serializer extracted to `AvalonDock.Serializer.Xml` | High | Reference `AvalonDock.Serializer.Xml`; update `using AvalonDock.Layout.Serialization;` → `using AvalonDock.Serializer.Xml;` + `using AvalonDock.Core;` |
+| `IXmlSerializable` removed from layout classes | Medium | Subclass `AvalonDock.Core.LayoutSerializerBase` over `LayoutRootDto` for custom formats |
+| `VS2013` / `Themes.VS` / `Serializer.Json` absent in this fork | Medium | Use `ArcDarkTheme` / `ArcLightTheme` or `VS2010Theme`, and `XmlLayoutSerializer` |
+| Unresolved deserialized anchorables removed by default | Medium | Opt into `UnresolvedContentHandling.Hide` if lazy-loading plugin panes after layout restore |
+| Frameworks older than `.NET Framework 4.8` / `.NET 8` dropped | High | Target `net48` or `net8.0-windows`–`net11.0-windows` |
 
-| Change | Impact | Action |
-|:-------|:-------|:-------|
-| XML serializer moved to `AvalonDock.Serializer.Xml` | High | Install serializer package, update `using` statements |
-| Namespace `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | High | Update `using` statements |
-| .NET Framework < 4.8 dropped | High | Upgrade target framework |
-| .NET Core 3.x / 5 dropped | High | Upgrade target framework |
-| `ILayoutEngine` introduced | Low | No action for default behavior |
-
-### Supported Frameworks
-
-- **.NET Framework 4.8**
-- **.NET 8.0** (`net8.0-windows`)
-- **.NET 9.0** (`net9.0-windows`)
-- **.NET 10.0** (`net10.0-windows`)
-- **.NET 11.0** (`net11.0-windows`)
+Read the complete [Migration Guide](new-docs-carbon4/migration/index.md) and [Breaking Changes Reference](new-docs-carbon4/migration/breaking-changes.md).
 
 ---
 
-## Building from Source
+## Building & Testing from Source
 
-This project requires **Windows** (WPF is Windows-only) and **.NET SDK 9.0.x / 10.0.x / 11.0.x**.
+Prerequisites: **Windows** (`UseWPF=true`), **.NET 8.0 / 9.0 / 10.0 / 11.0 SDKs**, and the **.NET Framework 4.8 Developer Pack**. `TreatWarningsAsErrors` is enabled globally across the solution.
 
-```bash
+```powershell
+# Restore & compile with zero-warnings enforcement
 dotnet restore source/AvalonDock.sln
-dotnet build source/AvalonDock.sln --configuration Release --no-restore
-dotnet test source/AvalonDock.sln --configuration Release --no-restore -m:1
+dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnaserror
+
+# Fast unit, XML DTO round-trip, MVVM, DI, and STA layout regression tests (always pass -m:1)
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
+
+# FlaUI desktop UI automation tests
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+See [Building from Source](new-docs-carbon4/getting-started/building-from-source.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for analyzer rules and STA testing guidelines.
 
 ---
 
 ## Screenshots
 
-### ToggleDockingManager
+### `ToggleDockingManager` (Arc Dark & Light)
 <table width="100%">
    <tr>
-      <td>Description</td>
-      <td>Dark</td>
-      <td>Light</td>
+      <td><strong>View</strong></td>
+      <td><strong>Dark</strong></td>
+      <td><strong>Light</strong></td>
    </tr>
    <tr>
       <td>Dock Document</td>
-      <td><img src="docs/images/AvalonDockCodeApp_Dark_Drag_Document.png" width="400"></td>
-      <td><img src="docs/images/AvalonDockCodeApp_Light_Drag_Document.png" width="400"></td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Drag_Document.png" alt="Dark Drag Document" width="400"></td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Drag_Document.png" alt="Light Drag Document" width="400"></td>
    </tr>
    <tr>
-      <td>Dock Tool Window</td>
-      <td><img src="docs/images/AvalonDockCodeApp_Dark_Drag.png" width="400"></td>
-      <td><img src="docs/images/AvalonDockCodeApp_Light_Drag.png" width="400"></td>
+      <td>Dock Tool Window (6-Zone Overlay)</td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Drag.png" alt="Dark Drag Tool Window" width="400"></td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Drag.png" alt="Light Drag Tool Window" width="400"></td>
    </tr>
    <tr>
-      <td>Document</td>
-      <td><img src="docs/images/AvalonDockCodeApp_Dark_Welcome.png" width="400"></td>
-      <td><img src="docs/images/AvalonDockCodeApp_Light_Welcome.png" width="400"></td>
+      <td>Document Workspace</td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Welcome.png" alt="Dark Welcome Document" width="400"></td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Welcome.png" alt="Light Welcome Document" width="400"></td>
    </tr>
    <tr>
-      <td>Tool Window</td>
-      <td><img src="docs/images/AvalonDockCodeApp_Dark_Toolbox.png" width="400"></td>
-      <td><img src="docs/images/AvalonDockCodeApp_Light_Toolbox.png" width="400"></td>
+      <td>Sidebar Toolbox</td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Toolbox.png" alt="Dark Toolbox" width="400"></td>
+      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Toolbox.png" alt="Light Toolbox" width="400"></td>
    </tr>
 </table>
 
-### Classic DockingManager
+### Classic `DockingManager`
 <table width="100%">
    <tr>
-      <td>Description</td>
-      <td>Dark</td>
-      <td>Light</td>
+      <td><strong>View</strong></td>
+      <td><strong>Dark</strong></td>
+      <td><strong>Light</strong></td>
    </tr>
    <tr>
       <td>Dock Document</td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/DockDocument.png" width="400"></td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/DockDocument.png" width="400"></td>
-   </tr>
-   <tr>
-      <td>Dock Document</td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/DockDocument_1.png" width="400"></td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/DockDocument_1.png" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/DockDocument.png" alt="Classic Dark Dock Document" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/DockDocument.png" alt="Classic Light Dock Document" width="400"></td>
    </tr>
    <tr>
       <td>Dock Tool Window</td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/DockToolWindow.png" width="400"></td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/DockToolWindow.png" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/DockToolWindow.png" alt="Classic Dark Dock Tool Window" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/DockToolWindow.png" alt="Classic Light Dock Tool Window" width="400"></td>
    </tr>
    <tr>
-      <td>Document</td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/Document.png" width="400"></td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/Document.png" width="400"></td>
+      <td>Document Workspace</td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/Document.png" alt="Classic Dark Document" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/Document.png" alt="Classic Light Document" width="400"></td>
    </tr>
    <tr>
       <td>Tool Window</td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/ToolWindow.png" width="400"></td>
-      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/ToolWindow.png" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Dark/ToolWindow.png" alt="Classic Dark Tool Window" width="400"></td>
+      <td><img src="https://raw.githubusercontent.com/Dirkster99/Docu/master/AvalonDock/VS2013/AD_MLib/Light/ToolWindow.png" alt="Classic Light Tool Window" width="400"></td>
    </tr>
 </table>
 
 ---
 
-## Release History
+## Documentation, Internals & Roadmap
 
-For detailed release notes and version history, see the [GitHub Releases](https://github.com/Dirkster99/AvalonDock/releases) page.
-
-## More Resources
-
-- [Documentation](docs/)
-- [Project Wiki](https://github.com/Dirkster99/AvalonDock/wiki)
-- [DI Tutorial](docs/tutorials/dependency-injection-app.md)
-- [Breaking Changes (v5.0)](docs/migration/breaking-changes.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [License (MS-PL)](LICENSE)
+- **[v5 Documentation Suite (`new-docs-carbon4/`)](new-docs-carbon4/index.md)** — 38-page user guide, tutorials, theme gallery, migration checklist, and API reference
+- **[Fork Roadmap & Caliburn.Micro Bridge (`ROADMAP.md`)](ROADMAP.md)** — Planned `AvalonDock.Mvvm.CaliburnMicro` BCL design, sample app modernization, and [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) vendoring plan
+- **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
+- **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map
+- **[Engine Internals Deep Dive (`SKILL.md`)](.agents/skills/avalondock-internals/SKILL.md)** — Inside-out explanation of the 3 parallel trees, `LayoutItem` depth ordering, `LayoutSyncBridge`, 6-zone sidebars, windowing/airspace, and DTO fixup
+- **[Repository Map (`REPO_MAP.md`)](REPO_MAP.md)** & **[SLOC Report (`SLOC_Report.md`)](SLOC_Report.md)** — Complete directory map and source metrics
+- **[Contributing Guidelines (`CONTRIBUTING.md`)](CONTRIBUTING.md)** & **[License — Ms-PL (`LICENSE`)](LICENSE)**
+- **Upstream Creator Repository:** [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) | [Upstream Releases](https://github.com/Dirkster99/AvalonDock/releases)

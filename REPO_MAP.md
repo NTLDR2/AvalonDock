@@ -55,8 +55,9 @@ AvalonDock-V5-NEW/
 ├── AGENTS.md                          # Build, test, code-style, and commit instructions for AI agents
 ├── CONTRIBUTING.md                    # Root contributor guidelines
 ├── LICENSE                            # Open-source license packed into all 11 NuGet packages
-├── README.md                          # Repository landing page
+├── README.md                          # Repository landing page & fork Quick Start
 ├── REPO_MAP.md                        # This repository map
+├── ROADMAP.md                         # SomaFrameQD vendoring, Caliburn.Micro BCL spec & sample modernization
 └── SLOC_Report.md                     # Detailed SLOC metrics
 ```
 
@@ -218,3 +219,4 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 | Modify drag-drop docking targets or `Ctrl+Tab` navigator | `Components/AvalonDock/Controls/OverlayWindow.cs`, `*DropTarget.cs`, `DragService.cs`, `NavigatorWindow.cs`, `Components/AvalonDock.Core/Controls/Overlay*.cs` | `concepts/floating-windows.md`, `api-reference/controls.md` |
 | Add or fix a theme or brush key | `Components/AvalonDock/Themes/*.cs`, `Components/AvalonDock.Themes.Arc/`, `Components/AvalonDock.Themes.*` | `themes/index.md`, `themes/arc.md`, `guides/theming.md`, `guides/custom-themes.md` |
 | Add unit tests or FlaUI UI automation tests | `AutomationTest/AvalonDockTest/*.cs`, `AutomationTest/AvalonDockTest/FlaUI/*.cs` | `getting-started/building-from-source.md`, `contributing.md` |
+| Implement `AvalonDock.Mvvm.CaliburnMicro` or modernize `CaliburnDockTestApp` | `CaliburnDockTestApp/`, `Components/AvalonDock.Mvvm.CommunityToolkit/*.cs`, `Components/AvalonDock.Mvvm/*.cs` | Root `ROADMAP.md` + AI-ready Caliburn.Micro internals repo (`https://github.com/NTLDR2/Caliburn.Micro`) |
