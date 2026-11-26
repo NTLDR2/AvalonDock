@@ -1,49 +1,47 @@
-# Contributing to AvalonDock
+# Contributing to AvalonDock (NTLDR2 Fork)
 
-Thank you for considering contributing to AvalonDock! Here's how to get started.
+Thank you for contributing to **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)** (an opinionated `v5.1.0` fork of [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) prioritizing `.NET Framework 4.8` + WPF and zero `System.Text.Json` dependencies).
 
 ## Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (or later)
-- Windows (WPF is Windows-only)
-- Visual Studio 2022 or later (recommended), or any editor with .NET support
+- **OS:** Windows (`UseWPF=true` requires Windows)
+- **.NET SDKs:** **.NET 8.0**, **.NET 9.0**, **.NET 10.0**, and **.NET 11.0** SDKs, plus the **.NET Framework 4.8 Developer Pack**
+- **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or VS Code with .NET CLI support
 
-## Building
+## Building (`--warnaserror`)
 
-```bash
-dotnet build source/AvalonDock.sln
+`TreatWarningsAsErrors` is enabled globally in `source/Directory.Build.props`, and public APIs require XML documentation comments:
+
+```powershell
+dotnet restore source/AvalonDock.sln
+dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnaserror
 ```
 
-## Running Tests
+## Running Tests (`-m:1`)
 
-The test suite uses **NUnit** and requires single-threaded execution for WPF/STA compatibility:
+Always execute tests single-threaded (`-m:1`) because WPF STA dispatchers and multi-targeted `net48` / modern `.NET` test hosts cannot run safely in parallel:
 
-```bash
-dotnet test source/AvalonDock.sln -m:1
+```powershell
+# Fast unit, XML DTO serialization, MVVM, DI, and STA layout regression tests
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
+
+# Desktop UI automation tests (FlaUI)
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net10.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
 ```
 
-## Submitting a Pull Request
+## Fork Guardrails & Pull Request Expectations
 
-1. Fork the repository and create your branch from `master`
-2. Make your changes
-3. Ensure the solution builds without errors
-4. Run the tests and verify they pass
-5. Open a pull request against `master`
-
-### PR expectations
-
-- Keep changes focused — one feature or fix per PR
-- Follow existing code style (tabs for indentation, UTF-8, LF line endings — see `.editorconfig`)
-- Add or update tests if applicable
-- Provide a clear description of what the PR does and why
+- **Zero `System.Text.Json`:** Never add `System.Text.Json` package references or imports to any library, sample, or test project.
+- **`.NET Framework 4.8` & `netstandard2.0` Boundaries:** Verify changes compile and pass tests on `net48` as well as modern `.NET`, and never reference `System.Windows.*` inside `netstandard2.0` projects (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`).
+- **Code Style:** Follow `source/.editorconfig` (tabs for indentation, UTF-8, LF line endings, Allman braces, `using` directives outside `namespace`).
+- **Documentation (`documentation/`):** The 38-page Jekyll documentation site lives in `documentation/` (deployed automatically via `.github/workflows/docs.yml`). When updating migration or version notes, explicitly distinguish **Upstream `v5.0.0`–`v5.1.0`** changes from **`NTLDR2 Fork v5.1.0`** changes. Also keep [AGENTS.md](AGENTS.md), [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md), and [ROADMAP.md](ROADMAP.md) aligned when modifying architectural behavior.
 
 ## Reporting Issues
 
-- Use [GitHub Issues](https://github.com/Dirkster99/AvalonDock/issues) to report bugs or request features
-- Include steps to reproduce for bugs
-- Include the .NET version and OS version you're using
+- Report fork-specific issues or roadmap proposals on [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues).
+- For upstream `Dirkster.AvalonDock` discussions and upstream NuGet releases, see [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock).
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same
-[MS-PL / Apache 2.0 License](LICENSE) that covers the project.
+By contributing, you agree that your contributions will be licensed under the [Microsoft Public License (Ms-PL)](LICENSE) that covers the project.

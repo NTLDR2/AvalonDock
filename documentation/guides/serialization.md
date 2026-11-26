@@ -33,6 +33,9 @@ AvalonDock v5 persists and restores complete docking layouts—including split o
 dotnet add package Dirkster.AvalonDock.Serializer.Xml
 ```
 
+{: .note }
+**Fork Scope (`NTLDR2 Fork v5.1.0` vs. Upstream `v5.0.0`):** Upstream `Dirkster99/AvalonDock v5.0.0` also introduced `Dirkster.AvalonDock.Serializer.Json`. In **`NTLDR2/AvalonDock` (`v5.1.0` fork)**, `Serializer.Json` is intentionally omitted to guarantee zero `System.Text.Json` assembly conflicts on `.NET Framework 4.8`. Applications requiring custom wire formats (JSON, binary, YAML, SQLite) can subclass `AvalonDock.Core.LayoutSerializerBase` directly against `LayoutRootDto`.
+
 ---
 
 ## Serialize and Deserialize Overloads

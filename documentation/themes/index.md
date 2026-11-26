@@ -13,6 +13,9 @@ AvalonDock provides **five dedicated theme NuGet packages** (delivering 7 ready-
 
 Every theme package targets `net8.0-windows`, `net9.0-windows`, `net10.0-windows`, `net11.0-windows`, and `net48` with zero third-party NuGet dependencies, and styles both classic `DockingManager` layouts and [`ToggleDockingManager`]({{ site.baseurl }}{% link guides/toggle-docking-manager.md %}) sidebars natively.
 
+{: .note }
+**Fork Scope (`NTLDR2 Fork v5.1.0` vs. Upstream `v5.0.0`):** Upstream `Dirkster99/AvalonDock v5.0.0` additionally shipped `Dirkster.AvalonDock.Themes.VS` and `Dirkster.AvalonDock.Themes.VS2013`. **`NTLDR2/AvalonDock` (`v5.1.0` fork)** omits both packages because they depended on `System.Text.Json`—use `Themes.Arc` (`ArcDarkTheme` / `ArcLightTheme`), `Themes.Expression`, or `Themes.VS2010` instead.
+
 ---
 
 ## Preview: Arc Dark & Arc Light

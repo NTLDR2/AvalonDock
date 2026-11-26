@@ -8,17 +8,16 @@ permalink: /contributing/
 
 # Contributing
 
-AvalonDock is an open source project and contributions are welcome! Here is everything you need to set up your environment, run tests, and open a pull request.
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)** is an open-source `v5.1.0` fork of [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock), and focused contributions are welcome! Here is everything you need to set up your environment, run tests, and open a pull request.
 
 ---
 
 ## Ways to Contribute
 
-- **Star** the [repository](https://github.com/Dirkster99/AvalonDock) to show your support
-- **Report bugs** via [GitHub Issues](https://github.com/Dirkster99/AvalonDock/issues) with reproduction steps, OS version, and .NET target framework
-- **Request features** or discuss design ideas via [GitHub Issues](https://github.com/Dirkster99/AvalonDock/issues) and [Discussions](https://github.com/Dirkster99/AvalonDock/discussions)
-- **Submit pull requests** with focused bug fixes, tests, or improvements
-- **Improve documentation** — the documentation site source lives in `docs/`
+- **Star** the [NTLDR2/AvalonDock repository](https://github.com/NTLDR2/AvalonDock) (and upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock))
+- **Report fork bugs or roadmap feedback** via [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues) with reproduction steps, OS version, and .NET target framework (`net48` or `.NET 8–11`)
+- **Submit pull requests** with focused bug fixes, tests, or documentation improvements
+- **Improve documentation** — the Jekyll documentation site source lives in `documentation/` and deploys via `.github/workflows/docs.yml` (always label `Upstream v5.0.0`–`v5.1.0` vs. `NTLDR2 Fork v5.1.0` scope explicitly when editing version or migration claims)
 
 ---
 
@@ -27,15 +26,15 @@ AvalonDock is an open source project and contributions are welcome! Here is ever
 ### Prerequisites
 
 - **OS:** Windows (required — WPF projects only build and run on Windows)
-- **.NET SDKs:** **.NET 9.0**, **.NET 10.0**, and **.NET 11.0** SDKs (plus **.NET 8.0** SDK or targeting pack when building all `ComponentTargetFrameworks`; see `source/Directory.Build.props`)
-- **IDE:** Visual Studio 2022 / 2026 or any editor with C# and .NET CLI support
+- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** plus **.NET 8.0**, **.NET 9.0**, **.NET 10.0**, and **.NET 11.0** SDKs (see `source/Directory.Build.props`)
+- **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or any editor with C# and .NET CLI support
 
 ### Restore & Build
 
 All warnings are treated as errors in CI (`TreatWarningsAsErrors` is enabled in `source/Directory.Build.props`, and `AvalonDock.Core` plus all component packages enforce `GenerateDocumentationFile` so public members must carry XML documentation comments).
 
 ```powershell
-git clone https://github.com/Dirkster99/AvalonDock.git
+git clone https://github.com/NTLDR2/AvalonDock.git
 cd AvalonDock
 
 dotnet restore source/AvalonDock.sln
@@ -101,4 +100,4 @@ Every non-test project in `source/` runs static analysis during compilation:
 
 ## License
 
-By contributing to AvalonDock, you agree that your contributions will be licensed under the project's [Microsoft Public License (Ms-PL)](https://github.com/Dirkster99/AvalonDock/blob/master/LICENSE).
+By contributing to AvalonDock, you agree that your contributions will be licensed under the project's [Microsoft Public License (Ms-PL)](https://github.com/NTLDR2/AvalonDock/blob/master/LICENSE).

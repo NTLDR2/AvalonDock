@@ -45,9 +45,12 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 
 ---
 
-## Package Architecture
+## Package Architecture (`NTLDR2 Fork v5.1.0`)
 
-AvalonDock v5 ships as **11 focused NuGet packages** with strict dependency boundaries:
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** ships as **11 focused libraries** with strict dependency boundaries:
+
+{: .note }
+**Fork vs. Upstream `v5.0.0` Scope:** Upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) `v5.0.0` introduced this layered architecture across 14 packages (including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`). `NTLDR2 Fork v5.1.0` removes those 3 `System.Text.Json`-dependent packages so all 11 libraries below deploy cleanly on `.NET Framework 4.8` without binding-redirect conflicts.
 
 ### Core & WPF Host Packages
 

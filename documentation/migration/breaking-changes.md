@@ -6,9 +6,15 @@ nav_order: 1
 description: "Complete reference of breaking and behavioral changes between AvalonDock v4.x and v5."
 ---
 
-# Breaking Changes in v5
+# Breaking Changes (v4.x → v5.0.0 Upstream & NTLDR2 Fork v5.1.0)
 
-This page catalogs every source, binary, package, target-framework, and behavioral breaking change between AvalonDock v4.x and v5 (`v5.1.0`), along with new non-breaking capabilities.
+This page catalogs every source, binary, package, target-framework, and behavioral breaking change between AvalonDock v4.x and **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)**, along with new non-breaking v5 capabilities.
+
+{: .note }
+**Explicit Scope Labels:** Every change on this page is labeled by its exact origin so readers comparing against upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) release notes can distinguish upstream v5 changes from fork-specific policy:
+- **`Upstream v5.0.0`** — Architectural breaking changes introduced in Dirkster99's `v5.0.0` release (which shipped 14 packages, including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`).
+- **`Upstream v5.0.2` / `Upstream v5.1.0`** — Target framework expansions (`net8.0-windows` in `v5.0.2`; `net11.0-windows` in `v5.1.0`) and layout restore fixes (`#696`).
+- **`NTLDR2 Fork v5.1.0`** — Fork-specific removal of the 3 `System.Text.Json`-dependent packages (14 → 11 libraries) to guarantee zero `System.Text.Json` DLL hell on `.NET Framework 4.8`.
 
 ---
 
@@ -16,6 +22,7 @@ This page catalogs every source, binary, package, target-framework, and behavior
 
 ### XML Serializer Extracted to a Separate NuGet Package
 
+**Origin / Scope:** `Upstream v5.0.0` *(retained in `NTLDR2 Fork v5.1.0`)*  
 **Impact:** High — affects every project that saves or restores layouts.
 
 `XmlLayoutSerializer` is no longer bundled inside `Dirkster.AvalonDock`. It now lives in a dedicated zero-dependency `netstandard2.0` package:
@@ -35,24 +42,27 @@ This page catalogs every source, binary, package, target-framework, and behavior
 
 ### Removal of `System.Text.Json`-Dependent Packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`)
 
-**Impact:** High if referencing `Themes.VS2013` from v4 (or `Serializer.Json` / `Themes.VS` from early v5.0).
+**Origin / Scope:** **`NTLDR2 Fork v5.1.0` (Fork-Specific — Shipped in `Upstream v5.0.0`)**  
+**Impact:** High if referencing `Themes.VS2013` from v4 (or `Serializer.Json` / `Themes.VS` from upstream `v5.0.0`).
 
-To guarantee clean, binding-redirect-free deployment on `.NET Framework 4.8` from Windows 7 SP1 64-bit through Windows 11 without out-of-band `System.Text.Json` assemblies, three packages are not shipped:
+Whereas upstream `Dirkster99/AvalonDock v5.0.0` introduced `Dirkster.AvalonDock.Serializer.Json` and retained `Dirkster.AvalonDock.Themes.VS` and `Dirkster.AvalonDock.Themes.VS2013` (14 packages total), **`NTLDR2/AvalonDock` (`v5.1.0` fork) surgically removes those three packages** (shipping **11 libraries**) to guarantee clean, binding-redirect-free deployment on `.NET Framework 4.8` from Windows 7 SP1 64-bit through Windows 11 with zero out-of-band `System.Text.Json` assemblies:
 - `Dirkster.AvalonDock.Serializer.Json` — use `Dirkster.AvalonDock.Serializer.Xml` (`XmlLayoutSerializer`), or implement a custom `LayoutSerializerBase` subclass in your own project if JSON persistence is required.
 - `Dirkster.AvalonDock.Themes.VS` & `Dirkster.AvalonDock.Themes.VS2013` — migrate to `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`), `Dirkster.AvalonDock.Themes.Expression` (`ExpressionDarkTheme`, `ExpressionLightTheme`), or `Dirkster.AvalonDock.Themes.VS2010` (`VS2010Theme`). Base custom XAML themes on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) with `AvalonDock.Themes.Arc.Themes.ResourceKeys`.
 
 ### UI-Agnostic Core Package Extracted
 
+**Origin / Scope:** `Upstream v5.0.0`  
 **Impact:** Low — transitive for WPF apps.
 
 `Dirkster.AvalonDock.Core` (`netstandard2.0`) holds UI-agnostic interfaces, enums, and serialization DTOs. `Dirkster.AvalonDock` references it transitively.
 
 ---
 
-## 2. Serialization & Architecture Breaking Changes
+## 2. Serialization & Architecture Breaking Changes (`Upstream v5.0.0`)
 
 ### `IXmlSerializable` Removed in Favor of DTO Serialization (`#580`)
 
+**Origin / Scope:** `Upstream v5.0.0`  
 **Impact:** Medium — affects custom serializers or subclasses calling `ReadXml` / `WriteXml`.
 
 All layout model classes (`LayoutRoot`, `LayoutPanel`, `LayoutGroup<T>`, `LayoutPositionableGroup<T>`, `LayoutContent`, `LayoutDocument`, `LayoutAnchorable`, `LayoutDocumentPane`, `LayoutAnchorablePane`, `LayoutAnchorSide`, `LayoutAnchorGroup`, `LayoutFloatingWindow`, etc.) **no longer implement `IXmlSerializable`**.
@@ -95,22 +105,22 @@ Both `IDockingManager` and `IRootDock` added `bool AllowFloatingWindows { get; s
 
 **Impact:** High — if targeting legacy runtimes.
 
-| Target Framework | v5 Status |
-|:-----------------|:----------|
-| `.NET Framework 4.0` / `4.5.2` | ❌ **Removed** |
-| `.NET Core 3.0` / `3.1` | ❌ **Removed** |
-| `.NET 5.0` | ❌ **Removed** |
-| `.NET 6.0` / `7.0` | ❌ **Not targeted** (out of Microsoft support) |
-| `.NET Framework 4.8` (`net48`) | ✅ **Supported** (`v5.0.0+`, Win7 SP1–Win11) |
-| `.NET 8.0` (`net8.0-windows`) | ✅ **Supported** (added in `v5.0.2`, `#673`) |
-| `.NET 9.0` (`net9.0-windows`) | ✅ **Supported** (`v5.0.0+`) |
-| `.NET 10.0` (`net10.0-windows`) | ✅ **Supported** (`v5.0.0+`) |
-| `.NET 11.0` (`net11.0-windows`) | ✅ **Supported** (added in `v5.1.0`) |
-| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` |
+| Target Framework | Status in `v5.1.0` Fork | Origin / Scope |
+|:-----------------|:------------------------|:---------------|
+| `.NET Framework 4.0` / `4.5.2` | ❌ **Removed** | `Upstream v5.0.0` |
+| `.NET Core 3.0` / `3.1` | ❌ **Removed** | `Upstream v5.0.0` |
+| `.NET 5.0` | ❌ **Removed** | `Upstream v5.0.0` |
+| `.NET 6.0` / `7.0` | ❌ **Not targeted** (out of Microsoft support) | `Upstream v5.0.0` |
+| `.NET Framework 4.8` (`net48`) | ✅ **Supported (Primary Focus)** | `Upstream v5.0.0` + **Prioritized in `NTLDR2 Fork v5.1.0`** (Win7 SP1–Win11) |
+| `.NET 8.0` (`net8.0-windows`) | ✅ **Supported** | `Upstream v5.0.2` (`#673`) |
+| `.NET 9.0` (`net9.0-windows`) | ✅ **Supported** | `Upstream v5.0.0` |
+| `.NET 10.0` (`net10.0-windows`) | ✅ **Supported** | `Upstream v5.0.0` |
+| `.NET 11.0` (`net11.0-windows`) | ✅ **Supported** | `Upstream v5.1.0` & `NTLDR2 Fork v5.1.0` |
+| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | `Upstream v5.0.0` |
 
 ---
 
-## 4. Behavioral Changes
+## 4. Behavioral Changes (`Upstream v5.0.0`–`v5.1.0`)
 
 ### Unresolved Layout Items Are Removed on Deserialization (`#625`)
 
@@ -172,7 +182,9 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 
 ---
 
-## 5. New Non-Breaking Features in v5
+## 5. New Non-Breaking Features (`Upstream v5.0.0`)
+
+*(Note: `Upstream v5.0.0` also introduced `Dirkster.AvalonDock.Serializer.Json`, which is excluded in `NTLDR2 Fork v5.1.0` per the zero-`System.Text.Json` policy above.)*
 
 | Feature | Package | Description |
 |:--------|:--------|:------------|
@@ -189,15 +201,15 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 
 ## Summary Matrix
 
-| Category | Change | Impact | Required Action |
-|:---------|:-------|:-------|:----------------|
-| **Packages** | XML serializer extracted to `Dirkster.AvalonDock.Serializer.Xml` | High | Install `Dirkster.AvalonDock.Serializer.Xml` |
-| **Packages** | `Themes.VS2013`, `Themes.VS`, and `Serializer.Json` removed (no `System.Text.Json`) | Medium–High | Switch to `Themes.Arc` (or `Expression` / `VS2010`) and `Serializer.Xml` |
-| **Namespaces** | `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | High | Update `using` statements |
-| **Serialization** | `IXmlSerializable` replaced by DTOs & `LayoutSerializerBase` | Medium | Move custom `ReadXml`/`WriteXml` logic to DTOs |
-| **Frameworks** | `.NET < 4.8` and `.NET Core 3.x / .NET 5` dropped | High | Target `net8.0-windows`–`net11.0-windows` or `net48` |
-| **DI** | `AddDockLayoutService(dock => ...)` builder pattern | Low | Move `AddToolbox` / options inside builder |
-| **Interfaces** | `AllowFloatingWindows` / `AllowDetachedWindows` on `IDockingManager` & `IRootDock` | Low | Implement on custom interface implementations |
-| **Binary API** | `Suspend*SourceBinding` fields became properties | Low | Recompile assemblies against v5 |
-| **Behavior** | Unresolved deserialized items default to `Remove` | Low | Set `UnresolvedContentHandling.Hide` for lazy plugins |
-| **Behavior** | `ToolTip` excluded from serialized layout files | Low | Set tooltips in views, styles, or view models |
+| Category | Change | Origin / Scope | Impact | Required Action |
+|:---------|:-------|:---------------|:-------|:----------------|
+| **Packages** | XML serializer extracted to `Dirkster.AvalonDock.Serializer.Xml` | `Upstream v5.0.0` | High | Reference `Dirkster.AvalonDock.Serializer.Xml` |
+| **Packages** | `Themes.VS2013`, `Themes.VS`, and `Serializer.Json` removed (no `System.Text.Json`) | **`NTLDR2 Fork v5.1.0`** *(shipped in `Upstream v5.0.0`)* | Medium–High | Switch to `Themes.Arc` (or `Expression` / `VS2010`) and `Serializer.Xml` |
+| **Namespaces** | `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | `Upstream v5.0.0` | High | Update `using` statements |
+| **Serialization** | `IXmlSerializable` replaced by DTOs & `LayoutSerializerBase` | `Upstream v5.0.0` | Medium | Move custom `ReadXml`/`WriteXml` logic to DTOs |
+| **Frameworks** | `.NET < 4.8` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added | `Upstream v5.0.0`–`v5.1.0` | High | Target `net48` or `net8.0-windows`–`net11.0-windows` |
+| **DI** | `AddDockLayoutService(dock => ...)` builder pattern (`#584`) | `Upstream v5.0.0` | Low | Move `AddToolbox` / options inside builder |
+| **Interfaces** | `AllowFloatingWindows` / `AllowDetachedWindows` on `IDockingManager` & `IRootDock` | `Upstream v5.0.0` | Low | Implement on custom interface implementations |
+| **Binary API** | `Suspend*SourceBinding` fields became properties | `Upstream v5.0.0` | Low | Recompile assemblies against v5 |
+| **Behavior** | Unresolved deserialized items default to `Remove` | `Upstream v5.0.0` | Low | Set `UnresolvedContentHandling.Hide` for lazy plugins |
+| **Behavior** | `ToolTip` excluded from serialized layout files | `Upstream v5.0.0` | Low | Set tooltips in views, styles, or view models |

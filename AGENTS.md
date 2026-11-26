@@ -4,7 +4,7 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 
 > [!IMPORTANT]
 > **Documentation & Internals Sources of Truth:**
-> - **v5 User & API Docs (`new-docs-carbon4/`):** Fresh 38-page v5 documentation site. **Ignore** legacy `docs/` and `AGENTS.md.old`.
+> - **v5.1.0 Fork User & API Docs (`documentation/`):** Authoritative 38-page documentation site deployed by `.github/workflows/docs.yml`. Explicitly distinguishes `Upstream v5.0.0`–`v5.1.0` changes from `NTLDR2 Fork v5.1.0` changes.
 > - **Engine Internals Skill (`.agents/skills/avalondock-internals/SKILL.md`):** Complete 9-part deep dive into AvalonDock's internal architecture and invariants—always read before editing `source/Components/*`.
 > - **Fork Roadmap & Caliburn.Micro AI Reference (`ROADMAP.md`):** Vendoring roadmap for [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) and architectural spec for `AvalonDock.Mvvm.CaliburnMicro`, paired with the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro).
 
@@ -178,7 +178,7 @@ Examples:
 
 ## 8. Repository & Documentation Lookup Map
 
-| When Working On… | Key Source Files (`source/…`) | Authoritative v5 Docs (`new-docs-carbon4/…`) |
+| When Working On… | Key Source Files (`source/…`) | Authoritative v5 Docs (`documentation/…`) |
 |:-----------------|:------------------------------|:-------------------------------------|
 | **Root `DockingManager`, DPs, visual creation, logical children, events** | `Components/AvalonDock/DockingManager.cs`, `*EventArgs.cs` | `api-reference/docking-manager.md`, `api-reference/events.md`, `concepts/architecture.md` |
 | **`ToggleDockingManager`, 6-zone sidebars, shortcuts, zone drag overlay** | `Components/AvalonDock/ToggleDockingManager.cs`, `ToggleLayoutEngine.cs`, `ToggleLayoutStrategy.cs`, `Controls/Toggle*.cs`, `AvalonDockCodeApp/` | `guides/toggle-docking-manager.md`, `api-reference/toggle-docking-manager.md` |
@@ -206,4 +206,5 @@ Before finishing any code change or generating sample code for AvalonDock v5, ve
 - [ ] **Adding vs restoring anchorables:** Use `AddToLayout` only when `Parent == null` (`!IsVisible && !IsHidden`); use `Show()` when `IsHidden == true`; use `RemoveFromLayout()` to detach without firing close events or disturbing auto-hide siblings.
 - [ ] **DTO round-trip parity:** Any new persisted layout property is added to the appropriate DTO in `AvalonDock.Core.Serialization.Dto` (with `ShouldSerialize*()` / `[DefaultValue]` XML guards as appropriate), mapped in **both** `ToDto` and `FromDto` in `LayoutDtoMapper.cs`, and tested with `XmlLayoutSerializer`.
 - [ ] **Tab icons in `Arc`:** Remember that `Arc` renders clean title-only document tabs by default; provide a custom `DocumentHeaderTemplate` if tab icons are required in `Arc`.
+- [ ] **Explicit scope labeling in docs:** When writing version or migration notes, distinguish `Upstream v5.0.0` / `v5.0.2` / `v5.1.0` changes from fork-specific `NTLDR2 Fork v5.1.0` changes (such as removing the 3 `System.Text.Json` packages).
 - [ ] **Zero warnings & `-m:1` tests:** `dotnet build source/AvalonDock.sln --configuration Release --warnaserror` passes with 0 warnings, and `dotnet test ... -m:1` passes without calling `Application.Current.Shutdown()`.

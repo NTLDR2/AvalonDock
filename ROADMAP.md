@@ -15,7 +15,7 @@ flowchart LR
 
 | Phase | Focus Area | Status |
 |:------|:-----------|:-------|
-| **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `new-docs-carbon4/` documentation, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
+| **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `documentation/` documentation, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
 | **Phase 2** | `.NET Framework 4.8` transitive-dependency audit, build/props isolation, and vendored integration into [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) | **Planned (Next)** |
 | **Phase 3** | Design & implementation of `AvalonDock.Mvvm.CaliburnMicro` (`netstandard2.0` BCL equivalent to `AvalonDock.Mvvm.CommunityToolkit`) + STA unit tests | **Proposed / Design Ready** |
 | **Phase 4** | Modernize dated sample applications—starting with `source/CaliburnDockTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **Planned** |
@@ -29,7 +29,7 @@ Every roadmap item in this fork is governed by four permanent constraints:
 1. **Zero `System.Text.Json` (Permanent Ban):** No library, bridge package, sample, or test project may directly or transitively reference `System.Text.Json`. Any candidate third-party NuGet dependency must have its `net48` and `netstandard2.0` dependency graph audited before adoption to prevent `System.Memory` / `System.Buffers` / `System.Runtime.CompilerServices.Unsafe` / `Microsoft.Bcl.AsyncInterfaces` DLL hell.
 2. **`.NET Framework 4.8` & WPF First:** Every WPF feature, theme dictionary, multi-window mode (`LayoutFloatingWindowControl` and `DetachedAnchorableWindow`), and MVVM bridge must compile cleanly (`--warnaserror`) and pass STA regression tests on `net48` (Windows 7 SP1 64-bit through Windows 11) alongside modern `.NET 8.0`–`11.0-windows`.
 3. **Strict `netstandard2.0` UI-Agnostic Boundary:** ViewModel and service libraries (`AvalonDock.Core`, `AvalonDock.Mvvm`, `AvalonDock.Mvvm.CommunityToolkit`, `AvalonDock.Serializer.Xml`, and the planned `AvalonDock.Mvvm.CaliburnMicro`) must remain pure `netstandard2.0` with zero `System.Windows.*` references.
-4. **Inside-Out AI-Readable Documentation:** Architectural changes must simultaneously update `new-docs-carbon4/`, [AGENTS.md](AGENTS.md), and [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md) so AI coding agents always operate from ground-truth invariants.
+4. **Inside-Out AI-Readable Documentation:** Architectural changes must simultaneously update `documentation/`, [AGENTS.md](AGENTS.md), and [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md) so AI coding agents always operate from ground-truth invariants.
 
 ---
 

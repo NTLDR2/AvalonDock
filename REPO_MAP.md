@@ -3,10 +3,10 @@
 **Repository Root:** `C:\SOFTDEV\AvalonDock-V5-NEW`  
 **Solution File:** `source/AvalonDock.sln`  
 **Current Version Prefix:** `5.1.0` (`source/Directory.Build.props`)  
-**Authoritative Documentation:** `new-docs-carbon4/` *(38-page Jekyll `just-the-docs` v5 site)*
+**Authoritative Documentation:** `documentation/` *(38-page Jekyll `just-the-docs` site for the `NTLDR2/AvalonDock` `v5.1.0` fork)*
 
-> [!CAUTION]
-> **`docs/` is legacy/obsolete.** Do **not** consult or update `C:\SOFTDEV\AvalonDock-V5-NEW\docs` for current v5 APIs, package names, theme URIs, or architecture. Always use **`C:\SOFTDEV\AvalonDock-V5-NEW\new-docs-carbon4`** as the single source of truth for AvalonDock v5+ documentation.
+> [!NOTE]
+> **Documentation & Scope Attribution:** `documentation/` is the single source of truth deployed by `.github/workflows/docs.yml` (`source: ./documentation`). Migration and architecture pages explicitly distinguish upstream `Dirkster99/AvalonDock` (`v5.0.0`–`v5.1.0`) changes from `NTLDR2/AvalonDock` (`v5.1.0` fork) changes.
 
 ---
 
@@ -23,8 +23,8 @@ AvalonDock-V5-NEW/
 │   └── workflows/
 │       ├── ci.yml                     # PR build (--warnaserror) + Unit + FlaUI (.NET 10 & 11) tests
 │       ├── release.yml                # Pack all 11 NuGet packages, OIDC push to nuget.org, GitHub Release
-│       └── docs.yml                   # GitHub Pages Jekyll deployment workflow (update source path on cutover)
-├── new-docs-carbon4/                  # AUTHORITATIVE v5 documentation site (38 pages + 8 PNGs)
+│       └── docs.yml                   # GitHub Pages Jekyll deployment workflow (builds ./documentation on documentation/**)
+├── documentation/                     # AUTHORITATIVE v5.1.0 fork documentation site (38 pages + 8 PNGs)
 │   ├── _config.yml                    # Jekyll / just-the-docs@v0.10.0 configuration
 │   ├── Gemfile                        # github-pages Ruby gem bundle
 │   ├── index.md                       # Home (nav_order: 1)
@@ -37,7 +37,6 @@ AvalonDock-V5-NEW/
 │   ├── migration/                     # v4 -> v5 Migration Checklist & Breaking Changes (nav_order: 8)
 │   ├── contributing.md                # Contributor workflow & quality gates (nav_order: 9)
 │   └── images/                        # 8 AvalonDockCodeApp Dark/Light PNG screenshots
-├── docs/                              # [LEGACY / OBSOLETE] Pre-regeneration documentation — ignore
 ├── source/
 │   ├── AvalonDock.sln                 # Master Visual Studio solution (16 projects)
 │   ├── Directory.Build.props          # Centralized TFMs, VersionPrefix (5.1.0), analyzers, TreatWarningsAsErrors
@@ -104,7 +103,7 @@ flowchart TD
 
 All 11 component projects are packed and published together by `.github/workflows/release.yml`:
 
-| Project Folder (`source/Components/…`) | NuGet Package ID | Target Framework(s) | Primary Namespace(s) | SLOC | Primary Documentation (`new-docs-carbon4/…`) |
+| Project Folder (`source/Components/…`) | NuGet Package ID | Target Framework(s) | Primary Namespace(s) | SLOC | Primary Documentation (`documentation/…`) |
 |:---|:---|:---|:---|---:|:---|
 | `AvalonDock` | `Dirkster.AvalonDock` | `net8/9/10/11-windows;net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Commands`, `AvalonDock.Converters` | 30,169 | `api-reference/docking-manager.md`, `api-reference/toggle-docking-manager.md`, `api-reference/layout-classes.md`, `api-reference/controls.md`, `api-reference/events.md` |
 | `AvalonDock.Core` | `Dirkster.AvalonDock.Core` | `netstandard2.0` | `AvalonDock.Core`, `AvalonDock.Core.Events`, `AvalonDock.Core.Controls`, `AvalonDock.Core.Serialization`, `AvalonDock.Core.Serialization.Dto` | 1,331 | `concepts/architecture.md`, `api-reference/core-and-mvvm.md` |
@@ -169,21 +168,21 @@ All 5 compiled XAML `Theme` packages live in the `AvalonDock.Themes` namespace:
 
 ---
 
-## 6. Authoritative v5 Documentation Map (`new-docs-carbon4/` — 38 Pages)
+## 6. Authoritative v5 Documentation Map (`documentation/` — 38 Pages)
 
-All internal Jekyll links in `new-docs-carbon4/` use `{{ site.baseurl }}{% link <path>.md %}` and local screenshots use `{{ site.baseurl }}/images/<file>.png`.
+All internal Jekyll links in `documentation/` use `{{ site.baseurl }}{% link <path>.md %}` and local screenshots use `{{ site.baseurl }}/images/<file>.png`.
 
 | Top-Level Nav (`nav_order`) | Index / Landing Page | Child Pages (`nav_order`) |
 |:---|:---|:---|
-| **1. Home** | `new-docs-carbon4/index.md` | — |
-| **2. Getting Started** | `new-docs-carbon4/getting-started/index.md` | `1` `getting-started/installation.md` — All 11 NuGet packages & TFMs<br>`2` `getting-started/quick-start.md` — 5-minute WPF docking layout<br>`3` `getting-started/building-from-source.md` — SDKs, `--warnaserror`, unit & FlaUI tests |
-| **3. Concepts** | `new-docs-carbon4/concepts/index.md` | `1` `concepts/architecture.md` — v5 `Core` vs WPF split, `LayoutSyncBridge`, engines<br>`2` `concepts/layout-model.md` — `LayoutRoot`, panels, groups, panes, proportions<br>`3` `concepts/documents-and-anchorables.md` — Lifecycle, closing vs hiding, `ContentId`<br>`4` `concepts/floating-windows.md` — Floating vs `DetachedAnchorableWindow`, `OverlayWindow` |
-| **4. Guides** | `new-docs-carbon4/guides/index.md` | `1` `guides/mvvm.md` — `RootDock` + `IDockLayoutService` vs `DocumentsSource`/`AnchorablesSource`<br>`2` `guides/toggle-docking-manager.md` — Sidebars, popups, docked splits, detached windows<br>`3` `guides/dependency-injection.md` — `AddDockLayoutService`, `IThemeManager`<br>`4` `guides/serialization.md` — `XmlLayoutSerializer`, `LayoutSerializationCallback`, custom DTO serializers<br>`5` `guides/theming.md` — Applying & switching all 5 theme packages + `GenericTheme`<br>`6` `guides/custom-themes.md` — `DictionaryTheme` & `Arc` `ResourceKeys` |
-| **5. Tutorials** | `new-docs-carbon4/tutorials/index.md` | `1` `tutorials/mvvm-ide.md` — Full MVVM IDE with `CommunityToolkit.Mvvm` & `ToggleDockingManager`<br>`2` `tutorials/dependency-injection-app.md` — DI multi-pane application<br>`3` `tutorials/styling-and-theming.md` — Live theme switcher, persisted settings, custom corporate & `DictionaryTheme` themes<br>`4` `tutorials/layout-persistence.md` — End-to-end XML workspace save/restore |
-| **6. Themes** | `new-docs-carbon4/themes/index.md` | `1` `themes/arc.md` — `ArcDarkTheme` / `ArcLightTheme` + screenshots & `ResourceKeys`<br>`2` `themes/vs2010.md` — `VS2010Theme`<br>`3` `themes/expression.md` — `ExpressionDarkTheme` / `ExpressionLightTheme`<br>`4` `themes/metro.md` — `MetroTheme`<br>`5` `themes/aero.md` — `AeroTheme` & `AeroColors` |
-| **7. API Reference** | `new-docs-carbon4/api-reference/index.md` | `1` `api-reference/docking-manager.md`<br>`2` `api-reference/toggle-docking-manager.md`<br>`3` `api-reference/layout-classes.md`<br>`4` `api-reference/controls.md`<br>`5` `api-reference/events.md`<br>`6` `api-reference/core-and-mvvm.md` |
-| **8. Migration** | `new-docs-carbon4/migration/index.md` | `1` `migration/breaking-changes.md` — Detailed v4 -> v5 breaking changes & code fixes |
-| **9. Contributing** | `new-docs-carbon4/contributing.md` | — |
+| **1. Home** | `documentation/index.md` | — |
+| **2. Getting Started** | `documentation/getting-started/index.md` | `1` `getting-started/installation.md` — All 11 NuGet packages & TFMs<br>`2` `getting-started/quick-start.md` — 5-minute WPF docking layout<br>`3` `getting-started/building-from-source.md` — SDKs, `--warnaserror`, unit & FlaUI tests |
+| **3. Concepts** | `documentation/concepts/index.md` | `1` `concepts/architecture.md` — v5 `Core` vs WPF split, `LayoutSyncBridge`, engines<br>`2` `concepts/layout-model.md` — `LayoutRoot`, panels, groups, panes, proportions<br>`3` `concepts/documents-and-anchorables.md` — Lifecycle, closing vs hiding, `ContentId`<br>`4` `concepts/floating-windows.md` — Floating vs `DetachedAnchorableWindow`, `OverlayWindow` |
+| **4. Guides** | `documentation/guides/index.md` | `1` `guides/mvvm.md` — `RootDock` + `IDockLayoutService` vs `DocumentsSource`/`AnchorablesSource`<br>`2` `guides/toggle-docking-manager.md` — Sidebars, popups, docked splits, detached windows<br>`3` `guides/dependency-injection.md` — `AddDockLayoutService`, `IThemeManager`<br>`4` `guides/serialization.md` — `XmlLayoutSerializer`, `LayoutSerializationCallback`, custom DTO serializers<br>`5` `guides/theming.md` — Applying & switching all 5 theme packages + `GenericTheme`<br>`6` `guides/custom-themes.md` — `DictionaryTheme` & `Arc` `ResourceKeys` |
+| **5. Tutorials** | `documentation/tutorials/index.md` | `1` `tutorials/mvvm-ide.md` — Full MVVM IDE with `CommunityToolkit.Mvvm` & `ToggleDockingManager`<br>`2` `tutorials/dependency-injection-app.md` — DI multi-pane application<br>`3` `tutorials/styling-and-theming.md` — Live theme switcher, persisted settings, custom corporate & `DictionaryTheme` themes<br>`4` `tutorials/layout-persistence.md` — End-to-end XML workspace save/restore |
+| **6. Themes** | `documentation/themes/index.md` | `1` `themes/arc.md` — `ArcDarkTheme` / `ArcLightTheme` + screenshots & `ResourceKeys`<br>`2` `themes/vs2010.md` — `VS2010Theme`<br>`3` `themes/expression.md` — `ExpressionDarkTheme` / `ExpressionLightTheme`<br>`4` `themes/metro.md` — `MetroTheme`<br>`5` `themes/aero.md` — `AeroTheme` & `AeroColors` |
+| **7. API Reference** | `documentation/api-reference/index.md` | `1` `api-reference/docking-manager.md`<br>`2` `api-reference/toggle-docking-manager.md`<br>`3` `api-reference/layout-classes.md`<br>`4` `api-reference/controls.md`<br>`5` `api-reference/events.md`<br>`6` `api-reference/core-and-mvvm.md` |
+| **8. Migration** | `documentation/migration/index.md` | `1` `migration/breaking-changes.md` — Detailed v4 -> v5 breaking changes & code fixes |
+| **9. Contributing** | `documentation/contributing.md` | — |
 
 ---
 
@@ -208,7 +207,7 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 
 ## 8. "Where Do I Look To…?" Task Lookup
 
-| Task | Source Files (`source/…`) | Documentation (`new-docs-carbon4/…`) |
+| Task | Source Files (`source/…`) | Documentation (`documentation/…`) |
 |:---|:---|:---|
 | Add or modify a `DockingManager` dependency property, template, or event | `Components/AvalonDock/DockingManager.cs`, `*EventArgs.cs` | `api-reference/docking-manager.md`, `api-reference/events.md` |
 | Work on `ToggleDockingManager`, edge sidebars, or detached windows | `Components/AvalonDock/ToggleDockingManager.cs`, `ToggleLayoutEngine.cs`, `Controls/Toggle*.cs`, `Controls/DetachedAnchorableWindow.cs`, `AvalonDockCodeApp/` | `guides/toggle-docking-manager.md`, `api-reference/toggle-docking-manager.md`, `concepts/floating-windows.md` |

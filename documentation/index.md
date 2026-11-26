@@ -6,20 +6,24 @@ description: "AvalonDock — A powerful WPF docking layout library for building 
 permalink: /
 ---
 
-# AvalonDock v5
+# AvalonDock v5.1.0 (NTLDR2 Fork)
 {: .fs-9 }
 
-A powerful WPF Document and Tool Window layout container for building Visual Studio, VS Code, and JetBrains Rider-like docking interfaces.
+A powerful WPF Document and Tool Window layout container for building Visual Studio, VS Code, and JetBrains Rider-like docking interfaces — hardened for `.NET Framework 4.8` and modern `.NET` with zero `System.Text.Json` dependencies.
 {: .fs-6 .fw-300 }
 
 [Get Started]({{ site.baseurl }}{% link getting-started/index.md %}){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[View on GitHub](https://github.com/Dirkster99/AvalonDock){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View Fork on GitHub](https://github.com/NTLDR2/AvalonDock){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[Upstream (Dirkster99)](https://github.com/Dirkster99/AvalonDock){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
 ## What is AvalonDock?
 
-AvalonDock is a mature, actively maintained WPF docking layout system for arranging tabbed documents and dockable tool windows. Version 5 modernizes the entire framework with a modular NuGet package architecture, first-class MVVM and `Microsoft.Extensions.DependencyInjection` support, a VS Code / Rider-style `ToggleDockingManager` sidebar control, DTO-based XML layout serialization with zero third-party serializer dependencies, standalone detached top-level tool windows, and modern Arc dark and light themes.
+AvalonDock is a mature WPF docking layout system for arranging tabbed documents and dockable tool windows. Version 5 modernizes the framework with a modular package architecture, first-class MVVM and `Microsoft.Extensions.DependencyInjection` support, a VS Code / Rider-style `ToggleDockingManager` sidebar control, DTO-based XML layout serialization with zero third-party serializer dependencies, standalone detached top-level tool windows, and modern Arc dark and light themes.
+
+{: .important }
+**Scope & Version Attribution (`NTLDR2 Fork v5.1.0` vs. `Upstream v5.0.0`):** This site documents **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0`)**, an opinionated fork of [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock). Upstream `v5.0.0` introduced the modular v5 architecture across 14 NuGet packages (followed by `net8.0-windows` in `v5.0.2` and `net11.0-windows` in `v5.1.0`). **This `NTLDR2 Fork v5.1.0` baseline** prioritizes `.NET Framework 4.8` + WPF, surgically removes the 3 `System.Text.Json`-dependent upstream packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`) to ship **11 zero-`System.Text.Json` libraries**, and targets vendored/source consumption (including [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)).
 
 ![AvalonDock v5 ToggleDockingManager with Arc Dark Theme]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Welcome.png)
 
@@ -79,9 +83,9 @@ AvalonDock is used by [many open source and commercial projects](https://github.
 
 ---
 
-## NuGet Packages
+## Component Libraries & Package IDs (`NTLDR2 Fork v5.1.0`)
 
-AvalonDock ships as **11 modular NuGet packages** (all with embedded XML IntelliSense documentation) so your application only references what it needs.
+This fork builds **11 modular libraries** (all with embedded XML IntelliSense documentation and zero `System.Text.Json` references). Package IDs retain the upstream `Dirkster.AvalonDock*` naming for project compatibility; consume this fork via vendored `ProjectReference` or local `dotnet pack` *(installing from `nuget.org` pulls upstream `Dirkster99` packages)*.
 
 ### Core, MVVM & Dependency Injection
 
@@ -113,14 +117,14 @@ AvalonDock ships as **11 modular NuGet packages** (all with embedded XML Intelli
 
 ## Platform Support
 
-| Target Framework | Status | Notes |
-|:-----------------|:-------|:------|
-| `.NET 11` (`net11.0-windows`) | ✅ Supported | Added in `v5.1.0` (`master`) |
-| `.NET 10` (`net10.0-windows`) | ✅ Supported | Supported since `v5.0.0` |
-| `.NET 9` (`net9.0-windows`) | ✅ Supported | Supported since `v5.0.0` |
-| `.NET 8` (`net8.0-windows`) | ✅ Supported | Supported since `v5.0.2` |
-| `.NET Framework 4.8` (`net48`) | ✅ Supported | Supported from Windows 7 SP1 64-bit to Windows 11 |
-| `.NET Standard 2.0` (`netstandard2.0`) | ✅ Supported | UI-agnostic packages (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`) |
+| Target Framework | Status | Introduced In / Scope |
+|:-----------------|:-------|:----------------------|
+| `.NET Framework 4.8` (`net48`) | ✅ Supported | **Primary prioritized target in `NTLDR2 Fork v5.1.0`** (supported since `Upstream v5.0.0`, Win7 SP1 64-bit – Win11) |
+| `.NET 11` (`net11.0-windows`) | ✅ Supported | Added in `Upstream v5.1.0` & included in `NTLDR2 Fork v5.1.0` |
+| `.NET 10` (`net10.0-windows`) | ✅ Supported | Supported since `Upstream v5.0.0` |
+| `.NET 9` (`net9.0-windows`) | ✅ Supported | Supported since `Upstream v5.0.0` |
+| `.NET 8` (`net8.0-windows`) | ✅ Supported | Added in `Upstream v5.0.2` (`#673`) |
+| `.NET Standard 2.0` (`netstandard2.0`) | ✅ Supported | UI-agnostic packages (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`) since `Upstream v5.0.0` |
 
 {: .note }
 `Dirkster.AvalonDock` and `Dirkster.AvalonDock.Themes.*` are WPF packages and run on Windows (`-windows` TFM on .NET 8+). Your UI-agnostic ViewModel and service projects can reference `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm*`, `Dirkster.AvalonDock.DependencyInjection`, and `Dirkster.AvalonDock.Serializer.Xml` via `netstandard2.0` without a WPF dependency.
@@ -129,10 +133,10 @@ AvalonDock ships as **11 modular NuGet packages** (all with embedded XML Intelli
 
 ## Upgrading from v4?
 
-If you are migrating from AvalonDock v4.x, read the [Migration Guide]({{ site.baseurl }}{% link migration/index.md %}) and [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) for step-by-step upgrade instructions covering separated serializer packages, DTO serialization, theme updates, target framework changes, and new v5 capabilities.
+If you are migrating from AvalonDock v4.x, read the [Migration Guide]({{ site.baseurl }}{% link migration/index.md %}) and [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) — both explicitly label which changes originated in **Upstream `v5.0.0`–`v5.1.0`** vs. **`NTLDR2 Fork v5.1.0`**.
 
 ---
 
 ## License
 
-AvalonDock is licensed under the [Microsoft Public License (Ms-PL)](https://github.com/Dirkster99/AvalonDock/blob/master/LICENSE) and is free for both commercial and open source use.
+AvalonDock is licensed under the [Microsoft Public License (Ms-PL)](https://github.com/NTLDR2/AvalonDock/blob/master/LICENSE) (forked from [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)) and is free for both commercial and open source use.

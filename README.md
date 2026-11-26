@@ -23,7 +23,7 @@ This fork ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)) refines [D
 - **Prioritize `.NET Framework 4.8` & WPF:** Treat `net48` and Windows Presentation Foundation as primary, first-class targets—never legacy afterthoughts—while maintaining full multi-target support for `.NET 8.0` through `.NET 11.0` (`-windows`) and `netstandard2.0` UI-agnostic contracts.
 - **Vendored Docking Dependency for SomaFrameQD:** Maintain a self-contained, warning-free (`--warnaserror`) component tree engineered to serve as the vendored docking engine inside [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD).
 - **Caliburn.Micro MVVM Comfort:** Explore a first-class **Caliburn.Micro** bridge / Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`) analogous to `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, guided by the AI-ready Caliburn.Micro internals repository at [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) so Caliburn.Micro developers feel at home. Full details live in [ROADMAP.md](ROADMAP.md).
-- **Inside-Out Documentation for AI Agents & Engineers:** Ship a complete 38-page v5 documentation suite ([new-docs-carbon4/](new-docs-carbon4/index.md)), always-loaded agent guardrails ([AGENTS.md](AGENTS.md)), and a deep engine-invariants reference ([SKILL.md](.agents/skills/avalondock-internals/SKILL.md)) so AI coding agents produce accurate v5 code without legacy v4 hallucinations.
+- **Inside-Out Documentation for AI Agents & Engineers:** Ship a complete 38-page v5 documentation suite ([documentation/](documentation/index.md)), always-loaded agent guardrails ([AGENTS.md](AGENTS.md)), and a deep engine-invariants reference ([SKILL.md](.agents/skills/avalondock-internals/SKILL.md)) so AI coding agents produce accurate v5 code without legacy v4 hallucinations.
 
 ---
 
@@ -40,7 +40,7 @@ Before installing or migrating code from upstream tutorials, note the deliberate
 | **Layout Persistence** | XML (`Serializer.Xml`) + JSON (`Serializer.Json`) | **XML DTO persistence (`AvalonDock.Serializer.Xml`)** using inbox `System.Xml.Serialization` (backward-compatible with v4 XML) + `LayoutSerializerBase` for custom formats |
 | **Available Themes** | `Arc`, `VS` (2015/2022), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **`Arc` (Dark/Light), `VS2010`, `Expression` (Dark/Light), `Metro`, `Aero`, `GenericTheme`**, plus `DictionaryTheme` custom XAML themes |
 | **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **`.NET Framework 4.8` + WPF prioritized**, built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)), while supporting `.NET 8`–`11` |
-| **Documentation & AI Tooling** | Docs site & GitHub Wiki | **38-page [new-docs-carbon4/](new-docs-carbon4/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
+| **Documentation & AI Tooling** | Docs site & GitHub Wiki | **38-page [documentation/](documentation/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
 
 ### Step 1: Consume This Fork (Vendored Source or Local NuGet Feed)
 
@@ -143,7 +143,7 @@ if (File.Exists("layout.xml"))
 }
 ```
 
-For the full walkthrough, see [Quick Start](new-docs-carbon4/getting-started/quick-start.md) and [Layout Serialization](new-docs-carbon4/guides/serialization.md).
+For the full walkthrough, see [Quick Start](documentation/getting-started/quick-start.md) and [Layout Serialization](documentation/guides/serialization.md).
 
 ---
 
@@ -194,7 +194,7 @@ AvalonDock v5 provides two root WPF docking controls:
 ### 2. `ToggleDockingManager` (6-Zone IDE Sidebars)
 `ToggleDockingManager` subclasses `DockingManager` and adds left and right vertical sidebar rails segmented into **6 `DockZone` button bars** (`LeftTop`, `LeftBottom`, `RightTop`, `RightBottom`, `BottomLeft`, `BottomRight`) modeled after VS Code and JetBrains Rider—complete with click-to-toggle panels, keyboard shortcut bindings (`IToolbox.Shortcut`), and a 6-zone drag-and-drop overlay.
 
-<img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Welcome.png" alt="ToggleDockingManager with Arc Dark Theme" width="800">
+<img src="documentation/images/AvalonDockCodeApp_Dark_Welcome.png" alt="ToggleDockingManager with Arc Dark Theme" width="800">
 
 ---
 
@@ -274,7 +274,7 @@ public partial class App : Application
 | `SidesFullHeight` | Left and right sidebars span the full window height; bottom panel sits between them | VS Code |
 | `Default` | Preserves standard split tree order without automatic restructuring | Classic AvalonDock |
 
-See the [Dependency Injection Guide](new-docs-carbon4/guides/dependency-injection.md) and [Dependency Injection App Tutorial](new-docs-carbon4/tutorials/dependency-injection-app.md) for complete examples.
+See the [Dependency Injection Guide](documentation/guides/dependency-injection.md) and [Dependency Injection App Tutorial](documentation/tutorials/dependency-injection-app.md) for complete examples.
 
 ---
 
@@ -392,7 +392,7 @@ Both `ToggleDockingManager` and classic `DockingManager` bind `IRootDock` via th
     LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}" />
 ```
 
-See the [MVVM Integration Guide](new-docs-carbon4/guides/mvvm.md) and [MVVM IDE Tutorial](new-docs-carbon4/tutorials/mvvm-ide.md) for complete style selector and template examples.
+See the [MVVM Integration Guide](documentation/guides/mvvm.md) and [MVVM IDE Tutorial](documentation/tutorials/mvvm-ide.md) for complete style selector and template examples.
 
 ---
 
@@ -430,23 +430,23 @@ dockManager.Theme = new MetroTheme();           // Flat Metro style
 dockManager.Theme = new AeroTheme();            // Classic Windows Aero style
 ```
 
-For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](new-docs-carbon4/guides/theming.md) and [Custom Themes](new-docs-carbon4/guides/custom-themes.md).
+For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](documentation/guides/theming.md) and [Custom Themes](documentation/guides/custom-themes.md).
 
 ---
 
-## Migrating from v4.x
+## Migrating from v4.x (Upstream v5.0.0 vs. NTLDR2 Fork v5.1.0)
 
-Upgrading from AvalonDock v4.x involves key structural updates—plus the `System.Text.Json`-free constraints of this fork:
+This repository tracks a **fork-specific `v5.1.0` baseline** built upon Dirkster99's upstream `v5.0.0`–`v5.1.0` architecture, with additional surgical package removals to guarantee zero `System.Text.Json` dependencies on `.NET Framework 4.8`:
 
-| Change | Impact | Required Action |
-|:-------|:-------|:----------------|
-| XML serializer extracted to `AvalonDock.Serializer.Xml` | High | Reference `AvalonDock.Serializer.Xml`; update `using AvalonDock.Layout.Serialization;` → `using AvalonDock.Serializer.Xml;` + `using AvalonDock.Core;` |
-| `IXmlSerializable` removed from layout classes | Medium | Subclass `AvalonDock.Core.LayoutSerializerBase` over `LayoutRootDto` for custom formats |
-| `VS2013` / `Themes.VS` / `Serializer.Json` absent in this fork | Medium | Use `ArcDarkTheme` / `ArcLightTheme` or `VS2010Theme`, and `XmlLayoutSerializer` |
-| Unresolved deserialized anchorables removed by default | Medium | Opt into `UnresolvedContentHandling.Hide` if lazy-loading plugin panes after layout restore |
-| Frameworks older than `.NET Framework 4.8` / `.NET 8` dropped | High | Target `net48` or `net8.0-windows`–`net11.0-windows` |
+| Change | Origin / Scope | Impact | Required Action |
+|:-------|:---------------|:-------|:----------------|
+| XML serializer extracted to `AvalonDock.Serializer.Xml` | **Upstream `v5.0.0`** | High | Reference `AvalonDock.Serializer.Xml`; update `using AvalonDock.Layout.Serialization;` → `using AvalonDock.Serializer.Xml;` + `using AvalonDock.Core;` |
+| `IXmlSerializable` removed from layout classes | **Upstream `v5.0.0`** | Medium | Subclass `AvalonDock.Core.LayoutSerializerBase` over `LayoutRootDto` for custom formats |
+| Unresolved deserialized anchorables removed by default | **Upstream `v5.0.0`** | Medium | Opt into `UnresolvedContentHandling.Hide` if lazy-loading plugin panes after layout restore |
+| Frameworks `< net48` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added | **Upstream `v5.0.0`–`v5.1.0`** | High | Target `net48` or `net8.0-windows`–`net11.0-windows` (`net8.0` added in `v5.0.2`; `net11.0` in `v5.1.0`) |
+| `Serializer.Json`, `Themes.VS`, & `Themes.VS2013` removed (14 → 11 libraries) | **`NTLDR2 Fork v5.1.0`** *(shipped in upstream `v5.0.0`)* | Medium–High | Use `XmlLayoutSerializer` and `ArcDarkTheme` / `ArcLightTheme` or `VS2010Theme` (eliminates `System.Text.Json` DLL hell on `net48`) |
 
-Read the complete [Migration Guide](new-docs-carbon4/migration/index.md) and [Breaking Changes Reference](new-docs-carbon4/migration/breaking-changes.md).
+Read the complete [Migration Guide](documentation/migration/index.md) and [Breaking Changes Reference](documentation/migration/breaking-changes.md).
 
 ---
 
@@ -467,7 +467,7 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net11.0-windows -m:1
 ```
 
-See [Building from Source](new-docs-carbon4/getting-started/building-from-source.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for analyzer rules and STA testing guidelines.
+See [Building from Source](documentation/getting-started/building-from-source.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for analyzer rules and STA testing guidelines.
 
 ---
 
@@ -482,23 +482,23 @@ See [Building from Source](new-docs-carbon4/getting-started/building-from-source
    </tr>
    <tr>
       <td>Dock Document</td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Drag_Document.png" alt="Dark Drag Document" width="400"></td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Drag_Document.png" alt="Light Drag Document" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Dark_Drag_Document.png" alt="Dark Drag Document" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Light_Drag_Document.png" alt="Light Drag Document" width="400"></td>
    </tr>
    <tr>
       <td>Dock Tool Window (6-Zone Overlay)</td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Drag.png" alt="Dark Drag Tool Window" width="400"></td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Drag.png" alt="Light Drag Tool Window" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Dark_Drag.png" alt="Dark Drag Tool Window" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Light_Drag.png" alt="Light Drag Tool Window" width="400"></td>
    </tr>
    <tr>
       <td>Document Workspace</td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Welcome.png" alt="Dark Welcome Document" width="400"></td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Welcome.png" alt="Light Welcome Document" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Dark_Welcome.png" alt="Dark Welcome Document" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Light_Welcome.png" alt="Light Welcome Document" width="400"></td>
    </tr>
    <tr>
       <td>Sidebar Toolbox</td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Dark_Toolbox.png" alt="Dark Toolbox" width="400"></td>
-      <td><img src="new-docs-carbon4/images/AvalonDockCodeApp_Light_Toolbox.png" alt="Light Toolbox" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Dark_Toolbox.png" alt="Dark Toolbox" width="400"></td>
+      <td><img src="documentation/images/AvalonDockCodeApp_Light_Toolbox.png" alt="Light Toolbox" width="400"></td>
    </tr>
 </table>
 
@@ -535,7 +535,7 @@ See [Building from Source](new-docs-carbon4/getting-started/building-from-source
 
 ## Documentation, Internals & Roadmap
 
-- **[v5 Documentation Suite (`new-docs-carbon4/`)](new-docs-carbon4/index.md)** — 38-page user guide, tutorials, theme gallery, migration checklist, and API reference
+- **[v5 Documentation Suite (`documentation/`)](documentation/index.md)** — 38-page user guide, tutorials, theme gallery, migration checklist, and API reference
 - **[Fork Roadmap & Caliburn.Micro Bridge (`ROADMAP.md`)](ROADMAP.md)** — Planned `AvalonDock.Mvvm.CaliburnMicro` BCL design, sample app modernization, and [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) vendoring plan
 - **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
 - **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map

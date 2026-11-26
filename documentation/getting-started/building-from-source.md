@@ -15,15 +15,15 @@ This guide covers cloning the repository, compiling all libraries and sample app
 ## Prerequisites
 
 - **OS:** Windows (WPF projects only build and execute on Windows)
-- **.NET SDKs:** **.NET 8.0 SDK**, **.NET 9.0 SDK**, **.NET 10.0 SDK**, and **.NET 11.0 SDK** (plus `.NET Framework 4.8` targeting pack)
-- **IDE:** Visual Studio 2022 / 2026 or any editor with .NET CLI support
+- **.NET SDKs & Targeting Packs:** **.NET Framework 4.8 Developer Pack** (primary prioritized desktop target) plus **.NET 8.0 SDK**, **.NET 9.0 SDK**, **.NET 10.0 SDK**, and **.NET 11.0 SDK**
+- **IDE:** Visual Studio 2022 / 2026, JetBrains Rider, or VS Code with .NET CLI support
 
 ---
 
-## Clone & Build
+## Clone & Build (`NTLDR2 Fork v5.1.0`)
 
 ```powershell
-git clone https://github.com/Dirkster99/AvalonDock.git
+git clone https://github.com/NTLDR2/AvalonDock.git
 cd AvalonDock
 
 dotnet restore source/AvalonDock.sln

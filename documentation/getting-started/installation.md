@@ -8,13 +8,24 @@ description: "Install AvalonDock v5 NuGet packages and configure target framewor
 
 # Installation
 
-AvalonDock v5 is distributed as a modular family of **11 NuGet packages** under the `Dirkster.AvalonDock*` prefix. Install the main `Dirkster.AvalonDock` package for WPF docking controls, then add only the theme, XML serializer, MVVM, or Dependency Injection packages your application uses.
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **11 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, with **zero `System.Text.Json` dependencies** across `.NET Framework 4.8` and modern `.NET`.
+
+{: .important }
+**Fork vs. Upstream Distribution Scope:**
+- **Consuming `NTLDR2 Fork v5.1.0` (Recommended for Zero-`System.Text.Json` / Vendored Hosts):** Reference the projects under `source/Components/*` directly via `ProjectReference` (submodule/vendored source) or pack local `.nupkg` artifacts (`dotnet pack source/AvalonDock.sln -c Release -o ./artifacts/nupkgs`) and install from your local NuGet feed.
+- **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including the 3 `System.Text.Json`-dependent packages removed in this fork: `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`).
 
 ---
 
-## 1. Install the Main WPF Package
+## 1. Reference the Main WPF Library
 
-### .NET CLI
+### Vendored `ProjectReference` (`NTLDR2 Fork v5.1.0`)
+
+```xml
+<ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
+```
+
+### .NET CLI (Local NuGet Feed or Upstream `nuget.org`)
 
 ```bash
 dotnet add package Dirkster.AvalonDock
@@ -94,14 +105,14 @@ Build the project (`dotnet build`). Once it compiles cleanly, continue to the [Q
 
 ## Target Framework Compatibility
 
-| Target Framework | WPF Packages (`AvalonDock`, `Themes.*`) | UI-Agnostic Packages (`Core`, `Mvvm*`, `DI`, `Serializer.Xml`) | Version Availability |
-|:-----------------|:---------------------------------------:|:--------------------------------------------------------------:|:---------------------|
-| `.NET 11` (`net11.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `v5.1.0+` |
-| `.NET 10` (`net10.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `v5.0.0+` |
-| `.NET 9` (`net9.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `v5.0.0+` |
-| `.NET 8` (`net8.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `v5.0.2+` |
-| `.NET Framework 4.8` (`net48`) | ✅ | ✅ (via `netstandard2.0`) | `v5.0.0+` |
-| `.NET Standard 2.0` (`netstandard2.0`) | — (requires WPF) | ✅ | `v5.0.0+` |
+| Target Framework | WPF Libraries (`AvalonDock`, `Themes.*`) | UI-Agnostic Libraries (`Core`, `Mvvm*`, `DI`, `Serializer.Xml`) | Introduced In / Scope |
+|:-----------------|:----------------------------------------:|:---------------------------------------------------------------:|:----------------------|
+| `.NET Framework 4.8` (`net48`) | ✅ | ✅ (via `netstandard2.0`) | **Primary prioritized target in `NTLDR2 Fork v5.1.0`** (`Upstream v5.0.0+`) |
+| `.NET 11` (`net11.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.1.0` & `NTLDR2 Fork v5.1.0` |
+| `.NET 10` (`net10.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.0+` |
+| `.NET 9` (`net9.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.0+` |
+| `.NET 8` (`net8.0-windows`) | ✅ | ✅ (via `netstandard2.0`) | `Upstream v5.0.2+` (`#673`) |
+| `.NET Standard 2.0` (`netstandard2.0`) | — (requires WPF) | ✅ | `Upstream v5.0.0+` |
 
 {: .important }
 WPF application projects on .NET 8 or later **must** include the `-windows` target framework suffix (for example, `<TargetFramework>net10.0-windows</TargetFramework>`) and `<UseWPF>true</UseWPF>`.

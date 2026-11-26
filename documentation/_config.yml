@@ -1,8 +1,8 @@
-title: AvalonDock
+title: "AvalonDock (NTLDR2 Fork)"
 description: >-
-  A WPF Document and Tool Window layout container for building
-  Visual Studio-like docking interfaces.
-url: "https://dirkster99.github.io"
+  WPF Document and Tool Window docking layout library (v5.1.0 NTLDR2 Fork —
+  .NET Framework 4.8 & modern .NET, zero System.Text.Json dependencies).
+url: "https://ntldr2.github.io"
 baseurl: "/AvalonDock"
 
 # This is a GitHub Pages *project* site, so every internal URL must carry the
@@ -22,10 +22,10 @@ remote_theme: just-the-docs/just-the-docs@v0.10.0
 permalink: pretty
 
 aux_links:
-  "GitHub":
+  "GitHub (NTLDR2 Fork)":
+    - "https://github.com/NTLDR2/AvalonDock"
+  "Upstream (Dirkster99)":
     - "https://github.com/Dirkster99/AvalonDock"
-  "NuGet":
-    - "https://www.nuget.org/packages/Dirkster.AvalonDock"
 
 aux_links_new_tab: true
 
@@ -44,7 +44,8 @@ back_to_top: true
 back_to_top_text: "Back to top"
 
 footer_content: >-
-  AvalonDock is licensed under the <a href="https://github.com/Dirkster99/AvalonDock/blob/master/LICENSE">Microsoft Public License (Ms-PL)</a>.
+  AvalonDock (NTLDR2 v5.1.0 Fork of <a href="https://github.com/Dirkster99/AvalonDock">Dirkster99/AvalonDock</a>)
+  is licensed under the <a href="https://github.com/NTLDR2/AvalonDock/blob/master/LICENSE">Microsoft Public License (Ms-PL)</a>.
   &copy; 2017&ndash;2026 Open Source Contributors.
 
 color_scheme: dark
