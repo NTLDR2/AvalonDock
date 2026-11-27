@@ -9,7 +9,7 @@ permalink: /getting-started/
 
 # Getting Started
 
-Get up and running with **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** in minutes. This section covers vendored/package consumption of the 11 zero-`System.Text.Json` libraries, building your first docking layout, and compiling the solution from source.
+Get up and running with **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** in minutes. This section covers vendored/package consumption of the 13 zero-`System.Text.Json` libraries, building your first docking layout, and compiling the solution from source.
 
 ---
 

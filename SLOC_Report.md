@@ -1,19 +1,21 @@
 # AvalonDock Source Lines of Code (SLOC) Report
 
-**Updated:** 2026-11-25  
+**Updated:** 2026-11-27  
 **Repository Path:** `C:\SOFTDEV\AvalonDock-V5-NEW`  
-**Scope:** Source code and configuration files across the 11 shipped `Dirkster.AvalonDock*` NuGet packages, sample applications, and automated test suites (after surgical removal of `AvalonDock.Serializer.Json`, `AvalonDock.Themes.VS`, `AvalonDock.Themes.VS2013`, and `VS2013Test`).
+**Scope:** Source code and configuration files across the 13 shipped `Dirkster.AvalonDock*` NuGet packages, sample applications, and automated test suites (`AvalonDock.Serializer.Json` and `VS2013Test` were omitted, while `AvalonDock.Themes.VS` and `AvalonDock.Themes.VS2013` were restored on `net48` refactored to pure C# with zero `System.Text.Json`).
 
 ---
 
-## 1. Breakdown of Shipped Component Projects (`source/Components/*` — 11 Packages)
+## 1. Breakdown of Shipped Component Projects (`source/Components/*` — 13 Packages)
 
-These 11 projects produce the published `Dirkster.AvalonDock*` NuGet packages:
+These 13 projects produce the published `Dirkster.AvalonDock*` NuGet packages:
 
 | Component Project | Files | Total SLOC | C# SLOC | XAML SLOC | Other SLOC | Total Lines |
 |:---|---:|---:|---:|---:|---:|---:|
 | `AvalonDock` | 192 | **30,169** | 26,162 | 1,631 | 2,376 | 51,126 |
+| `AvalonDock.Themes.VS` | 39 | **9,416** | 1,469 | 6,397 | 1,550 | 11,678 |
 | `AvalonDock.Themes.Arc` | 16 | **4,375** | 150 | 4,208 | 17 | 5,494 |
+| `AvalonDock.Themes.VS2013` | 18 | **3,796** | 343 | 3,430 | 23 | 5,074 |
 | `AvalonDock.Themes.VS2010` | 6 | **2,043** | 33 | 1,993 | 17 | 2,259 |
 | `AvalonDock.Themes.Aero` | 9 | **2,035** | 141 | 1,877 | 17 | 2,335 |
 | `AvalonDock.Themes.Expression` | 12 | **2,002** | 111 | 1,874 | 17 | 2,347 |
@@ -23,7 +25,7 @@ These 11 projects produce the published `Dirkster.AvalonDock*` NuGet packages:
 | `AvalonDock.Mvvm.CommunityToolkit` | 5 | **231** | 210 | 0 | 21 | 368 |
 | `AvalonDock.DependencyInjection` | 5 | **208** | 186 | 0 | 22 | 443 |
 | `AvalonDock.Serializer.Xml` | 2 | **56** | 38 | 0 | 18 | 92 |
-| **Components Subtotal** | **303** | **44,863** | **28,870** | **13,438** | **2,555** | **70,033** |
+| **Components Subtotal** | **360** | **58,075** | **30,682** | **23,265** | **4,128** | **86,785** |
 
 ---
 
@@ -54,4 +56,5 @@ These 11 projects produce the published `Dirkster.AvalonDock*` NuGet packages:
 | `MLibTest/` | MLib theming integration sample |
 | `CaliburnDockTestApp/` | Upstream Caliburn.Micro 4 integration sample |
 | `ExperimentalTestApp/` | Caliburn.Micro 6 + `DockLayout` reference sample |
+| `ThemeSuperTestApp/` | Caliburn.Micro 6 + classic `DockingManager` 20-theme visual debugger, 6-tool profiler/auditor & Antigravity XML `AgentBridge` |
 | `AvalonDocPanelMemoryLeaks/` | Memory-leak regression harness |

@@ -1,14 +1,14 @@
-# Plan 01 (of 07) — Project Scaffold, Caliburn.Micro Docking Foundation & Lazy Theme Catalog
+# Plan 01 (of 10) — Project Scaffold, Caliburn.Micro Docking Foundation & Lazy Theme Catalog
 
-> **Execution Order:** **Step 1 of 7** (Foundation stage — must compile cleanly with `--warnaserror` before starting [Plan 02](02-Windows-OS-Theme-Detection-DWM-Chrome-And-Pinned-Shell-Header.md)).
-> **Hard Constraints Across All 7 Plans:**
+> **Execution Order:** **Step 1 of 10** (Foundation stage — must compile cleanly with `--warnaserror` before starting [Plan 02](02-Windows-OS-Theme-Detection-DWM-Chrome-And-Pinned-Shell-Header.md)).
+> **Hard Constraints Across All 10 Plans:**
 > 1. **DO NOT edit any existing theme code or XAML** (`source/Components/AvalonDock.Themes.*` and `source/Components/AvalonDock/Themes/*` must remain 100% untouched).
 > 2. **Target `.NET Framework 4.8` (`net48`) exclusively** with **zero** `System.Text.Json`, `System.Memory`, or `Microsoft.Bcl.*` transitive dependencies.
 > 3. **Use `Caliburn.Micro` `6.0.15-beta`** (`SimpleContainer`, action messages, `DockLayout` + `IDockLayoutService`) and **classic `DockingManager` only** (no `ToggleDockingManager`).
 
 ---
 
-## Master 7-Plan Sequence Overview
+## Master 10-Plan Sequence Overview
 
 | Plan | File | Scope |
 | :--- | :--- | :--- |

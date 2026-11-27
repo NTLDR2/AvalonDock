@@ -76,7 +76,9 @@ source/
 ├── MLibTest/                               # MLib application theming integration demo
 ├── CaliburnDockTestApp/                    # Upstream Caliburn.Micro 4 integration sample (standalone)
 ├── ExperimentalTestApp/                    # Caliburn.Micro 6 + classic DockingManager (DockLayout) reference sample
-└── WinFormsTestApp/                        # Windows Forms ElementHost interop demo
+├── ThemeSuperTestApp/                      # 20-theme visual debugger, 6-tool profiler/auditor & Antigravity XML AgentBridge
+├── WinFormsTestApp/                        # Windows Forms ElementHost interop demo
+└── AvalonDocPanelMemoryLeaks/              # Memory-leak regression harness (standalone)
 ```
 
 ---

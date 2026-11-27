@@ -34,7 +34,7 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 - **Zero `System.Text.Json`:** Never add `System.Text.Json` package references or imports to any library, sample, or test project.
 - **`.NET Framework 4.8` & `netstandard2.0` Boundaries:** Verify changes compile and pass tests on `net48`, and never reference `System.Windows.*` inside `netstandard2.0` projects (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`).
 - **Code Style:** Follow `source/.editorconfig` (tabs for indentation, UTF-8, LF line endings, Allman braces, `using` directives outside `namespace`).
-- **Documentation (`documentation/`):** The 38-page Jekyll documentation site lives in `documentation/` (deployed automatically via `.github/workflows/docs.yml`). When updating migration or version notes, explicitly distinguish **Upstream `v5.0.0`–`v5.1.0`** changes from **`NTLDR2 Fork v5.1.0`** changes. Also keep [AGENTS.md](AGENTS.md), [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md), and [ROADMAP.md](ROADMAP.md) aligned when modifying architectural behavior.
+- **Documentation (`documentation/`):** The 41-page Jekyll documentation site lives in `documentation/` (deployed automatically via `.github/workflows/docs.yml`). When updating migration or version notes, explicitly distinguish **Upstream `v5.0.0`–`v5.1.0`** changes from **`NTLDR2 Fork v5.1.0`** changes. Also keep [AGENTS.md](AGENTS.md), [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md), and [ROADMAP.md](ROADMAP.md) aligned when modifying architectural behavior.
 
 ## Reporting Issues
 

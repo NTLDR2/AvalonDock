@@ -434,7 +434,7 @@ dockManager.Theme = new MetroTheme();           // Flat Metro style
 dockManager.Theme = new AeroTheme();            // Classic Windows Aero style
 ```
 
-For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](documentation/guides/theming.md) and [Custom Themes](documentation/guides/custom-themes.md).
+For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](documentation/guides/theming.md), [Custom Themes](documentation/guides/custom-themes.md), [THEMES.md](source/Components/THEMES.md), and [THEMES-ANALYSIS-AND-BEST-PRACTICES.md](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md). To inspect, profile, audit, or live-capture all 20 themes on `net48` (with multimodal Antigravity XML `AgentBridge` support), launch [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md).
 
 ---
 
@@ -543,6 +543,7 @@ See [Building from Source](documentation/getting-started/building-from-source.md
 - **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
 - **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map
 - **[Engine Internals Deep Dive (`SKILL.md`)](.agents/skills/avalondock-internals/SKILL.md)** — Inside-out explanation of the 3 parallel trees, `LayoutItem` depth ordering, `LayoutSyncBridge`, 6-zone sidebars, windowing/airspace, and DTO fixup
+- **[Theme Architecture, Best Practices & Visual Debugger (`THEMES.md`)](source/Components/THEMES.md)** — Complete 20-theme inventory, [WPF Theme Best Practices (`THEMES-ANALYSIS-AND-BEST-PRACTICES.md`)](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md), and the 6-tool [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md) (`F12` dual-mode screenshots + Antigravity XML `AgentBridge`)
 - **[Repository Map (`REPO_MAP.md`)](REPO_MAP.md)** & **[SLOC Report (`SLOC_Report.md`)](SLOC_Report.md)** — Complete directory map and source metrics
 - **[Contributing Guidelines (`CONTRIBUTING.md`)](CONTRIBUTING.md)** & **[License — Ms-PL (`LICENSE`)](LICENSE)**
 - **Upstream Creator Repository:** [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) | [Upstream Releases](https://github.com/Dirkster99/AvalonDock/releases)

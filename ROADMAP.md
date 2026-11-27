@@ -19,7 +19,7 @@ flowchart LR
 | **Phase 1** | Elimination of `System.Text.Json` (`Serializer.Json` removed; `Themes.VS` & `Themes.VS2013` refactored to pure zero-dependency C#), 41-page `documentation/` site, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
 | **Phase 2** | `.NET Framework 4.8` transitive-dependency audit, build/props isolation, and vendored integration into [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) | **Planned (Next)** |
 | **Phase 3** | Design & implementation of `AvalonDock.Mvvm.CaliburnMicro` (`netstandard2.0` BCL equivalent to `AvalonDock.Mvvm.CommunityToolkit`) + STA unit tests | **Proposed / Design Ready** |
-| **Phase 4** | Modernize dated sample applications—starting with `source/ExperimentalTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **In Progress** (`ExperimentalTestApp` rewritten for Caliburn.Micro 6.0.15-beta — done) |
+| **Phase 4** | Modernize dated sample applications—starting with `source/ExperimentalTestApp`, `source/ThemeSuperTestApp`, and extending across `source/*Test*` / `AvalonDockCodeApp` | **In Progress** (`ExperimentalTestApp` & `ThemeSuperTestApp` on Caliburn.Micro 6.0.15-beta — done) |
 | **Phase 5** | Full fork rebranding (**`AvalonDock` → `AvalonDox`**) across NuGet `<PackageId>`s, assembly names, WPF `pack://` URIs, namespaces, and CI release workflows | **Planned** |
 
 ---
@@ -159,7 +159,13 @@ While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Mi
 - **Docs:** `source/ExperimentalTestApp/README.md` and `documentation/guides/caliburn-micro.md`.
 - **Deferred:** a FlaUI smoke test for the sample, and unit tests for the boilerplate (it graduates into tests with the optional Phase 3 BCL).
 
-### 2. Audit & Refresh Remaining Sample Projects in `source/`
+### 2. Add `source/ThemeSuperTestApp` — 20-Theme Visual Debugger, Best-Practices Auditor & Antigravity `AgentBridge` *(Completed — NTLDR2 Fork v5.1.0)*
+Built on the same modernized `.NET Framework 4.8` (`net48`) + **Caliburn.Micro 6.0.15-beta** (`SimpleContainer`, `Conductor`, actions, `IEventAggregator`) + classic `DockingManager` (`DockLayout` + `IDockLayoutService`) foundation with **zero `System.Text.Json`**:
+- **20-Theme Live Switcher & OS/DWM Detector:** Switches live across all 20 built-in themes (`Arc`, `VS` [2015/2022/2026], `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, and `GenericTheme`) plus custom `.vstheme` / `.vstheme.gz` / pure-C# VS2026 `.json` overrides, paired with a pinned two-row header tracking Windows OS Dark/Light app & system modes, High-Contrast (`SystemParameters.HighContrast`), OS accent color, and Win32 DWM immersive dark title bars (`DWMWA_USE_IMMERSIVE_DARK_MODE`).
+- **6 Diagnostic Toolboxes:** `1. Theme Architecture & Profiler` (`ThemeProfilerViewModel`, `Ctrl+Alt+P` — cold `.ctor` & 20-theme apply/render profiler + `[XmlnsDefinition]` audit), `2. Resource & Freezable Auditor` (`ResourceAuditorViewModel`, `Ctrl+Alt+R` — `ResourceDictionary` precedence inspector, unfrozen `Freezable` `!IsFrozen` detector & cross-theme `ResourceKeys` parity diff), `3. Multi-Window Dict Sharing` (`WindowSharingTrackerViewModel`, `Ctrl+Alt+W` — `RuntimeHelpers.GetHashCode` multi-window `ResourceDictionary` object-identity sharing tracker), `4. WPF XAML Binding & Resource Trace` (`WpfTraceListenerViewModel`, `Ctrl+Alt+T` — `PresentationTraceSources` listener), `5. Runtime .vstheme / JSON Loader` (`RuntimeThemeLoaderViewModel`, `Ctrl+Alt+L` — external `.vstheme`/`.vstheme.gz`/VS2026 `.json` loader & inline JSON override sandbox), and `6. Antigravity Live Bridge` (`AgentBridgeToolboxViewModel`, `Ctrl+Alt+A`).
+- **Dual-Mode Screenshot Stitcher & Pure-XML Antigravity `AgentBridge`:** Captures both WPF `RenderTargetBitmap` and Win32 `PrintWindow` (`PW_RENDERFULLCONTENT`) DWM frames into stitched `latest-composite.png` + `latest-context.md` on `F12` or via a file-based XML `inbox/` → `outbox/` command loop (`heartbeat.xml` + 16 allow-listed verbs, documented in `.agents/skills/theme-super-test-bridge/SKILL.md` and covered by `ThemeSuperTestAppDiagnosticsTests` & `ThemeSuperTestAppAgentBridgeTests`).
+
+### 3. Audit & Refresh Remaining Sample Projects in `source/`
 
 | Sample Project | Current State Found in Audit | Planned Cleanup |
 |:---------------|:-----------------------------|:----------------|
