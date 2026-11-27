@@ -21,7 +21,7 @@ Because this documentation covers the **`NTLDR2/AvalonDock` (`v5.1.0`) fork** ra
 
 1. **`Upstream v5.0.0` ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Extracted `Serializer.Xml`, `Core`, `Mvvm`, `Mvvm.CommunityToolkit`, and `DependencyInjection` (`AddDockLayoutService` `#584`); replaced `IXmlSerializable` with plain DTOs (`#580`); added `ToggleDockingManager`, `DetachedAnchorableWindow`, `AllowFloatingWindows` / `AllowDetachedWindows` (`#637`), and `Themes.Arc`; dropped `< net48` and `.NET Core 3.x / .NET 5`. *(Note: upstream `v5.0.0` originally shipped **14 packages** on `nuget.org`, including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`.)*
 2. **`Upstream v5.0.2` & `v5.1.0`:** Added `net8.0-windows` (`v5.0.2`, `#673`) and `net11.0-windows` (`v5.1.0`).
-3. **`NTLDR2 Fork v5.1.0` ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)):** Surgically removes the 3 `System.Text.Json`-dependent packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), shipping **11 zero-`System.Text.Json` libraries** to eliminate `net48` binding-redirect DLL hell, targets `.NET Framework 4.8` (`net48`) strictly across all WPF packages/samples/tests (with `netstandard2.0` UI-agnostic libraries), and uses vendored `ProjectReference` / local `dotnet pack` distribution rather than publishing fork builds to `nuget.org`.
+3. **`NTLDR2 Fork v5.1.0` ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)):** Omits `Serializer.Json` and refactors `Themes.VS` (`VsJsonThemeParser`) + `Themes.VS2013` to pure zero-dependency C# — shipping **13 zero-`System.Text.Json` libraries** to eliminate `net48` binding-redirect DLL hell — targets `.NET Framework 4.8` (`net48`) strictly across all WPF packages/samples/tests (with `netstandard2.0` UI-agnostic libraries), and uses vendored `ProjectReference` / local `dotnet pack` distribution rather than publishing fork builds to `nuget.org`.
 
 {: .important }
 Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) reference before starting your upgrade.
@@ -35,7 +35,7 @@ Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{%
 - [ ] Add `Dirkster.AvalonDock.Serializer.Xml` if you persist layouts
 - [ ] Update serializer namespaces (`AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` + `AvalonDock.Core`)
 - [ ] Migrate any custom `IXmlSerializable` layout hooks to `LayoutSerializerBase` / DTOs
-- [ ] Migrate `Dirkster.AvalonDock.Themes.VS2013` usages to `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme` / `ArcLightTheme`), `Themes.Expression`, or `Themes.VS2010`
+- [ ] Audit custom `Themes.VS2013` XAML dictionary merges (`DarkBrushs.xaml` / `DarkTheme.xaml` were replaced by embedded `.vstheme.gz` resources in v5 `#572`; base custom XAML themes on `Themes.Arc` or override `Vs2013*Theme.ThemeResourceDictionary` in C#)
 - [ ] Check unresolved anchorable handling (`UnresolvedContentHandling.Hide`) if late-loaded plugins rely on `LayoutRoot.Hidden`
 - [ ] Rebuild and test layout round-trips, floating/detached windows, and theme switching
 
@@ -93,8 +93,9 @@ In v4, XML serialization was bundled inside `Dirkster.AvalonDock`. Starting in `
 | — | `Dirkster.AvalonDock.Mvvm` | `Upstream v5.0.0` | Optional zero-dependency MVVM base classes & `DockLayoutService` |
 | — | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `Upstream v5.0.0` | Optional `CommunityToolkit.Mvvm` (`ObservableObject`) base classes |
 | — | `Dirkster.AvalonDock.DependencyInjection` | `Upstream v5.0.0` | Optional `IServiceCollection` & `DockLayoutBuilder` integration |
-| `Dirkster.AvalonDock.Themes.VS2013` | `Dirkster.AvalonDock.Themes.Arc` *(recommended)* | **`NTLDR2 Fork v5.1.0`** *(retained in upstream `v5.0.0`)* | Replace `Vs2013*Theme` with `ArcDarkTheme` / `ArcLightTheme` (or `Expression` / `VS2010`) — removed in this fork to eliminate `System.Text.Json` |
-| *(early v5 `Serializer.Json` / `Themes.VS`)* | `Serializer.Xml` / `Themes.Arc` | **`NTLDR2 Fork v5.1.0`** *(introduced in upstream `v5.0.0`)* | Not shipped in this fork (zero `System.Text.Json` policy); use `XmlLayoutSerializer` or `LayoutSerializerBase`, and `Arc` / `VS2010` |
+| `Dirkster.AvalonDock.Themes.VS2013` | `Dirkster.AvalonDock.Themes.VS2013` *(or `Themes.Arc`)* | `Upstream v5.0.0` (`#572`) + **`NTLDR2 Fork v5.1.0`** | `Vs2013*Theme` classes continue to work (zero `System.Text.Json` in this fork); loose v4 XAML files (`DarkBrushs.xaml` / `DarkTheme.xaml`) were replaced by embedded `.vstheme.gz` resources |
+| — | `Dirkster.AvalonDock.Themes.VS` | `Upstream v5.0.0` + **`NTLDR2 Fork v5.1.0`** | Optional `VS2015*`, `VS2022*`, and `VS2026*` themes + `.vstheme` / pure-C# VS2026 JSON loader (`AvalonDock.Themes.VS` namespace; zero `System.Text.Json`) |
+| *(early v5 `Serializer.Json`)* | `Dirkster.AvalonDock.Serializer.Xml` | **`NTLDR2 Fork v5.1.0`** *(introduced in upstream `v5.0.0`)* | Not shipped in this fork (zero `System.Text.Json` policy); use `XmlLayoutSerializer` or subclass `LayoutSerializerBase` |
 | `Dirkster.AvalonDock.Themes.{VS2010,Expression,Metro,Aero}` | `Dirkster.AvalonDock.Themes.{VS2010,Expression,Metro,Aero}` | `Upstream v5.0.0` | Update version / project reference |
 
 ---
@@ -134,8 +135,8 @@ serializer.Serialize("layout.xml");
 ## Step 4: Review Theme & Custom Dictionary Usage
 
 - **`VS2010`, `Expression`, `Metro`, `Aero`, and `GenericTheme` instantiation is unchanged:** `new VS2010Theme()`, `new ExpressionDarkTheme()`, `new MetroTheme()`, and `new AeroTheme()` continue to work as in v4.
-- **Migrating from `Themes.VS2013` (`NTLDR2 Fork v5.1.0`):** Whereas upstream `v5.0.0` continued publishing `Dirkster.AvalonDock.Themes.VS2013` (alongside `Themes.VS` and `Serializer.Json`), **`NTLDR2 Fork v5.1.0` removes all three packages** so that the entire solution remains 100% free of `System.Text.Json` binding-redirect / DLL conflicts on `.NET Framework 4.8`. Switch to `Dirkster.AvalonDock.Themes.Arc` (`new ArcDarkTheme()` or `new ArcLightTheme()`), and base custom XAML brush overrides on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) using `AvalonDock.Themes.Arc.Themes.ResourceKeys`.
-- Explore all 5 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
+- **`VS2013` loose XAML dictionaries removed (`Upstream v5.0.0`, `#572`):** `new Vs2013DarkTheme()`, `new Vs2013LightTheme()`, and `new Vs2013BlueTheme()` continue to work in v5 (and run with zero `System.Text.Json` dependencies in `NTLDR2 Fork v5.1.0`). However, v4's loose XAML files (`DarkBrushs.xaml`, `LightBrushs.xaml`, `BlueBrushs.xaml`, `DarkTheme.xaml`) were replaced by embedded `.vstheme.gz` resources — base custom XAML merged-dictionary themes on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) using `AvalonDock.Themes.Arc.Themes.ResourceKeys`, or override `Vs2013*Theme.ThemeResourceDictionary` in C#.
+- Explore all 7 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
 
 ---
 

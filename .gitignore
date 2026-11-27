@@ -33,6 +33,9 @@ nupkg/
 # WPF temporary project files generated during builds
 *_wpftmp.csproj
 
+# Runtime Antigravity <-> ThemeSuperTestApp mailbox & screenshot captures
+/source/ThemeSuperTestApp/AgentBridge/
+
 # Always track shared AI agent skills and customizations
 !/.agents/
 !/.agents/**

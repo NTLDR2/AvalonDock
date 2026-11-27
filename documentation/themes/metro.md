@@ -2,7 +2,7 @@
 title: Metro Theme
 layout: default
 parent: Themes
-nav_order: 4
+nav_order: 6
 description: "Clean, flat Metro light theme with crisp borders and sky-blue accents."
 ---
 

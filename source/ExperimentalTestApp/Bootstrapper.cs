@@ -7,6 +7,7 @@ using AvalonDock;
 using AvalonDock.Core;
 using AvalonDock.Mvvm;
 using AvalonDock.Themes;
+using AvalonDock.Themes.VS;
 using Caliburn.Micro;
 using ExperimentalTestApp.Infrastructure;
 using ExperimentalTestApp.Services;
@@ -73,12 +74,25 @@ namespace ExperimentalTestApp
 			var themeManager = new ThemeManager(new Theme[]
 			{
 				new VS2010Theme(),
+				new Vs2013LightTheme(),
+				new Vs2013BlueTheme(),
+				new Vs2013DarkTheme(),
+				new VS2015LightTheme(),
+				new VS2015BlueTheme(),
+				new VS2015DarkTheme(),
+				new VS2022LightTheme(),
+				new VS2022BlueTheme(),
+				new VS2022DarkTheme(),
+				new VS2026LightTheme(),
+				new VS2026BlueTheme(),
+				new VS2026DarkTheme(),
 				new ArcLightTheme(),
 				new ArcDarkTheme(),
 				new MetroTheme(),
 				new ExpressionLightTheme(),
 				new ExpressionDarkTheme(),
 				new AeroTheme(),
+				new GenericTheme(),
 			});
 			themeManager.ApplyTheme(DefaultThemeName); // records the choice; ShellView re-applies it once attached
 			_container.Instance(themeManager);

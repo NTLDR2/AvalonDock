@@ -3,12 +3,12 @@ title: "Tutorial: Styling & Theming"
 layout: default
 parent: Tutorials
 nav_order: 3
-description: "Build a WPF docking application with live switching across all five theme packages, persisted user theme preferences, and custom corporate themes."
+description: "Build a WPF docking application with live switching across AvalonDock theme packages, persisted user theme preferences, and custom corporate themes."
 ---
 
 # Tutorial: Styling & Theming
 
-In this tutorial you will build a WPF application that switches live across **all five** AvalonDock theme packages (plus `GenericTheme`), synchronizes the host window chrome with light and dark themes, persists the user's selected theme across restarts, and adds both a XAML-based corporate theme and a runtime C# `DictionaryTheme` accent override.
+In this tutorial you will build a WPF application that switches live across AvalonDock theme packages (plus `GenericTheme`), synchronizes the host window chrome with light and dark themes, persists the user's selected theme across restarts, and adds both a XAML-based corporate theme and a runtime C# `DictionaryTheme` accent override.
 
 ---
 
@@ -34,7 +34,7 @@ dotnet add package CommunityToolkit.Mvvm
 
 ## Step 1: Review All Built-in Theme Classes
 
-Across the five theme packages and `Dirkster.AvalonDock`, 8 ready-to-use `Theme` classes are available:
+Across the seven theme packages and `Dirkster.AvalonDock`, 20 ready-to-use `Theme` classes are available (this tutorial wires the five URI-based packages below; you can also add `Dirkster.AvalonDock.Themes.VS` for `VS2015*`/`VS2022*`/`VS2026*` and `Dirkster.AvalonDock.Themes.VS2013` for `Vs2013*`):
 
 | Theme Class | Namespace | NuGet Package | Palette |
 |:------------|:----------|:--------------|:--------|
@@ -500,6 +500,6 @@ dotnet run
 
 ## Next Steps
 
-- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all five theme packages.
+- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all seven theme packages.
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Full `ResourceKeys` reference and `DictionaryTheme` customization patterns.
 - [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Combine persisted theme settings with XML docking layout save/restore.

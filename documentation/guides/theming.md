@@ -3,12 +3,12 @@ title: Theming
 layout: default
 parent: Guides
 nav_order: 5
-description: "Apply and switch between all five AvalonDock theme packages and GenericTheme in XAML, code-behind, MVVM, and Dependency Injection."
+description: "Apply and switch between all seven AvalonDock theme packages and GenericTheme in XAML, code-behind, MVVM, and Dependency Injection."
 ---
 
 # Theming
 
-AvalonDock ships **five NuGet theme packages** (7 built-in theme variants) alongside the built-in `GenericTheme` and `DictionaryTheme` base class in `Dirkster.AvalonDock`. Every theme supports both `DockingManager` and [`ToggleDockingManager`]({{ site.baseurl }}{% link guides/toggle-docking-manager.md %}) out of the box, has zero third-party NuGet dependencies, and can be switched dynamically at runtime without recreating the layout.
+AvalonDock ships **seven NuGet theme packages** (19 built-in theme variants plus `VsTheme` custom `.vstheme`/JSON loading) alongside the built-in `GenericTheme` and `DictionaryTheme` base class in `Dirkster.AvalonDock`. Every theme targets `net48` exclusively, supports both `DockingManager` and [`ToggleDockingManager`]({{ site.baseurl }}{% link guides/toggle-docking-manager.md %}) out of the box, has zero third-party NuGet dependencies, and can be switched dynamically at runtime without recreating the layout.
 
 ---
 
@@ -16,9 +16,11 @@ AvalonDock ships **five NuGet theme packages** (7 built-in theme variants) along
 
 Install one or more theme packages alongside `Dirkster.AvalonDock`:
 
-| NuGet Package | Namespace | Built-in Theme Classes | Aesthetic |
-|:--------------|:----------|:-----------------------|:----------|
+| NuGet Package (`net48`) | Namespace | Built-in Theme Classes | Aesthetic |
+|:------------------------|:----------|:-----------------------|:----------|
 | `Dirkster.AvalonDock.Themes.Arc` | `AvalonDock.Themes` | `ArcDarkTheme`, `ArcLightTheme` | Modern JetBrains Rider / Fleet styling with rounded tabs and semi-transparent overlays |
+| `Dirkster.AvalonDock.Themes.VS` | **`AvalonDock.Themes.VS`** | `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, `VsTheme` | Visual Studio 2015, 2022, and 2026 themes plus custom `.vstheme` / `.vstheme.gz` / VS2026 JSON palettes |
+| `Dirkster.AvalonDock.Themes.VS2013` | `AvalonDock.Themes` | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` | Flat Visual Studio 2013 Dark, Light, and Blue palettes built from embedded `.vstheme.gz` resources |
 | `Dirkster.AvalonDock.Themes.VS2010` | `AvalonDock.Themes` | `VS2010Theme` | Classic Visual Studio 2010 blue-gray gradient chrome |
 | `Dirkster.AvalonDock.Themes.Expression` | `AvalonDock.Themes` | `ExpressionDarkTheme`, `ExpressionLightTheme` | High-contrast Expression Blend dark charcoal and light palettes |
 | `Dirkster.AvalonDock.Themes.Metro` | `AvalonDock.Themes` | `MetroTheme` | Clean, flat Windows 8 / Metro light theme with `#41B1E1` accents |
@@ -26,7 +28,7 @@ Install one or more theme packages alongside `Dirkster.AvalonDock`:
 | `Dirkster.AvalonDock` *(built-in)* | `AvalonDock.Themes` | `GenericTheme` | Default WPF system-color fallback (applied when `Theme` is `null` or explicitly set) |
 
 {: .note }
-All built-in theme classes reside in the **`AvalonDock.Themes`** CLR namespace.
+`Dirkster.AvalonDock.Themes.VS` types live in the **`AvalonDock.Themes.VS`** CLR namespace (`xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS"` in XAML). All other built-in theme classes (including `Vs2013*Theme`) reside in **`AvalonDock.Themes`**.
 
 See the [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) for screenshots, tab-icon support comparison, and package-specific details.
 
@@ -63,14 +65,16 @@ Assigning a new `Theme` instance to `DockingManager.Theme` (or `ToggleDockingMan
 
 ```csharp
 using AvalonDock.Themes;
+using AvalonDock.Themes.VS;
 
-// Switch to Arc Dark
+// Switch to Arc Dark or Arc Light
 dockManager.Theme = new ArcDarkTheme();
-
-// Switch to Arc Light
 dockManager.Theme = new ArcLightTheme();
 
-// Switch to VS2010
+// Switch to Visual Studio 2026 / 2022 / 2015 / 2013 / 2010
+dockManager.Theme = new VS2026DarkTheme();
+dockManager.Theme = new VS2022LightTheme();
+dockManager.Theme = new Vs2013DarkTheme();
 dockManager.Theme = new VS2010Theme();
 
 // Switch to Expression Dark
@@ -87,6 +91,7 @@ dockManager.Theme = new GenericTheme(); // or null
 ```csharp
 using System.Collections.Generic;
 using AvalonDock.Themes;
+using AvalonDock.Themes.VS;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 public partial class MainViewModel : ObservableObject
@@ -95,6 +100,10 @@ public partial class MainViewModel : ObservableObject
     {
         new ArcDarkTheme(),
         new ArcLightTheme(),
+        new VS2026DarkTheme(),
+        new VS2026LightTheme(),
+        new VS2022DarkTheme(),
+        new Vs2013DarkTheme(),
         new VS2010Theme(),
         new ExpressionDarkTheme(),
         new ExpressionLightTheme(),
@@ -130,7 +139,7 @@ public partial class MainViewModel : ObservableObject
 ```
 
 {: .tip }
-`Theme.Name` automatically strips the `"Theme"` suffix from the class name (for example, `ArcDarkTheme.Name` returns `"ArcDark"` and `VS2010Theme.Name` returns `"VS2010"`), making `DisplayMemberPath="Name"` work cleanly in selector controls.
+`Theme.Name` automatically strips the `"Theme"` suffix from the class name (for example, `ArcDarkTheme.Name` returns `"ArcDark"` and `VS2026DarkTheme.Name` returns `"VS2026Dark"`), making `DisplayMemberPath="Name"` work cleanly in selector controls.
 
 ### Switching Themes via `IThemeManager` (Dependency Injection)
 
@@ -141,6 +150,8 @@ services.AddSingleton<IThemeManager>(_ => new ThemeManager(new Theme[]
 {
     new ArcDarkTheme(),
     new ArcLightTheme(),
+    new VS2026DarkTheme(),
+    new Vs2013DarkTheme(),
     new ExpressionDarkTheme(),
     new VS2010Theme()
 }));
@@ -157,7 +168,7 @@ if (themeManager is ThemeManager concreteManager)
 }
 
 // In a ViewModel injected with IThemeManager:
-_themeManager.ApplyTheme("ArcLight"); // case-insensitive match on Theme.Name
+_themeManager.ApplyTheme("VS2026Dark"); // case-insensitive match on Theme.Name
 ```
 
 ---
@@ -189,13 +200,13 @@ AvalonDock's theming system is built on two base classes in `AvalonDock.Themes`:
 1. **`Theme`** (`public abstract class Theme : DependencyObject, IThemeInfo`):
    - URI-based themes (`ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `AeroTheme`, `GenericTheme`) override `GetResourceUri()` to return a relative pack `Uri` to a compiled XAML `ResourceDictionary`.
 2. **`DictionaryTheme`** (`public abstract class DictionaryTheme : Theme`):
-   - Runtime-constructed custom themes pass a dynamically built `ResourceDictionary` to `base(themeResourceDictionary)` and return `null` from `GetResourceUri()`.
+   - Runtime-constructed themes (`VsTheme` / `VS2015*` / `VS2022*` / `VS2026*`, `Vs2013*Theme`, and custom subclasses) pass a dynamically built `ResourceDictionary` to `base(themeResourceDictionary)` and return `null` from `GetResourceUri()`.
    - When `DockingManager.Theme` changes, AvalonDock removes the previous theme dictionary and merges either `ThemeResourceDictionary` (if `Theme is DictionaryTheme`) or a new `ResourceDictionary { Source = theme.GetResourceUri() }` into the manager, every active [`LayoutFloatingWindowControl`]({{ site.baseurl }}{% link concepts/floating-windows.md %}), and every open `DetachedAnchorableWindow`.
 
 ---
 
 ## Next Steps
 
-- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Compare all 5 theme packages, tab icon behavior, and visual styles.
-- [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Build branded themes via `DictionaryTheme` or XAML `ResourceKeys` overrides.
+- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Compare all 7 theme packages, tab icon behavior, and visual styles.
+- [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Build branded themes via `DictionaryTheme`, `.vstheme`/JSON palettes, or XAML `ResourceKeys` overrides.
 - [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) — Build an end-to-end runtime theme switcher with persisted preferences and custom corporate branding.

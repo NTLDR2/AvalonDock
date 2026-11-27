@@ -198,10 +198,11 @@ Load:  DeserializeCore(Stream) ──► LayoutRootDto ──► LayoutDtoMapper
 
 ---
 
-## 9. Theme Engine Internals (`Theme` vs `DictionaryTheme` & `Arc` `ResourceKeys`)
+## 9. Theme Engine Internals (`Theme` vs `DictionaryTheme`, `VS`/`VS2013` Palettes & `Arc` `ResourceKeys`)
 
 1. **Two Base Classes in `AvalonDock.Themes`:**
    - **`Theme`** (`abstract`): Pack-URI-based themes (`ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `AeroTheme`, `GenericTheme`) override `GetResourceUri()`.
-   - **`DictionaryTheme : Theme`** (`abstract`): Runtime-constructed custom themes pass a built `ResourceDictionary` to `base(themeResourceDictionary)` and return `null` from `GetResourceUri()`.
-   - Changing `DockingManager.Theme` swaps the merged dictionary on `DockingManager`, every open `LayoutFloatingWindowControl`, and every open `DetachedAnchorableWindow` (`UpdateThemeResources`), and triggers `ToggleDockingManager.ReapplyThemeStyles()` (which preserves currently open toolboxes across theme switches).
-2. **Assembly-Scoped `ComponentResourceKey`s (`AvalonDock.Themes.Arc`):** `AvalonDock.Themes.Arc.Themes.ResourceKeys` scopes brush and color keys to `typeof(ResourceKeys)` so custom `DictionaryTheme` subclasses or merged XAML dictionaries can re-accent `DarkTheme.xaml` / `LightTheme.xaml` cleanly.
+   - **`DictionaryTheme : Theme`** (`abstract`): Runtime-constructed themes pass a built `ResourceDictionary` to `base(themeResourceDictionary)` and return `null` from `GetResourceUri()`.
+     - **Built-in `DictionaryTheme` Packages:** `AvalonDock.Themes.VS` (`VsTheme`, `VS2015*Theme`, `VS2022*Theme`, `VS2026*Theme` in `AvalonDock.Themes.VS`) parses XML `.vstheme` / `.vstheme.gz` via `VsThemeParser` and VS2026 JSON color overrides via the zero-dependency pure-C# `VsJsonThemeParser` (throwing `FormatException` with line/column on malformed JSON), mapping frozen brushes onto `AvalonDock.Themes.VS.Themes.ResourceKeys` and merging `Themes/Generic.xaml` or `Themes/VS2022/Generic.xaml`. `AvalonDock.Themes.VS2013` (`Vs2013{Blue,Dark,Light}Theme` in `AvalonDock.Themes`) decompresses embedded `.vstheme.gz` palettes via `VsThemePaletteFactory` (all ~75 brushes frozen) onto `AvalonDock.Themes.VS2013.Themes.ResourceKeys`.
+   - Changing `DockingManager.Theme` swaps the merged dictionary on `DockingManager`, every open `LayoutFloatingWindowControl`, and every open `DetachedAnchorableWindow` (`UpdateThemeResources`), plus `_navigatorWindow` and `_overlayWindow`, and triggers `ToggleDockingManager.ReapplyThemeStyles()` (which preserves currently open toolboxes across theme switches).
+2. **Assembly-Scoped `ComponentResourceKey`s (`AvalonDock.Themes.Arc`, `VS`, `VS2013`, `Aero`):** `ResourceKeys` (and `AeroColors`) scope brush and color keys to their owning static class so custom `DictionaryTheme` subclasses or merged XAML dictionaries can re-accent themes cleanly without key collisions.

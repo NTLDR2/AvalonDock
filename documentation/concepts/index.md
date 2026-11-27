@@ -19,7 +19,7 @@ Understand how AvalonDock v5 separates its UI-agnostic core from the WPF layout 
 
 | Page | Summary |
 |:-----|:--------|
-| [Architecture]({{ site.baseurl }}{% link concepts/architecture.md %}) | The 11-package v5 architecture: `AvalonDock.Core`, `AvalonDock.Mvvm`, `LayoutSyncBridge`, `ILayoutEngine`, DTO serialization, and theme layers. |
+| [Architecture]({{ site.baseurl }}{% link concepts/architecture.md %}) | The 13-package v5 architecture: `AvalonDock.Core`, `AvalonDock.Mvvm`, `LayoutSyncBridge`, `ILayoutEngine`, DTO serialization, and theme layers. |
 | [Layout Model]({{ site.baseurl }}{% link concepts/layout-model.md %}) | How `LayoutRoot`, `LayoutPanel`, pane groups, panes, auto-hide sides, `Hidden`, and `FloatingWindows` form a live layout tree—and how `ILayoutEngine` and `ILayoutUpdateStrategy` manipulate it. |
 | [Documents & Anchorables]({{ site.baseurl }}{% link concepts/documents-and-anchorables.md %}) | Differences between `LayoutDocument` and `LayoutAnchorable`, programmatic placement (`AddToLayout` vs `Show`), auto-hide (`ToggleAutoHide` vs `ToggleSingleAutoHide`), and lifecycle events. |
 | [Floating & Detached Windows]({{ site.baseurl }}{% link concepts/floating-windows.md %}) | Comparing AvalonDock tear-off `LayoutFloatingWindowControl` instances with standalone OS-level `DetachedAnchorableWindow` windows, multi-monitor clamping, and global switches. |

@@ -1,5 +1,7 @@
 namespace AvalonDockTest
 {
+	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Windows;
 	using System.Windows.Controls;
@@ -8,6 +10,7 @@ namespace AvalonDockTest
 
 	using AvalonDock.Controls;
 	using AvalonDock.Themes;
+	using AvalonDock.Themes.VS;
 
 	/// <summary>
 	/// Regression tests for #684: the <see cref="MenuItemEx"/> style used by the document overflow
@@ -21,6 +24,36 @@ namespace AvalonDockTest
 	[Apartment(System.Threading.ApartmentState.STA)]
 	public class MenuItemExContentAlignmentTests
 	{
+		private static IEnumerable<TestCaseData> VsDictionaryThemes()
+		{
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new Vs2013BlueTheme())).SetName("Vs2013Blue");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new Vs2013DarkTheme())).SetName("Vs2013Dark");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new Vs2013LightTheme())).SetName("Vs2013Light");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015BlueTheme())).SetName("VS2015Blue");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015DarkTheme())).SetName("VS2015Dark");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2015LightTheme())).SetName("VS2015Light");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022BlueTheme())).SetName("VS2022Blue");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022DarkTheme())).SetName("VS2022Dark");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2022LightTheme())).SetName("VS2022Light");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026BlueTheme())).SetName("VS2026Blue");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026DarkTheme())).SetName("VS2026Dark");
+			yield return new TestCaseData((Func<DictionaryTheme>)(() => new VS2026LightTheme())).SetName("VS2026Light");
+		}
+
+		[TestCaseSource(nameof(VsDictionaryThemes))]
+		public void MenuItemExStyle_SetsContentAlignmentExplicitly(Func<DictionaryTheme> createTheme)
+		{
+			_ = new Border();
+			var style = createTheme().ThemeResourceDictionary[typeof(MenuItemEx)] as Style;
+			Assert.That(style, Is.Not.Null);
+
+			var setters = style!.Setters.OfType<Setter>().ToList();
+			Assert.That(setters.SingleOrDefault(s => s.Property == Control.HorizontalContentAlignmentProperty)?.Value,
+				Is.EqualTo(HorizontalAlignment.Left));
+			Assert.That(setters.SingleOrDefault(s => s.Property == Control.VerticalContentAlignmentProperty)?.Value,
+				Is.EqualTo(VerticalAlignment.Center));
+		}
+
 		[Test]
 		public void VS2010Theme_MenuItemExStyle_SetsContentAlignmentExplicitly()
 		{

@@ -55,7 +55,7 @@ Tests **must** run single-threaded (`-m:1`) because WPF requires STA threads on 
 source/
 ├── AvalonDock.sln                          # Main Visual Studio / dotnet CLI solution
 ├── Directory.Build.props                   # Shared TFMs, version, license, and analyzer settings
-├── Components/                             # 11 NuGet package projects
+├── Components/                             # 13 NuGet package projects
 │   ├── AvalonDock/                         # Main WPF docking library (DockingManager, ToggleDockingManager)
 │   ├── AvalonDock.Core/                    # UI-agnostic interfaces, enums, and serialization DTOs (netstandard2.0)
 │   ├── AvalonDock.Mvvm/                    # Zero-dependency MVVM base classes & DockLayoutService (netstandard2.0)
@@ -63,6 +63,8 @@ source/
 │   ├── AvalonDock.DependencyInjection/     # IServiceCollection & DockLayoutBuilder extensions (netstandard2.0)
 │   ├── AvalonDock.Serializer.Xml/          # XML layout serializer (netstandard2.0)
 │   ├── AvalonDock.Themes.Arc/              # Modern Arc Dark & Light themes
+│   ├── AvalonDock.Themes.VS/               # VS2015, VS2022 & VS2026 themes + .vstheme / JSON loader
+│   ├── AvalonDock.Themes.VS2013/           # Visual Studio 2013 Dark, Light & Blue themes
 │   ├── AvalonDock.Themes.VS2010/           # Visual Studio 2010 theme
 │   ├── AvalonDock.Themes.Expression/       # Expression Dark & Light themes
 │   ├── AvalonDock.Themes.Metro/            # Metro flat theme

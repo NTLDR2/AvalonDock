@@ -16,7 +16,7 @@ flowchart LR
 
 | Phase | Focus Area | Status |
 |:------|:-----------|:-------|
-| **Phase 1** | Surgical removal of `System.Text.Json` packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), 38-page `documentation/` site, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
+| **Phase 1** | Elimination of `System.Text.Json` (`Serializer.Json` removed; `Themes.VS` & `Themes.VS2013` refactored to pure zero-dependency C#), 41-page `documentation/` site, `AGENTS.md`, and `avalondock-internals` AI skill | **Completed** |
 | **Phase 2** | `.NET Framework 4.8` transitive-dependency audit, build/props isolation, and vendored integration into [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD) | **Planned (Next)** |
 | **Phase 3** | Design & implementation of `AvalonDock.Mvvm.CaliburnMicro` (`netstandard2.0` BCL equivalent to `AvalonDock.Mvvm.CommunityToolkit`) + STA unit tests | **Proposed / Design Ready** |
 | **Phase 4** | Modernize dated sample applications—starting with `source/ExperimentalTestApp` and extending across `source/*Test*` / `AvalonDockCodeApp` | **In Progress** (`ExperimentalTestApp` rewritten for Caliburn.Micro 6.0.15-beta — done) |
@@ -44,7 +44,7 @@ The primary operational goal of this fork is to serve as a clean, deterministic 
   - Ensure `source/Directory.Build.props` does not collide with parent-directory `Directory.Build.props` / `Directory.Packages.props` when mounted as a submodule, Git subtree, or `vendor/` source tree inside `SomaFrameQD`.
   - Provide a lightweight MSBuild import or solution filter containing only the shipped `source/Components/*` projects required by `SomaFrameQD` (excluding sample apps and FlaUI harnesses from host builds).
 - **`net48` Zero-Transitive-Bloat Audit:**
-  - `AvalonDock`, `AvalonDock.Core`, `AvalonDock.Mvvm`, `AvalonDock.Serializer.Xml`, and all 5 `AvalonDock.Themes.*` libraries already compile on `net48` with **zero** external NuGet runtime dependencies (only inbox `.NET Framework 4.8` BCL + WPF assemblies).
+  - `AvalonDock`, `AvalonDock.Core`, `AvalonDock.Mvvm`, `AvalonDock.Serializer.Xml`, and all 7 `AvalonDock.Themes.*` libraries (`Arc`, `VS`, `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`) already compile on `net48` with **zero** external NuGet runtime dependencies (only inbox `.NET Framework 4.8` BCL + WPF assemblies).
   - Document and verify binding-redirect expectations for optional packages (`AvalonDock.DependencyInjection` and `AvalonDock.Mvvm.CommunityToolkit`, which pull `Microsoft.Bcl.AsyncInterfaces` / `System.Memory` on `net48`) so `SomaFrameQD` can stay 100% inbox-only on `net48` whenever desired.
 - **Deterministic Layout Persistence Verification:**
   - Lock down XML DTO round-trip tests (`XmlLayoutDtoMapperRoundTripTests`) for `SomaFrameQD`'s workspace layouts, floating windows, detached OS tool windows, and unresolved-pane handling (`UnresolvedContentHandling`).
@@ -154,7 +154,7 @@ Implementing `CaliburnDockableBase : Screen, IDockable` cleanly requires solving
 
 ### 1. Add `source/ExperimentalTestApp` Alongside Upstream `source/CaliburnDockTestApp` *(Completed — NTLDR2 Fork v5.1.0)*
 While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Micro `4.0.136-rc`, `#if CALIBURN_ASYNC` shims for Caliburn.Micro 3.2, a local `RelayCommand`, `DisplayRootViewFor<T>()`, off-UI-thread `ActivateItemAsync`, v4-style `DocumentsSource="{Binding Items}"` with an unfiltered `ActiveContent` ↔ `ActiveItem` binding, retargeted to `net48`, standalone outside `AvalonDock.sln`), a modern reference sample **`source/ExperimentalTestApp`** was added to the solution:
-- **Stack:** classic `DockingManager` driven by `DockLayout` + `IDockLayoutService` (`AvalonDock.Mvvm`), Caliburn.Micro **6.0.15-beta** (NuGet build of upstream commit `83e93b34`, part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) history — zero `System.Text.Json`), `SimpleContainer`, `net48`, VS2010 default theme with runtime switching across all theme packages.
+- **Stack:** classic `DockingManager` driven by `DockLayout` + `IDockLayoutService` (`AvalonDock.Mvvm`), Caliburn.Micro **6.0.15-beta** (NuGet build of upstream commit `83e93b34`, part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) history — zero `System.Text.Json`), `SimpleContainer`, `net48`, VS2010 default theme with runtime switching across all 7 theme packages (20 built-in themes).
 - **Patterns:** sample-internal `IDockable`/`IToolbox` boilerplate on Caliburn.Micro `Screen`s, a conductor synchronized with the layout service, every AvalonDock document close routed through `CanCloseAsync` (serialized Save/Discard/Cancel prompts), 6-zone tool placement on the classic manager, `IToolbox.IsOpen`/`Shortcut` honoured, `IEventAggregator` decoupling, Caliburn.Micro actions instead of `ICommand`, `XmlLayoutSerializer` save/load/reset with auto-save on exit.
 - **Docs:** `source/ExperimentalTestApp/README.md` and `documentation/guides/caliburn-micro.md`.
 - **Deferred:** a FlaUI smoke test for the sample, and unit tests for the boilerplate (it graduates into tests with the optional Phase 3 BCL).
@@ -175,7 +175,7 @@ While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Mi
 
 ### Why Rebranding Is Necessary
 
-As this repository diverges architecturally from upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) (permanent `System.Text.Json` removal, 11-library topology, `.NET Framework 4.8` prioritization, and the planned Caliburn.Micro BCL), continuing to use the `AvalonDock` / `Dirkster.AvalonDock*` identity creates two concrete technical conflicts:
+As this repository diverges architecturally from upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) (permanent `System.Text.Json` elimination, 13-library topology, `.NET Framework 4.8` prioritization, and the planned Caliburn.Micro BCL), continuing to use the `AvalonDock` / `Dirkster.AvalonDock*` identity creates two concrete technical conflicts:
 
 1. **NuGet Package ID Ownership Collision:** Every `.csproj` under `source/Components/*` currently retains `<PackageId>Dirkster.AvalonDock*</PackageId>` (and `.github/workflows/release.yml` still points to those upstream IDs). Publishing standalone packages from this fork to `nuget.org` requires a distinct, non-colliding package namespace.
 2. **`.NET Framework 4.8` CLR Assembly Fusion Collision:** On `net48`, if a host application or third-party plugin loads upstream `AvalonDock.dll` in the same `AppDomain` as a diverged fork also compiled as `AvalonDock.dll`, the CLR assembly loader will collide on assembly short name / strong-name identity.
@@ -193,7 +193,7 @@ Rebrand the diverged project to **`AvalonDox`** (preserving full open-source `Ms
 | `AvalonDock.Mvvm.CaliburnMicro` *(Phase 3)* | **`AvalonDox.Mvvm.CaliburnMicro`** |
 | `Dirkster.AvalonDock.DependencyInjection` | **`AvalonDox.DependencyInjection`** |
 | `Dirkster.AvalonDock.Serializer.Xml` | **`AvalonDox.Serializer.Xml`** |
-| `Dirkster.AvalonDock.Themes.{Arc,VS2010,Expression,Metro,Aero}` | **`AvalonDox.Themes.{Arc,VS2010,Expression,Metro,Aero}`** |
+| `Dirkster.AvalonDock.Themes.{Arc,VS,VS2013,VS2010,Expression,Metro,Aero}` | **`AvalonDox.Themes.{Arc,VS,VS2013,VS2010,Expression,Metro,Aero}`** |
 
 *(Optional NuGet prefixing such as `NTLDR2.AvalonDox*` vs. top-level `AvalonDox*` will be finalized when registering package IDs on `nuget.org`.)*
 
@@ -204,9 +204,9 @@ Executing a WPF control-library rename cleanly requires updating seven coupled s
 1. **Solution, Project Directories & MSBuild Metadata (`source/Directory.Build.props`):**
    - Rename `source/AvalonDock.sln` → `source/AvalonDox.sln` and `source/Components/AvalonDock*` → `source/Components/AvalonDox*`.
    - Update `<AssemblyName>`, `<PackageId>`, `<Product>`, `<PackageProjectUrl>`, `<RepositoryUrl>`, and `<Authors>` while preserving historical copyright notices and `LICENSE` (`Ms-PL`) attribution.
-2. **WPF `pack://application:,,,` Resource URIs *(Critical Runtime Invariant)*:**
-   - Every `Theme.GetResourceUri()` implementation (`GenericTheme`, `ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `Expression*Theme`, `MetroTheme`, `AeroTheme`) and every XAML `<ResourceDictionary Source="/AvalonDock...;component/...">` merge embeds the exact `<AssemblyName>`.
-   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests on `net48`.
+2. **WPF `pack://application:,,,` Resource URIs & Embedded Manifest Prefixes *(Critical Runtime Invariant)*:**
+   - Every `Theme.GetResourceUri()` implementation (`GenericTheme`, `ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `Expression*Theme`, `MetroTheme`, `AeroTheme`), runtime `DictionaryTheme` builder (`VsThemeResourceBuilder`, `VsThemePaletteFactory`, `VS2022*Theme`, `VS2026*Theme`), and XAML `<ResourceDictionary Source="/AvalonDock...;component/...">` merge embeds the exact `<AssemblyName>`, while `AvalonDock.Themes.VS` and `AvalonDock.Themes.VS2013` load embedded `.vstheme` / `.vstheme.gz` / `.json` streams using their `<RootNamespace>.Resources.*` manifest prefix.
+   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...` (and update manifest resource prefixes to `AvalonDox.Themes.Resources.*`), guarded by STA theme-loading regression tests on `net48`.
 3. **C# Root Namespaces & XAML `[XmlnsDefinition]` Mapping:**
    - Transition C# namespaces from `AvalonDock.*` → `AvalonDox.*` and introduce the new primary XAML namespace URI (`https://github.com/NTLDR2/AvalonDox` with `[assembly: XmlnsPrefix(..., "avalonDox")]`) in `Properties/AssemblyInfo.cs`.
    - Optionally retain secondary `[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", ...)]` attributes in `AssemblyInfo.cs` so existing XAML views migrate with minimal friction.
@@ -217,4 +217,4 @@ Executing a WPF control-library rename cleanly requires updating seven coupled s
 6. **CI/CD & NuGet Release Workflow (`.github/workflows/release.yml` & `docs.yml`):**
    - Update `release.yml` project/package arrays from `Dirkster.AvalonDock*` to `AvalonDox*` (or gate `nuget.org` publishing behind the completed `AvalonDox` cutover) and update GitHub Pages site metadata in `documentation/_config.yml`.
 7. **Documentation & AI Agent Skills:**
-   - Update all 38 pages in `documentation/`, `README.md`, `AGENTS.md`, `REPO_MAP.md`, and `.agents/skills/avalondock-internals/SKILL.md` in lockstep so AI coding agents emit `AvalonDox` namespaces and package names accurately.
+   - Update all 41 pages in `documentation/`, `README.md`, `AGENTS.md`, `REPO_MAP.md`, and `.agents/skills/avalondock-internals/SKILL.md` in lockstep so AI coding agents emit `AvalonDox` namespaces and package names accurately.

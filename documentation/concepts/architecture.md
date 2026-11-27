@@ -27,10 +27,10 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 ├───────────────────────────────────┴───────────────────────────────┤
 │                     AvalonDock  (WPF UI)                          │
 │  ┌────────────────────┐ ┌────────────────┐ ┌───────────────────┐  │
-│  │ Controls & Managers│ │ Themes (5 pkgs)│ │ Serializer (1 pkg)│  │
-│  │ (DockingManager,   │ │ (Arc, VS2010,  │ │ (Serializer.Xml,  │  │
-│  │  ToggleDockingMgr, │ │  Expression,   │ │  netstandard2.0)  │  │
-│  │  LayoutSyncBridge) │ │  Metro, Aero)  │ │                   │  │
+│  │ Controls & Managers│ │ Themes (7 pkgs)│ │ Serializer (1 pkg)│  │
+│  │ (DockingManager,   │ │ (Arc, VS,      │ │ (Serializer.Xml,  │  │
+│  │  ToggleDockingMgr, │ │  VS2013/2010,  │ │  netstandard2.0)  │  │
+│  │  LayoutSyncBridge) │ │  Expr/Met/Aero)│ │                   │  │
 │  └─────────┬──────────┘ └───────┬────────┘ └─────────┬─────────┘  │
 │            │                    │                    │            │
 │  ┌─────────┴────────────────────┴────────────────────┴─────────┐  │
@@ -47,10 +47,10 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 
 ## Package Architecture (`NTLDR2 Fork v5.1.0`)
 
-**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** ships as **11 focused libraries** with strict dependency boundaries:
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** ships as **13 focused libraries** with strict dependency boundaries:
 
 {: .note }
-**Fork vs. Upstream `v5.0.0` Scope:** Upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) `v5.0.0` introduced this layered architecture across 14 packages (including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`). `NTLDR2 Fork v5.1.0` removes those 3 `System.Text.Json`-dependent packages so all 11 libraries below deploy cleanly on `.NET Framework 4.8` without binding-redirect conflicts.
+**Fork vs. Upstream `v5.0.0` Scope:** Upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) `v5.0.0` introduced this layered architecture across 14 packages. `NTLDR2 Fork v5.1.0` omits `Serializer.Json` and refactors `Themes.VS` (`VsJsonThemeParser`) + `Themes.VS2013` to zero `System.Text.Json` dependencies so all 13 libraries below deploy cleanly on `.NET Framework 4.8` without binding-redirect conflicts.
 
 ### Core & WPF Host Packages
 
@@ -72,11 +72,13 @@ All four extension packages target **`netstandard2.0`**, allowing your ViewModel
 
 ### Theme Packages
 
-Each of the **5 theme packages** targets `net48` with zero third-party dependencies, so you only ship the visual themes your application uses:
+Each of the **7 theme packages** targets `net48` exclusively with zero third-party dependencies, so you only ship the visual themes your application uses:
 
 | Package | Theme Classes & Capabilities |
 |:--------|:-----------------------------|
 | `Dirkster.AvalonDock.Themes.Arc` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE aesthetic with rounded corners |
+| `Dirkster.AvalonDock.Themes.VS` | `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, plus `VsTheme` (`.vstheme` / `.vstheme.gz` / zero-dependency VS2026 JSON) in `AvalonDock.Themes.VS` |
+| `Dirkster.AvalonDock.Themes.VS2013` | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` |
 | `Dirkster.AvalonDock.Themes.VS2010` | `VS2010Theme` |
 | `Dirkster.AvalonDock.Themes.Expression` | `ExpressionDarkTheme`, `ExpressionLightTheme` |
 | `Dirkster.AvalonDock.Themes.Metro` | `MetroTheme` |

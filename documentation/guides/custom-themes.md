@@ -250,4 +250,5 @@ Before shipping a custom theme, verify every visual state:
 
 - [Theming Guide]({{ site.baseurl }}{% link guides/theming.md %}) — Applying and switching built-in themes.
 - [Arc Theme]({{ site.baseurl }}{% link themes/arc.md %}) — Pack URIs and `ResourceKeys` details for `Dirkster.AvalonDock.Themes.Arc`.
+- [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) — Loading custom `.vstheme`, `.vstheme.gz`, and VS2026 JSON color overrides via `VsTheme`.
 - [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) — Step-by-step walkthrough building a multi-theme app with custom corporate branding.

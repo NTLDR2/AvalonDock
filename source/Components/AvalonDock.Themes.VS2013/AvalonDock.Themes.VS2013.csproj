@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<RootNamespace>AvalonDock.Themes</RootNamespace>
+		<PackageId>Dirkster.AvalonDock.Themes.VS2013</PackageId>
+		<TargetFrameworks>$(ComponentTargetFrameworks)</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+        <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
+        <SignAssembly>true</SignAssembly>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="**\*.png"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\vs2013blue.vstheme.gz"/>
+		<EmbeddedResource Include="Resources\vs2013dark.vstheme.gz"/>
+		<EmbeddedResource Include="Resources\vs2013light.vstheme.gz"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AvalonDock\AvalonDock.csproj"/>
+		<ProjectReference Include="..\AvalonDock.Themes.VS\AvalonDock.Themes.VS.csproj"/>
+	</ItemGroup>
+</Project>

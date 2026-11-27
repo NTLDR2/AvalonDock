@@ -8,12 +8,12 @@ description: "Install AvalonDock v5 NuGet packages and configure target framewor
 
 # Installation
 
-**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **11 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, targeting **`.NET Framework 4.8` (`net48`)** for WPF assemblies and **`.NET Standard 2.0` (`netstandard2.0`)** for UI-agnostic libraries, with **zero `System.Text.Json` dependencies**.
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **13 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, targeting **`.NET Framework 4.8` (`net48`)** for WPF assemblies and **`.NET Standard 2.0` (`netstandard2.0`)** for UI-agnostic libraries, with **zero `System.Text.Json` dependencies**.
 
 {: .important }
 **Fork vs. Upstream Distribution & Planned `AvalonDox` Rebrand:**
 - **Consuming `NTLDR2 Fork v5.1.0` (Recommended for Zero-`System.Text.Json` / Vendored Hosts):** Reference the projects under `source/Components/*` directly via `ProjectReference` (submodule/vendored source) or pack local `.nupkg` artifacts (`dotnet pack source/AvalonDock.sln -c Release -o ./artifacts/nupkgs`) and install from your local NuGet feed.
-- **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including the 3 `System.Text.Json`-dependent packages removed in this fork: `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`).
+- **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including `Serializer.Json` and `System.Text.Json`-dependent builds of `Themes.VS` / `Themes.VS2013` on `net48`).
 - **Planned Rebrand (`AvalonDox`):** Assembly and `<PackageId>` names temporarily remain `Dirkster.AvalonDock*` during initial vendoring stabilization; a full rebrand to **`AvalonDox`** is scheduled on the fork `ROADMAP.md` before any standalone NuGet publication to eliminate package and CLR assembly name collisions.
 
 ---
@@ -51,11 +51,15 @@ Install-Package Dirkster.AvalonDock
 
 ## 2. Install a Theme Package
 
-`Dirkster.AvalonDock` includes a fallback generic Windows theme (`GenericTheme`), and **5 dedicated theme packages** are available (all with zero external NuGet dependencies):
+`Dirkster.AvalonDock` includes a fallback generic Windows theme (`GenericTheme`), and **7 dedicated theme packages** are available (all targeting `net48` exclusively with zero external NuGet dependencies):
 
 ```bash
 # Modern compact IDE theme — Dark & Light variants (recommended for modern apps)
 dotnet add package Dirkster.AvalonDock.Themes.Arc
+
+# Visual Studio 2015, 2022 & 2026 themes (+ .vstheme / JSON loader) and VS2013 themes
+dotnet add package Dirkster.AvalonDock.Themes.VS
+dotnet add package Dirkster.AvalonDock.Themes.VS2013
 
 # Additional classic & flat themes
 dotnet add package Dirkster.AvalonDock.Themes.VS2010

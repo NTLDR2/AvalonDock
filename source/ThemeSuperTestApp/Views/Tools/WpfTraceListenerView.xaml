@@ -1,0 +1,184 @@
+<UserControl
+	x:Class="ThemeSuperTestApp.Views.Tools.WpfTraceListenerView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:cal="http://caliburnmicro.com"
+	Background="#FFFFFF"
+	Foreground="#111827">
+
+	<DockPanel Margin="6">
+		<!-- Toolbar & Counters -->
+		<WrapPanel
+			Margin="0,0,0,5"
+			DockPanel.Dock="Top"
+			Orientation="Horizontal">
+			<Border
+				Margin="0,0,6,3"
+				Padding="6,2"
+				BorderThickness="1"
+				CornerRadius="3">
+				<Border.Style>
+					<Style TargetType="{x:Type Border}">
+						<Setter Property="Background" Value="#F0FDF4" />
+						<Setter Property="BorderBrush" Value="#86EFAC" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding HasErrors}" Value="True">
+								<Setter Property="Background" Value="#FEF2F2" />
+								<Setter Property="BorderBrush" Value="#FCA5A5" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<TextBlock FontSize="11" FontWeight="SemiBold">
+					<TextBlock.Style>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="Foreground" Value="#166534" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding HasErrors}" Value="True">
+									<Setter Property="Foreground" Value="#B91C1C" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</TextBlock.Style>
+					<Run Text="Errors: " />
+					<Run FontFamily="Consolas" Text="{Binding TotalErrorCount, Mode=OneWay}" />
+					<Run Text=" | Warnings: " />
+					<Run FontFamily="Consolas" Text="{Binding TotalWarningCount, Mode=OneWay}" />
+				</TextBlock>
+			</Border>
+
+			<CheckBox
+				Margin="0,0,8,3"
+				VerticalAlignment="Center"
+				Content="Capture Enabled"
+				FontSize="11"
+				IsChecked="{Binding IsCaptureEnabled, Mode=TwoWay}" />
+			<CheckBox
+				Margin="0,0,8,3"
+				VerticalAlignment="Center"
+				Content="Active Theme Only"
+				FontSize="11"
+				IsChecked="{Binding FilterCurrentThemeOnly, Mode=TwoWay}" />
+
+			<Button
+				Margin="0,0,5,3"
+				Padding="6,2"
+				cal:Message.Attach="TriggerTestBindingError"
+				Content="Test Probe (Error 40)"
+				FontSize="11"
+				ToolTip="Evaluates a deliberate broken binding on an off-tree probe element to verify live trace capture" />
+			<Button
+				Margin="0,0,5,3"
+				Padding="6,2"
+				cal:Message.Attach="ClearEvents"
+				Content="Clear"
+				FontSize="11" />
+			<Button
+				Margin="0,0,6,3"
+				Padding="6,2"
+				cal:Message.Attach="CopyVisibleTraceMarkdown"
+				Content="Copy Markdown"
+				FontSize="11" />
+
+			<TextBox
+				MinWidth="170"
+				Margin="0,0,0,3"
+				VerticalContentAlignment="Center"
+				Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+				ToolTip="Filter trace events by message, theme, category, or ID" />
+		</WrapPanel>
+
+		<TextBlock
+			Margin="0,0,0,4"
+			DockPanel.Dock="Top"
+			FontSize="11"
+			Foreground="#374151"
+			Text="{Binding TraceStatusText}"
+			TextTrimming="CharacterEllipsis" />
+
+		<!-- Split Master-Detail Grid -->
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="5" />
+				<RowDefinition Height="*" MinHeight="58" />
+			</Grid.RowDefinitions>
+
+			<DataGrid
+				Grid.Row="0"
+				AlternatingRowBackground="#F9FAFB"
+				AutoGenerateColumns="False"
+				Background="#FFFFFF"
+				BorderBrush="#D1D5DB"
+				CanUserAddRows="False"
+				CanUserDeleteRows="False"
+				EnableRowVirtualization="True"
+				Foreground="#111827"
+				GridLinesVisibility="Horizontal"
+				HeadersVisibility="Column"
+				HorizontalGridLinesBrush="#E5E7EB"
+				IsReadOnly="True"
+				ItemsSource="{Binding FilteredEvents}"
+				RowBackground="#FFFFFF"
+				SelectedItem="{Binding SelectedEvent, Mode=TwoWay}"
+				SelectionMode="Single">
+				<DataGrid.Columns>
+					<DataGridTextColumn
+						Width="48"
+						Binding="{Binding SequenceNumber}"
+						FontFamily="Consolas"
+						Header="#" />
+					<DataGridTextColumn
+						Width="86"
+						Binding="{Binding TimestampText}"
+						FontFamily="Consolas"
+						Header="Time" />
+					<DataGridTextColumn
+						Width="115"
+						Binding="{Binding Category}"
+						FontFamily="Consolas"
+						Header="Source" />
+					<DataGridTextColumn
+						Width="72"
+						Binding="{Binding Severity}"
+						FontWeight="SemiBold"
+						Header="Severity" />
+					<DataGridTextColumn
+						Width="45"
+						Binding="{Binding EventId}"
+						FontFamily="Consolas"
+						Header="ID" />
+					<DataGridTextColumn
+						Width="120"
+						Binding="{Binding ThemeName}"
+						Header="Active Theme" />
+					<DataGridTextColumn
+						Width="*"
+						Binding="{Binding Message}"
+						FontFamily="Consolas"
+						Header="Diagnostic Message" />
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<GridSplitter
+				Grid.Row="1"
+				Height="5"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Background="#E5E7EB" />
+
+			<TextBox
+				Grid.Row="2"
+				Padding="5"
+				Background="#F8FAFC"
+				BorderBrush="#CBD5E1"
+				FontFamily="Consolas"
+				FontSize="11"
+				Foreground="#0F172A"
+				IsReadOnly="True"
+				Text="{Binding SelectedEventDetailText, Mode=OneWay}"
+				TextWrapping="Wrap"
+				VerticalScrollBarVisibility="Auto" />
+		</Grid>
+	</DockPanel>
+</UserControl>

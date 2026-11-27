@@ -15,13 +15,17 @@ ECHO WinFormsTestApp
 ECHO.
 ECHO Components\AvalonDock
 ECHO Components\AvalonDock.Themes.Aero
+ECHO Components\AvalonDock.Themes.Arc
 ECHO Components\AvalonDock.Themes.Expression
+ECHO Components\AvalonDock.Themes.VS
+ECHO Components\AvalonDock.Themes.VS2013
 ECHO Components\AvalonDock.Themes.VS2010
 ECHO Components\AvalonDock.Themes.Metro
 ECHO.
 ECHO AutomationTest\AvalonDockTest
 ECHO CaliburnDockTestApp
 ECHO ExperimentalTestApp
+ECHO ThemeSuperTestApp
 ECHO AvalonDocPanelMemoryLeaks
 ECHO.
 REM Ask the user if hes really sure to continue beyond this point XXXXXXXX
@@ -94,6 +98,21 @@ ECHO.
 RMDIR /S /Q Components\AvalonDock.Themes.Metro\bin
 RMDIR /S /Q Components\AvalonDock.Themes.Metro\obj
 
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Arc
+ECHO.
+RMDIR /S /Q Components\AvalonDock.Themes.Arc\bin
+RMDIR /S /Q Components\AvalonDock.Themes.Arc\obj
+
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS
+ECHO.
+RMDIR /S /Q Components\AvalonDock.Themes.VS\bin
+RMDIR /S /Q Components\AvalonDock.Themes.VS\obj
+
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS2013
+ECHO.
+RMDIR /S /Q Components\AvalonDock.Themes.VS2013\bin
+RMDIR /S /Q Components\AvalonDock.Themes.VS2013\obj
+
 ECHO Deleting BIN and OBJ Folders in AutomationTest\AvalonDockTest
 ECHO.
 RMDIR /S /Q AutomationTest\AvalonDockTest\bin
@@ -108,6 +127,11 @@ ECHO Deleting BIN and OBJ Folders in ExperimentalTestApp
 ECHO.
 RMDIR /S /Q ExperimentalTestApp\bin
 RMDIR /S /Q ExperimentalTestApp\obj
+
+ECHO Deleting BIN and OBJ Folders in ThemeSuperTestApp
+ECHO.
+RMDIR /S /Q ThemeSuperTestApp\bin
+RMDIR /S /Q ThemeSuperTestApp\obj
 
 ECHO Deleting BIN and OBJ Folders in AvalonDocPanelMemoryLeaks
 ECHO.

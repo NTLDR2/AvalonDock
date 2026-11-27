@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+		ThemeSuperTestApp - dedicated AvalonDock v5 theme visual inspection, profiling, and best-practices auditing app
+		hosted by Caliburn.Micro 6.0.15-beta (SimpleContainer) on .NET Framework 4.8 (net48) exclusively.
+	-->
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net48</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<!-- Caliburn.Micro resolves pack URIs from the root namespace: keep RootNamespace == AssemblyName. -->
+		<RootNamespace>ThemeSuperTestApp</RootNamespace>
+		<AssemblyName>ThemeSuperTestApp</AssemblyName>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="AvalonDockTest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Caliburn.Micro" Version="6.0.15-beta" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Components\AvalonDock\AvalonDock.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Core\AvalonDock.Core.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Mvvm\AvalonDock.Mvvm.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Serializer.Xml\AvalonDock.Serializer.Xml.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.Arc\AvalonDock.Themes.Arc.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.VS\AvalonDock.Themes.VS.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.VS2013\AvalonDock.Themes.VS2013.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.VS2010\AvalonDock.Themes.VS2010.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.Expression\AvalonDock.Themes.Expression.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj" />
+		<ProjectReference Include="..\Components\AvalonDock.Themes.Aero\AvalonDock.Themes.Aero.csproj" />
+	</ItemGroup>
+
+</Project>

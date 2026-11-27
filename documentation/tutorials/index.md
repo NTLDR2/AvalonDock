@@ -22,7 +22,7 @@ These tutorials assume you have completed the [Quick Start]({{ site.baseurl }}{%
 |:---------|:------------------|:-----------|
 | [MVVM IDE Application]({{ site.baseurl }}{% link tutorials/mvvm-ide.md %}) | A VS Code / Rider-style multi-panel IDE | `ObservableToolboxBase`, `ObservableDocument`, `IDockLayoutService`, `SideToggleManager`, `ToggleDockingManager`, `DockZone`, `Shortcut`, DI |
 | [Dependency Injection App]({{ site.baseurl }}{% link tutorials/dependency-injection-app.md %}) | Scalable DI composition root & headless NUnit tests | `AddDockLayoutService` builder, `ConfigureDocking`, `ConfigureToggleDock`, factory toolboxes, `IDisposable` cleanup, NUnit testing |
-| [Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) | A runtime theme-switchable app with custom branding | All 5 theme packages (`Arc`, `VS2010`, `Expression`, `Metro`, `Aero`), `ResourceKeys` brush overrides, custom `Theme` & `DictionaryTheme` classes |
+| [Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) | A runtime theme-switchable app with custom branding | Theme packages (`Arc`, `VS`, `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`), `ResourceKeys` brush overrides, custom `Theme` & `DictionaryTheme` classes |
 | [Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) | An app that saves and restores its workspace | `XmlLayoutSerializer`, v5 `DockLayout` MVVM callbacks, classic MVVM callbacks, `UnresolvedContentHandling`, layout reset |
 
 ---
@@ -37,7 +37,7 @@ Every tutorial corresponds directly to working sample projects under `source/`:
 | `MVVMTestApp` | `net48` | Classic MVVM using `DocumentsSource` / `AnchorablesSource` and `XmlLayoutSerializer`. |
 | `TestApp` | `net48` | Comprehensive classic `DockingManager` feature showcase. |
 | `MLibTest` | `net48` | Unified application + docking theming with `Dirkster.MLib`. |
-| `ExperimentalTestApp` | `net48` | *(NTLDR2 Fork v5.1.0)* Caliburn.Micro 6.0.15-beta reference: classic `DockingManager` driven by `DockLayout` + `IDockLayoutService`, `SimpleContainer`, conductor-synchronized documents, async close guards, `IEventAggregator`, 6-zone tool placement, `XmlLayoutSerializer`, VS2010 default theme. See the [Caliburn.Micro Integration]({{ site.baseurl }}{% link guides/caliburn-micro.md %}) guide. |
+| `ExperimentalTestApp` | `net48` | *(NTLDR2 Fork v5.1.0)* Caliburn.Micro 6.0.15-beta reference: classic `DockingManager` driven by `DockLayout` + `IDockLayoutService`, `SimpleContainer`, conductor-synchronized documents, async close guards, `IEventAggregator`, 6-zone tool placement, `XmlLayoutSerializer`, and runtime switching across all 20 built-in themes (`VS2010` default). See the [Caliburn.Micro Integration]({{ site.baseurl }}{% link guides/caliburn-micro.md %}) guide. |
 | `WinFormsTestApp` | `net48` | Hosting AvalonDock inside a Windows Forms `ElementHost`. |
 
 Run the v5 reference IDE directly from the repository root:
