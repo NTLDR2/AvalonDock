@@ -6,7 +6,7 @@
 	-->
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
+		<TargetFrameworks>net48</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<!-- Caliburn.Micro resolves pack URIs from the root namespace: keep RootNamespace == AssemblyName. -->
 		<RootNamespace>ExperimentalTestApp</RootNamespace>

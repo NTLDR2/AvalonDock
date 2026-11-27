@@ -19,20 +19,20 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 
 ## Running Tests (`-m:1`)
 
-Always execute tests single-threaded (`-m:1`) because WPF STA dispatchers and multi-targeted `net48` / modern `.NET` test hosts cannot run safely in parallel:
+Always execute tests single-threaded (`-m:1`) because WPF STA dispatchers on `net48` cannot run safely in parallel:
 
 ```powershell
 # Fast unit, XML DTO serialization, MVVM, DI, and STA layout regression tests
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
 
 # Desktop UI automation tests (FlaUI)
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net48 -m:1
 ```
 
 ## Fork Guardrails & Pull Request Expectations
 
 - **Zero `System.Text.Json`:** Never add `System.Text.Json` package references or imports to any library, sample, or test project.
-- **`.NET Framework 4.8` & `netstandard2.0` Boundaries:** Verify changes compile and pass tests on `net48` as well as modern `.NET`, and never reference `System.Windows.*` inside `netstandard2.0` projects (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`).
+- **`.NET Framework 4.8` & `netstandard2.0` Boundaries:** Verify changes compile and pass tests on `net48`, and never reference `System.Windows.*` inside `netstandard2.0` projects (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`).
 - **Code Style:** Follow `source/.editorconfig` (tabs for indentation, UTF-8, LF line endings, Allman braces, `using` directives outside `namespace`).
 - **Documentation (`documentation/`):** The 38-page Jekyll documentation site lives in `documentation/` (deployed automatically via `.github/workflows/docs.yml`). When updating migration or version notes, explicitly distinguish **Upstream `v5.0.0`–`v5.1.0`** changes from **`NTLDR2 Fork v5.1.0`** changes. Also keep [AGENTS.md](AGENTS.md), [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md), and [ROADMAP.md](ROADMAP.md) aligned when modifying architectural behavior.
 

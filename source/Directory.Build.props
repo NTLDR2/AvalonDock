@@ -2,11 +2,11 @@
 	<PropertyGroup>
 		<!-- Centralized Target Frameworks -->
 		<!--
-			net8.0-windows assemblies run unchanged on newer .NET runtimes (roll-forward), and no AvalonDock source depends on a
-			newer target framework, so libraries ship for exactly two targets: modern .NET (net8.0-windows) and .NET Framework 4.8.
+			UI-agnostic libraries (Core, Mvvm*, DependencyInjection, Serializer.Xml) target netstandard2.0;
+			all WPF component libraries, theme packages, and automated tests target .NET Framework 4.8 (net48).
 		-->
-		<ComponentTargetFrameworks>net8.0-windows;net48</ComponentTargetFrameworks>
-		<TestTargetFrameworks>net8.0-windows;net48</TestTargetFrameworks>
+		<ComponentTargetFrameworks>net48</ComponentTargetFrameworks>
+		<TestTargetFrameworks>net48</TestTargetFrameworks>
 		<!-- C# 12: the compiler of the .NET 8 SDK, the only SDK this repo needs. -->
 		<LangVersion>12</LangVersion>
 

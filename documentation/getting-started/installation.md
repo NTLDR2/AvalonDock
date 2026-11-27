@@ -8,7 +8,7 @@ description: "Install AvalonDock v5 NuGet packages and configure target framewor
 
 # Installation
 
-**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **11 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, with **zero `System.Text.Json` dependencies** across `.NET Framework 4.8` and modern `.NET`.
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **11 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, targeting **`.NET Framework 4.8` (`net48`)** for WPF assemblies and **`.NET Standard 2.0` (`netstandard2.0`)** for UI-agnostic libraries, with **zero `System.Text.Json` dependencies**.
 
 {: .important }
 **Fork vs. Upstream Distribution & Planned `AvalonDox` Rebrand:**
@@ -108,9 +108,9 @@ Build the project (`dotnet build`). Once it compiles cleanly, continue to the [Q
 
 | Target Framework | WPF Libraries (`AvalonDock`, `Themes.*`) | UI-Agnostic Libraries (`Core`, `Mvvm*`, `DI`, `Serializer.Xml`) | Introduced In / Scope |
 |:-----------------|:----------------------------------------:|:---------------------------------------------------------------:|:----------------------|
-| `.NET Framework 4.8` (`net48`) | ✅ | ✅ (via `netstandard2.0`) | **Primary prioritized target in `NTLDR2 Fork v5.1.0`** (`Upstream v5.0.0+`) |
-| `.NET 8+` (`net8.0-windows`; the same assembly runs on the .NET 9, 10 and 11 runtimes) | ✅ | ✅ (via `netstandard2.0`) | NTLDR2 Fork v5.1.0 ships only `net8.0-windows` and `net48` WPF builds (`Upstream v5.0.2+`, `#673`, additionally ships separate `net9.0`/`net10.0`/`net11.0` builds) |
-| `.NET Standard 2.0` (`netstandard2.0`) | — (requires WPF) | ✅ | `Upstream v5.0.0+` |
+| `.NET Framework 4.8` (`net48`) | ✅ | ✅ (via `netstandard2.0`) | **Exclusive desktop WPF target in `NTLDR2 Fork v5.1.0`** (`Upstream v5.0.0+`) |
+| `.NET Standard 2.0` (`netstandard2.0`) | — (requires WPF) | ✅ | `Upstream v5.0.0+` & `NTLDR2 Fork v5.1.0` |
+| `.NET 8`–`.NET 11` (`net8.0-windows`..`net11.0-windows`) | Upstream only | ✅ (via `netstandard2.0`) | `NTLDR2 Fork v5.1.0` targets `net48` strictly on WPF assemblies (`Upstream v5.0.2`–`v5.1.0`, `#673`, ships `net8.0-windows`–`net11.0-windows` builds) |
 
 {: .important }
-WPF application projects on .NET 8 or later **must** include the `-windows` target framework suffix (for example, `<TargetFramework>net8.0-windows</TargetFramework>`) and `<UseWPF>true</UseWPF>`.
+WPF application projects consuming `NTLDR2 Fork v5.1.0` directly target `<TargetFramework>net48</TargetFramework>` with `<UseWPF>true</UseWPF>`.

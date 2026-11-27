@@ -29,7 +29,7 @@ flowchart LR
 Every roadmap item in this fork is governed by four permanent constraints:
 
 1. **Zero `System.Text.Json` (Permanent Ban):** No library, bridge package, sample, or test project may directly or transitively reference `System.Text.Json`. Any candidate third-party NuGet dependency must have its `net48` and `netstandard2.0` dependency graph audited before adoption to prevent `System.Memory` / `System.Buffers` / `System.Runtime.CompilerServices.Unsafe` / `Microsoft.Bcl.AsyncInterfaces` DLL hell.
-2. **`.NET Framework 4.8` & WPF First:** Every WPF feature, theme dictionary, multi-window mode (`LayoutFloatingWindowControl` and `DetachedAnchorableWindow`), and MVVM bridge must compile cleanly (`--warnaserror`) and pass STA regression tests on `net48` (Windows 7 SP1 64-bit through Windows 11) alongside modern `net8.0-windows`.
+2. **Strict `.NET Framework 4.8` & WPF Desktop Target:** Every WPF feature, theme dictionary, multi-window mode (`LayoutFloatingWindowControl` and `DetachedAnchorableWindow`), sample application, and STA/FlaUI regression test targets `net48` exclusively (Windows 7 SP1 64-bit through Windows 11) and must compile cleanly (`--warnaserror`), paired with `netstandard2.0` UI-agnostic libraries.
 3. **Strict `netstandard2.0` UI-Agnostic Boundary:** ViewModel and service libraries (`AvalonDock.Core`, `AvalonDock.Mvvm`, `AvalonDock.Mvvm.CommunityToolkit`, `AvalonDock.Serializer.Xml`, and the planned `AvalonDock.Mvvm.CaliburnMicro`) must remain pure `netstandard2.0` with zero `System.Windows.*` references.
 4. **Inside-Out AI-Readable Documentation:** Architectural changes must simultaneously update `documentation/`, [AGENTS.md](AGENTS.md), and [.agents/skills/avalondock-internals/SKILL.md](.agents/skills/avalondock-internals/SKILL.md) so AI coding agents always operate from ground-truth invariants.
 
@@ -153,8 +153,8 @@ Implementing `CaliburnDockableBase : Screen, IDockable` cleanly requires solving
 > **Audit Note:** Several sample applications under `source/` predate the full AvalonDock v5 architecture and carry dated target frameworks, pre-release packages, or legacy v4 binding boilerplate. Updating them—starting with **`source/ExperimentalTestApp`**—is an explicit roadmap priority.
 
 ### 1. Add `source/ExperimentalTestApp` Alongside Upstream `source/CaliburnDockTestApp` *(Completed — NTLDR2 Fork v5.1.0)*
-While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Micro `4.0.136-rc`, `#if CALIBURN_ASYNC` shims for Caliburn.Micro 3.2, a local `RelayCommand`, `DisplayRootViewFor<T>()`, off-UI-thread `ActivateItemAsync`, v4-style `DocumentsSource="{Binding Items}"` with an unfiltered `ActiveContent` ↔ `ActiveItem` binding, retargeted to `net8.0-windows;net48`, standalone outside `AvalonDock.sln`), a modern reference sample **`source/ExperimentalTestApp`** was added to the solution:
-- **Stack:** classic `DockingManager` driven by `DockLayout` + `IDockLayoutService` (`AvalonDock.Mvvm`), Caliburn.Micro **6.0.15-beta** (NuGet build of upstream commit `83e93b34`, part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) history — zero `System.Text.Json`), `SimpleContainer`, `net8.0-windows;net48`, VS2010 default theme with runtime switching across all theme packages.
+While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Micro `4.0.136-rc`, `#if CALIBURN_ASYNC` shims for Caliburn.Micro 3.2, a local `RelayCommand`, `DisplayRootViewFor<T>()`, off-UI-thread `ActivateItemAsync`, v4-style `DocumentsSource="{Binding Items}"` with an unfiltered `ActiveContent` ↔ `ActiveItem` binding, retargeted to `net48`, standalone outside `AvalonDock.sln`), a modern reference sample **`source/ExperimentalTestApp`** was added to the solution:
+- **Stack:** classic `DockingManager` driven by `DockLayout` + `IDockLayoutService` (`AvalonDock.Mvvm`), Caliburn.Micro **6.0.15-beta** (NuGet build of upstream commit `83e93b34`, part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) history — zero `System.Text.Json`), `SimpleContainer`, `net48`, VS2010 default theme with runtime switching across all theme packages.
 - **Patterns:** sample-internal `IDockable`/`IToolbox` boilerplate on Caliburn.Micro `Screen`s, a conductor synchronized with the layout service, every AvalonDock document close routed through `CanCloseAsync` (serialized Save/Discard/Cancel prompts), 6-zone tool placement on the classic manager, `IToolbox.IsOpen`/`Shortcut` honoured, `IEventAggregator` decoupling, Caliburn.Micro actions instead of `ICommand`, `XmlLayoutSerializer` save/load/reset with auto-save on exit.
 - **Docs:** `source/ExperimentalTestApp/README.md` and `documentation/guides/caliburn-micro.md`.
 - **Deferred:** a FlaUI smoke test for the sample, and unit tests for the boilerplate (it graduates into tests with the optional Phase 3 BCL).
@@ -163,11 +163,11 @@ While preserving the original upstream `source/CaliburnDockTestApp` (Caliburn.Mi
 
 | Sample Project | Current State Found in Audit | Planned Cleanup |
 |:---------------|:-----------------------------|:----------------|
-| **`AvalonDockCodeApp`** | Flagship v5 `ToggleDockingManager` IDE demo, currently targeting `net8.0-windows` **only** (omits `net48`) | Evaluate adding `net48` support (or a zero-transitive-dep `AvalonDock.Mvvm` `net48` variant) so the flagship demo runs directly on `.NET Framework 4.8` |
-| **`MVVMTestApp`** | Classic `DocumentsSource` / `AnchorablesSource` + `XmlLayoutSerializer` sample targeting `net8.0-windows;net48` | Include `ArcDarkTheme` / `ArcLightTheme` in its theme switcher |
-| **`WinFormsTestApp`** | `ElementHost` / `WindowsFormsHost` airspace interop test targeting `net8.0-windows;net48` | Verify `net48` interop focus behavior |
-| **`MLibTest`** | Targets `net8.0-windows;net48`, retains dead MSBuild conditions (`net5.0-windows`, `netcoreapp3.0`, `net40`), and references non-SDK `Settings.csproj` (`v4.5.2`) | Prune dead pre-v5 MSBuild conditions and upgrade or retire legacy `v4.5.2` helper project |
-| **`AvalonDocPanelMemoryLeaks`** | Legacy non-SDK `.csproj` targeting `.NET Framework v4.6.1` | Migrate leak regression scenarios into `AvalonDockTest` (`net48` + modern `.NET`) or convert to SDK-style `net48` |
+| **`AvalonDockCodeApp`** | Flagship v5 `ToggleDockingManager` IDE demo, retargeted to `net48` *(completed)* | Keep `net48` FlaUI `ToggleDock` automation suite green |
+| **`MVVMTestApp`** | Classic `DocumentsSource` / `AnchorablesSource` + `XmlLayoutSerializer` sample targeting `net48` | Include `ArcDarkTheme` / `ArcLightTheme` in its theme switcher |
+| **`WinFormsTestApp`** | `ElementHost` / `WindowsFormsHost` airspace interop test targeting `net48` | Verify `net48` interop focus behavior |
+| **`MLibTest`** | Targets `net48`, retains dead MSBuild conditions (`net5.0-windows`, `netcoreapp3.0`, `net40`), and references non-SDK `Settings.csproj` (`v4.8`) | Prune dead pre-v5 MSBuild conditions and convert legacy non-SDK `Settings.csproj` |
+| **`AvalonDocPanelMemoryLeaks`** | Legacy non-SDK `.csproj` targeting `.NET Framework v4.8` (`packages.config`) | Migrate leak regression scenarios into `AvalonDockTest` (`net48`) or convert to SDK-style `net48` |
 
 ---
 
@@ -206,7 +206,7 @@ Executing a WPF control-library rename cleanly requires updating seven coupled s
    - Update `<AssemblyName>`, `<PackageId>`, `<Product>`, `<PackageProjectUrl>`, `<RepositoryUrl>`, and `<Authors>` while preserving historical copyright notices and `LICENSE` (`Ms-PL`) attribution.
 2. **WPF `pack://application:,,,` Resource URIs *(Critical Runtime Invariant)*:**
    - Every `Theme.GetResourceUri()` implementation (`GenericTheme`, `ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `Expression*Theme`, `MetroTheme`, `AeroTheme`) and every XAML `<ResourceDictionary Source="/AvalonDock...;component/...">` merge embeds the exact `<AssemblyName>`.
-   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests across `net48` and `net8.0-windows`.
+   - Update all pack URIs atomically to `/AvalonDox;component/...` and `/AvalonDox.Themes.*;component/...`, guarded by STA theme-loading regression tests on `net48`.
 3. **C# Root Namespaces & XAML `[XmlnsDefinition]` Mapping:**
    - Transition C# namespaces from `AvalonDock.*` → `AvalonDox.*` and introduce the new primary XAML namespace URI (`https://github.com/NTLDR2/AvalonDox` with `[assembly: XmlnsPrefix(..., "avalonDox")]`) in `Properties/AssemblyInfo.cs`.
    - Optionally retain secondary `[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", ...)]` attributes in `AssemblyInfo.cs` so existing XAML views migrate with minimal friction.

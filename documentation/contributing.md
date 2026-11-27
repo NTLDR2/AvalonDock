@@ -15,7 +15,7 @@ permalink: /contributing/
 ## Ways to Contribute
 
 - **Star** the [NTLDR2/AvalonDock repository](https://github.com/NTLDR2/AvalonDock) (and upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock))
-- **Report fork bugs or roadmap feedback** via [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues) with reproduction steps, OS version, and .NET target framework (`net48` or `.NET 8+`)
+- **Report fork bugs or roadmap feedback** via [NTLDR2/AvalonDock Issues](https://github.com/NTLDR2/AvalonDock/issues) with reproduction steps and Windows OS version
 - **Submit pull requests** with focused bug fixes, tests, or documentation improvements
 - **Improve documentation** — the Jekyll documentation site source lives in `documentation/` and deploys via `.github/workflows/docs.yml` (always label `Upstream v5.0.0`–`v5.1.0` vs. `NTLDR2 Fork v5.1.0` scope explicitly when editing version or migration claims)
 
@@ -56,10 +56,10 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 
 #### 2. FlaUI Desktop UI Automation Tests
 
-FlaUI tests launch real WPF windows (`AvalonDockCodeApp` and test hosts) and drive mouse/keyboard input. Run them separately, once per modern .NET desktop target:
+FlaUI tests launch real WPF windows (`TestApp` and `AvalonDockCodeApp`) on `.NET Framework 4.8` and drive mouse/keyboard input:
 
 ```powershell
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net48 -m:1
 ```
 
 ---

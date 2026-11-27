@@ -111,12 +111,12 @@ Both `IDockingManager` and `IRootDock` added `bool AllowFloatingWindows { get; s
 | `.NET Core 3.0` / `3.1` | ❌ **Removed** | `Upstream v5.0.0` |
 | `.NET 5.0` | ❌ **Removed** | `Upstream v5.0.0` |
 | `.NET 6.0` / `7.0` | ❌ **Not targeted** (out of Microsoft support) | `Upstream v5.0.0` |
-| `.NET Framework 4.8` (`net48`) | ✅ **Supported (Primary Focus)** | `Upstream v5.0.0` + **Prioritized in `NTLDR2 Fork v5.1.0`** (Win7 SP1–Win11) |
-| `.NET 8.0` (`net8.0-windows`) | ✅ **Supported** (rolls forward onto `.NET 9`–`.NET 11` runtimes) | `Upstream v5.0.2` (`#673`) & `NTLDR2 Fork v5.1.0` |
-| `.NET 9.0` (`net9.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
-| `.NET 10.0` (`net10.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
-| `.NET 11.0` (`net11.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.1.0` |
-| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | `Upstream v5.0.0` |
+| `.NET Framework 4.8` (`net48`) | ✅ **Supported (Exclusive Desktop Target)** | `Upstream v5.0.0` + **`NTLDR2 Fork v5.1.0`** (Win7 SP1–Win11) |
+| `.NET 8.0` (`net8.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.2` (`#673`) |
+| `.NET 9.0` (`net9.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.0` |
+| `.NET 10.0` (`net10.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.0` |
+| `.NET 11.0` (`net11.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.1.0` |
+| `.NET Standard 2.0` (`netstandard2.0`) | ✅ **Supported** on `Core`, `Mvvm*`, `DependencyInjection`, and `Serializer.Xml` | `Upstream v5.0.0` & `NTLDR2 Fork v5.1.0` |
 
 ---
 
@@ -207,7 +207,7 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 | **Packages** | `Themes.VS2013`, `Themes.VS`, and `Serializer.Json` removed (no `System.Text.Json`) | **`NTLDR2 Fork v5.1.0`** *(shipped in `Upstream v5.0.0`)* | Medium–High | Switch to `Themes.Arc` (or `Expression` / `VS2010`) and `Serializer.Xml` |
 | **Namespaces** | `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | `Upstream v5.0.0` | High | Update `using` statements |
 | **Serialization** | `IXmlSerializable` replaced by DTOs & `LayoutSerializerBase` | `Upstream v5.0.0` | Medium | Move custom `ReadXml`/`WriteXml` logic to DTOs |
-| **Frameworks** | `.NET < 4.8` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added upstream | `Upstream v5.0.0`–`v5.1.0` | High | Target `net48` or `net8.0-windows` in `NTLDR2 Fork v5.1.0` |
+| **Frameworks** | `.NET < 4.8` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added upstream | `Upstream v5.0.0`–`v5.1.0` | High | Target `net48` in `NTLDR2 Fork v5.1.0` (`Upstream v5.0.2+` also ships `net8.0-windows`–`net11.0-windows`) |
 | **DI** | `AddDockLayoutService(dock => ...)` builder pattern (`#584`) | `Upstream v5.0.0` | Low | Move `AddToolbox` / options inside builder |
 | **Interfaces** | `AllowFloatingWindows` / `AllowDetachedWindows` on `IDockingManager` & `IRootDock` | `Upstream v5.0.0` | Low | Implement on custom interface implementations |
 | **Binary API** | `Suspend*SourceBinding` fields became properties | `Upstream v5.0.0` | Low | Recompile assemblies against v5 |

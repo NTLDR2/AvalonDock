@@ -9,7 +9,7 @@ It uses the **classic `DockingManager`** driven through the modern v5 MVVM surfa
 
 | | |
 |:--|:--|
-| **Target frameworks** | `net8.0-windows`, `net48` |
+| **Target framework** | `net48` |
 | **Caliburn.Micro** | NuGet `Caliburn.Micro` **6.0.15-beta**. It is built from upstream commit `83e93b34`, which is part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) fork history; the fork adds documentation only. Dependencies: `Caliburn.Micro.Core` (no dependencies) and `Microsoft.Xaml.Behaviors.Wpf` (no dependencies). |
 | **AvalonDock** | `AvalonDock`, `AvalonDock.Core`, `AvalonDock.Mvvm` (for `DockLayoutService`), `AvalonDock.Serializer.Xml`, and the five theme packages |
 | **Container** | Caliburn.Micro `SimpleContainer` |
@@ -19,7 +19,7 @@ It uses the **classic `DockingManager`** driven through the modern v5 MVVM surfa
 
 ```powershell
 dotnet build source/ExperimentalTestApp/ExperimentalTestApp.csproj -c Release
-dotnet run --project source/ExperimentalTestApp/ExperimentalTestApp.csproj -c Release -f net8.0-windows
+dotnet run --project source/ExperimentalTestApp/ExperimentalTestApp.csproj -c Release -f net48
 ```
 
 The layout is saved to `%LOCALAPPDATA%\ExperimentalTestApp\layout.xml` when the application exits and is restored at the next start. Delete that file to start from the default layout.

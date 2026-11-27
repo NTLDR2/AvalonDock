@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -9,13 +9,20 @@ namespace CaliburnDockTestApp.ViewModels
 {
 	public class MainWindowViewModel : Conductor<Screen>.Collection.OneActive
 	{
+		private readonly IWindowManager _windowManager;
 		private RelayCommand _showACommand;
 		private RelayCommand _showBCommand;
 		private RelayCommand _showCCommand;
 		private RelayCommand _showDCommand;
 
 		public MainWindowViewModel()
+			: this(null)
 		{
+		}
+
+		public MainWindowViewModel(IWindowManager windowManager)
+		{
+			_windowManager = windowManager ?? new WindowManager();
 			SetShowCommand<TestViewModel>(ref _showACommand, "Test A");
 			SetShowCommand<TestViewModel>(ref _showBCommand, "Test B");
 			SetShowCommand<TestViewModel>(ref _showCCommand, "Test C");
@@ -25,6 +32,9 @@ namespace CaliburnDockTestApp.ViewModels
 		public RelayCommand ShowACommand { get { return _showACommand; } }
 		public RelayCommand ShowBCommand { get { return _showBCommand; } }
 		public RelayCommand ShowCCommand { get { return _showCCommand; } }
+		public RelayCommand ShowDCommand { get { return _showDCommand; } }
+
+		public Task ShowAbout() => _windowManager.ShowDialogAsync(new AboutViewModel());
 
 		private void SetShowCommand<T>(ref RelayCommand command, string displayName)
 			where T : ViewModelBase
@@ -41,8 +51,6 @@ namespace CaliburnDockTestApp.ViewModels
 			if (item == null)
 			{
 				item = (T)Activator.CreateInstance(typeof(T));
-				item.Parent = this;
-				item.ConductWith(this);
 				item.DisplayName = displayName;
 				item.IsDirty = ++_createCount % 2 > 0;
 			}
@@ -71,46 +79,21 @@ namespace CaliburnDockTestApp.ViewModels
 			Trace.TraceInformation($"{GetType().Name}.Items_CollectionChanged: Action={e.Action}, OldItems={GetListTypes(e.OldItems)}, OldStartingIndex={e.OldStartingIndex}, NewItems={GetListTypes(e.NewItems)}, NewStartingIndex={e.NewStartingIndex}");
 		}
 
-#if CALIBURN_ASYNC
-		// For Caliburn 4.0 or higher (asynchronous)
 		protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
 		{
 			Trace.TraceInformation($"{GetType().Name}.OnDeactivateAsync: close={close}");
 			return base.OnDeactivateAsync(close, cancellationToken);
 		}
 
-		protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+		protected override Task OnInitializedAsync(CancellationToken cancellationToken)
 		{
-			Trace.TraceInformation($"{GetType().Name}.OnInitializeAsync");
+			Trace.TraceInformation($"{GetType().Name}.OnInitializedAsync");
 
 			Items.CollectionChanged += Items_CollectionChanged;
-			Task.Run(() => StartInitialDocuments());
+			_ = Execute.OnUIThreadAsync(StartInitialDocuments);
 
-			return base.OnInitializeAsync(cancellationToken);
+			return base.OnInitializedAsync(cancellationToken);
 		}
-#else
-		// For Caliburn 3.2 and lower (synchronous)
-		public Task ActivateItemAsync(Screen item, CancellationToken cancellationToken)
-		{
-			ActivateItem(item);
-			return Task.FromResult(0);
-		}
-
-		protected override void OnDeactivate(bool close)
-		{
-			Trace.TraceInformation($"{GetType().Name}.OnDeactivate: close={close}");
-			base.OnDeactivate(close);
-		}
-
-		protected override void OnInitialize()
-		{
-			Trace.TraceInformation($"{GetType().Name}.OnInitialize");
-
-			Task.Run(() => StartInitialDocuments());
-
-			base.OnInitialize();
-		}
-#endif
 
 		protected async Task StartInitialDocuments()
 		{

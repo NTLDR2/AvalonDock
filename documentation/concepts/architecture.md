@@ -57,7 +57,7 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 | Package | Target Frameworks | Purpose |
 |:--------|:------------------|:--------|
 | `Dirkster.AvalonDock.Core` | `netstandard2.0` | UI-agnostic interfaces (`IDockable`, `IDock`, `IRootDock`, `IToolbox`, `IDockLayoutService`, `IDockingManager`, `IFactory`, `ILayoutSerializer`), enums, `FactoryBase`, and serialization DTOs. Zero external or WPF dependencies. |
-| `Dirkster.AvalonDock` | `net8.0-windows`, `net48` | Main WPF docking library containing `DockingManager`, `ToggleDockingManager`, `LayoutSyncBridge`, all layout model classes, WPF controls, `DictionaryTheme`, and `GenericTheme`. Depends only on `AvalonDock.Core`. |
+| `Dirkster.AvalonDock` | `net48` | Main WPF docking library containing `DockingManager`, `ToggleDockingManager`, `LayoutSyncBridge`, all layout model classes, WPF controls, `DictionaryTheme`, and `GenericTheme`. Depends only on `AvalonDock.Core`. |
 
 ### MVVM, DI & Serializer Extension Packages
 
@@ -72,7 +72,7 @@ All four extension packages target **`netstandard2.0`**, allowing your ViewModel
 
 ### Theme Packages
 
-Each of the **5 theme packages** targets `net8.0-windows` and `net48` with zero third-party dependencies, so you only ship the visual themes your application uses:
+Each of the **5 theme packages** targets `net48` with zero third-party dependencies, so you only ship the visual themes your application uses:
 
 | Package | Theme Classes & Capabilities |
 |:--------|:-----------------------------|

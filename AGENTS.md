@@ -28,7 +28,7 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 
 AvalonDock is a WPF document and tool-window docking layout system (`https://github.com/Dirkster99/AvalonDock` XAML namespace, Ms-PL license) built around six v5 pillars:
 
-1. **Strict UI-Agnostic / WPF Split & Zero `System.Text.Json`:** `Core`, `Mvvm`, `Mvvm.CommunityToolkit`, `DependencyInjection`, and `Serializer.Xml` target **`netstandard2.0`** (zero WPF deps); WPF packages target `net8.0-windows` and `net48` (Windows 7 SP1 64-bit–Windows 11, **zero `System.Text.Json`**).
+1. **Strict UI-Agnostic / WPF Split & Zero `System.Text.Json`:** `Core`, `Mvvm`, `Mvvm.CommunityToolkit`, `DependencyInjection`, and `Serializer.Xml` target **`netstandard2.0`** (zero WPF deps); WPF packages, samples, and tests target **`net48`** (Windows 7 SP1 64-bit–Windows 11, **zero `System.Text.Json`**).
 2. **Two Root Controls:** **`DockingManager`** (classic VS 4-edge auto-hide flyouts, tabbed documents, splits, `DocumentsSource`/`AnchorablesSource`, `DockLayout`) and **`ToggleDockingManager`** *(subclasses `DockingManager`)* (VS Code / Rider 6-zone click-to-toggle sidebars, `DockLayoutPriority`, `IToolbox.Shortcut`, 6-zone drag overlay).
 3. **First-Class MVVM & DI:** Zero-dependency `AvalonDock.Mvvm`, source-generator-ready `AvalonDock.Mvvm.CommunityToolkit`, `IDockLayoutService` + `SideToggleManager`, and `services.AddDockLayoutService(dock => ...)` (`AvalonDock.DependencyInjection`).
 4. **DTO XML Persistence:** Bidirectional mapping between `LayoutRoot` and 17 plain DTOs (`AvalonDock.Core.Serialization.Dto`), powering `XmlLayoutSerializer` (`Dirkster.AvalonDock.Serializer.Xml`, v4 XML backward-compatible) and custom `LayoutSerializerBase` subclasses.
@@ -55,7 +55,7 @@ AI models trained on older repositories frequently emit **AvalonDock v4** (or re
 | **DI Registration** | Early preview `services.AddToolbox<T>()` / `AddToggleDockOptions(...)` | Consolidated builder: `services.AddDockLayoutService(dock => { dock.ConfigureToggleDock(...); dock.ConfigureDocking(...); dock.AddToolbox<T>(); })` |
 | **Document Body Template Property** | Inventing `DockingManager.DocumentTemplate` (does not exist) | Use `DockingManager.LayoutItemTemplate`, `LayoutItemTemplateSelector`, or implicit `<DataTemplate DataType="{x:Type ...}">` resources |
 | **Adding vs Showing Anchorables** | Calling `Show()` on a brand-new unparented `LayoutAnchorable` | `anchorable.AddToLayout(dockManager, strategy)` inserts a **new unparented** anchorable (`Parent == null`); `anchorable.Show()` restores a **hidden** anchorable (`IsHidden == true` in `Layout.Hidden`) |
-| **Target Frameworks** | `net40`, `net452`, `netcoreapp3.1`, `net5.0-windows` | `net8.0-windows`, `net48` (WPF packages); `netstandard2.0` (Core/MVVM/DI/Serializer.Xml) |
+| **Target Frameworks** | `net40`, `net452`, `netcoreapp3.1`, `net5.0-windows`, `net8.0-windows` | `net48` (WPF packages, samples & tests); `netstandard2.0` (Core/MVVM/DI/Serializer.Xml) |
 | **Source Binding Suspension** | `SuspendDocumentsSourceBinding` / `SuspendAnchorablesSourceBinding` as fields | Now public `bool` **properties** (`{ get; set; }`) on `DockingManager` and `IDockingManager` |
 | **Caliburn.Micro Hosting** *(NTLDR2 Fork)* | `Caliburn.Micro` `4.0.x-rc`, `#if CALIBURN_ASYNC` shims, `DisplayRootViewFor<T>()`, `OnInitializeAsync`/`OnActivateAsync` overrides (`[Obsolete]`), a hand-written `RelayCommand`, `DocumentsSource="{Binding Items}"` with an unfiltered `ActiveContent` ↔ `ActiveItem` binding, or guarded `<cal:ActionMessage>` directly on `<Window>` | Caliburn.Micro `6.0.15-beta`, `await DisplayRootViewForAsync<T>()`, `OnInitializedAsync`/`OnActivatedAsync`, actions (`cal:Message.Attach`, `x:Name`, and `KeyTrigger` + `cal:ActionMessage` hosted on a leaf `FrameworkElement` so `ApplyAvailabilityEffect` never sets `Window.IsEnabled = false`), `DockLayout` + `IDockLayoutService`, closes routed from `DocumentClosing` to `IConductor.CloseItemAsync` — see `source/ExperimentalTestApp` and `documentation/guides/caliburn-micro.md` |
 | **Hosting Views by ViewModel Type** | `DockingManager.LayoutItemTemplate` with `cal:View.Model="{Binding}"` or `{Binding Content}` | Implicit `<DataTemplate DataType="{x:Type MyDockableBase}">`. Themes apply `LayoutItemTemplate` with `DataContext` = the inner `LayoutItem.View` presenter in docked/floating panes but = the ViewModel in `DetachedAnchorableWindow` |
@@ -77,16 +77,16 @@ Host App
 | Project (`source/Components/…`) | NuGet Package | Target Frameworks | Primary Namespace(s) |
 |:--------------------------------|:--------------|:------------------|:---------------------|
 | `AvalonDock.Core` | `Dirkster.AvalonDock.Core` | `netstandard2.0` | `AvalonDock.Core`, `AvalonDock.Core.Events`, `AvalonDock.Core.Serialization`, `AvalonDock.Core.Serialization.Dto`, `AvalonDock.Controls` *(pure geometry rules)* |
-| `AvalonDock` | `Dirkster.AvalonDock` | `net8.0-windows;net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Converters`, `AvalonDock.Commands`, `AvalonDock.Serialization` |
+| `AvalonDock` | `Dirkster.AvalonDock` | `net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Converters`, `AvalonDock.Commands`, `AvalonDock.Serialization` |
 | `AvalonDock.Mvvm` | `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | `AvalonDock.Mvvm` |
 | `AvalonDock.Mvvm.CommunityToolkit` | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | `AvalonDock.Mvvm.CommunityToolkit` |
 | `AvalonDock.DependencyInjection` | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `AvalonDock.DependencyInjection` |
 | `AvalonDock.Serializer.Xml` | `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | `AvalonDock.Serializer.Xml` |
-| `AvalonDock.Themes.Arc` | `Dirkster.AvalonDock.Themes.Arc` | `net8.0-windows;net48` | `AvalonDock.Themes`, `AvalonDock.Themes.Arc.Themes` |
-| `AvalonDock.Themes.VS2010` | `Dirkster.AvalonDock.Themes.VS2010` | `net8.0-windows;net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Expression` | `Dirkster.AvalonDock.Themes.Expression` | `net8.0-windows;net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Metro` | `Dirkster.AvalonDock.Themes.Metro` | `net8.0-windows;net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Aero` | `Dirkster.AvalonDock.Themes.Aero` | `net8.0-windows;net48` | `AvalonDock.Themes` |
+| `AvalonDock.Themes.Arc` | `Dirkster.AvalonDock.Themes.Arc` | `net48` | `AvalonDock.Themes`, `AvalonDock.Themes.Arc.Themes` |
+| `AvalonDock.Themes.VS2010` | `Dirkster.AvalonDock.Themes.VS2010` | `net48` | `AvalonDock.Themes` |
+| `AvalonDock.Themes.Expression` | `Dirkster.AvalonDock.Themes.Expression` | `net48` | `AvalonDock.Themes` |
+| `AvalonDock.Themes.Metro` | `Dirkster.AvalonDock.Themes.Metro` | `net48` | `AvalonDock.Themes` |
+| `AvalonDock.Themes.Aero` | `Dirkster.AvalonDock.Themes.Aero` | `net48` | `AvalonDock.Themes` |
 
 ---
 
@@ -122,7 +122,7 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 ```
 
 ### Run Unit & Layout Regression Tests (Fast — Run First)
-Always pass **`-m:1`** (single-threaded MSBuild execution). Test projects multi-target `net8.0-windows;net48` and run WPF STA dispatchers that cannot execute safely in parallel.
+Always pass **`-m:1`** (single-threaded MSBuild execution). Test projects target `net48` and run WPF STA dispatchers that cannot execute safely in parallel.
 
 ```powershell
 dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1
@@ -131,14 +131,14 @@ dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter 
 To run a single NUnit test fixture or method quickly during iteration:
 
 ```powershell
-dotnet test source/AutomationTest/AvalonDockTest/AvalonDockTest.csproj --configuration Release --no-build --framework net8.0-windows --filter "FullyQualifiedName~LayoutSyncBridgeTests" -m:1
+dotnet test source/AutomationTest/AvalonDockTest/AvalonDockTest.csproj --configuration Release --no-build --framework net48 --filter "FullyQualifiedName~LayoutSyncBridgeTests" -m:1
 ```
 
 ### Run FlaUI Desktop UI Automation Tests
-FlaUI tests launch real desktop WPF windows (`TestApp.exe` and `AvalonDockCodeApp.exe`) and drive mouse/keyboard input via Windows UI Automation (`UIA3`). Run them separately per desktop framework:
+FlaUI tests launch real desktop WPF windows (`TestApp.exe` and `AvalonDockCodeApp.exe`) on `.NET Framework 4.8` and drive mouse/keyboard input via Windows UI Automation (`UIA3`):
 
 ```powershell
-dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1
+dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net48 -m:1
 ```
 
 ---

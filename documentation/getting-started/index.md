@@ -26,6 +26,6 @@ Get up and running with **[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDo
 ## Prerequisites
 
 - **Windows** — AvalonDock's UI controls use WPF and run on Windows.
-- **Supported Application Runtimes:** **`.NET Framework 4.8`** (`net48`, primary prioritized target — Windows 7 SP1 64-bit to Windows 11), **.NET 8 or later** (`net8.0-windows`; the same assembly runs on the .NET 9, 10 and 11 runtimes through roll-forward).
+- **Supported Application Runtime:** **`.NET Framework 4.8`** (`net48`, exclusive desktop WPF target in `NTLDR2 Fork v5.1.0` — Windows 7 SP1 64-bit to Windows 11). *(Upstream `v5.0.2+` additionally ships `net8.0-windows`–`net11.0-windows` builds.)*
 - **UI-Agnostic Class Libraries:** View-model and service projects can target **`.NET Standard 2.0`** (`netstandard2.0`) when referencing `AvalonDock.Core`, `AvalonDock.Mvvm*`, `AvalonDock.DependencyInjection`, or `AvalonDock.Serializer.Xml`.
 - **IDE / Tooling:** Visual Studio 2022 / 2026 (recommended), JetBrains Rider, or VS Code with the .NET SDK CLI.

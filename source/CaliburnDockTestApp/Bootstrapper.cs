@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using CaliburnDockTestApp.ViewModels;
 using System.Windows;
 
@@ -12,10 +12,24 @@ namespace CaliburnDockTestApp
 			Initialize();
 		}
 
-		protected override void OnStartup(object sender, StartupEventArgs e)
+		protected override void Configure()
+		{
+			base.Configure();
+
+			// Verified on Caliburn.Micro 6.0.15-beta; stress-test again once full AvalonDock v5 features
+			// (Themes.Arc, DockLayout, and DetachedAnchorableWindow tool panes) are enabled: rapidly switch,
+			// split, swap themes, float, and detach tabs while typing in both panes to confirm zero view-theft
+			// or stale ViewAware cache references.
+			var defaultLocateTypeForModelType = ViewLocator.LocateTypeForModelType;
+			ViewLocator.LocateTypeForModelType = (modelType, displayLocation, context) =>
+				defaultLocateTypeForModelType(modelType, displayLocation, context)
+				?? (context != null ? defaultLocateTypeForModelType(modelType, displayLocation, null) : null);
+		}
+
+		protected override async void OnStartup(object sender, StartupEventArgs e)
 		{
 			base.OnStartup(sender, e);
-			DisplayRootViewFor<MainWindowViewModel>();
+			await DisplayRootViewForAsync<MainWindowViewModel>();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -56,8 +56,6 @@ namespace CaliburnDockTestApp.ViewModels
 			return close;
 		}
 
-#if CALIBURN_ASYNC
-		// For Caliburn 4.0 or higher (asynchronous)
 		public override Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
 		{
 			bool close = CanClosePrompt();
@@ -70,26 +68,5 @@ namespace CaliburnDockTestApp.ViewModels
 			Trace.TraceInformation($"{GetType().Name}.OnDeactivateAsync: close={close}");
 			return base.OnDeactivateAsync(close, cancellationToken);
 		}
-#else
-		// For Caliburn 3.2 and lower (synchronous)
-		public Task TryCloseAsync(bool? dialogResult)
-		{
-			TryClose(dialogResult);
-			return Task.FromResult(dialogResult);
-		}
-
-		public override void CanClose(Action<bool> callback)
-		{
-			bool close = CanClosePrompt();
-			Trace.TraceInformation($"{GetType().Name}.CanClose: close={close}");
-			callback(close);
-		}
-
-		protected override void OnDeactivate(bool close)
-		{
-			Trace.TraceInformation($"{GetType().Name}.OnDeactivate: close={close}");
-			base.OnDeactivate(close);
-		}
-#endif
 	}
 }

@@ -27,7 +27,7 @@ No Caliburn.Micro ↔ AvalonDock base class library ships today. The integration
 <!-- AvalonDock: AvalonDock, AvalonDock.Core, AvalonDock.Mvvm (DockLayoutService), AvalonDock.Serializer.Xml, a theme package -->
 ```
 
-`Caliburn.Micro.Core` targets `netstandard2.0` with **no dependencies**. On `net462`, `net8.0-windows` and `net9.0-windows`, `Caliburn.Micro` adds only `Microsoft.Xaml.Behaviors.Wpf`, which has no dependencies either. `net48` uses the `net462` assets, and `net8.0-windows` uses the `net8.0-windows` assets directly. There is no `System.Text.Json` anywhere in the graph.
+`Caliburn.Micro.Core` targets `netstandard2.0` with **no dependencies**. On `net462` (used by `net48`), `Caliburn.Micro` adds only `Microsoft.Xaml.Behaviors.Wpf`, which has no dependencies either. There is no `System.Text.Json` anywhere in the graph.
 
 ---
 

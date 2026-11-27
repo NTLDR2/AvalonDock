@@ -33,15 +33,15 @@ Every tutorial corresponds directly to working sample projects under `source/`:
 
 | Sample Project | Target Frameworks | Architecture & Highlights |
 |:---------------|:------------------|:--------------------------|
-| `AvalonDockCodeApp` | `net8.0-windows` | Flagship v5 reference IDE: `ToggleDockingManager`, `AvalonDock.Mvvm.CommunityToolkit`, DI, AvalonEdit syntax highlighting, live PowerShell terminal, XML layout save/load, and theme/priority switching. |
-| `MVVMTestApp` | `net8.0-windows`, `net48` | Classic MVVM using `DocumentsSource` / `AnchorablesSource` and `XmlLayoutSerializer`. |
-| `TestApp` | `net8.0-windows`, `net48` | Comprehensive classic `DockingManager` feature showcase. |
-| `MLibTest` | `net8.0-windows`, `net48` | Unified application + docking theming with `Dirkster.MLib`. |
-| `ExperimentalTestApp` | `net8.0-windows`, `net48` | *(NTLDR2 Fork v5.1.0)* Caliburn.Micro 6.0.15-beta reference: classic `DockingManager` driven by `DockLayout` + `IDockLayoutService`, `SimpleContainer`, conductor-synchronized documents, async close guards, `IEventAggregator`, 6-zone tool placement, `XmlLayoutSerializer`, VS2010 default theme. See the [Caliburn.Micro Integration]({{ site.baseurl }}{% link guides/caliburn-micro.md %}) guide. |
-| `WinFormsTestApp` | `net8.0-windows`, `net48` | Hosting AvalonDock inside a Windows Forms `ElementHost`. |
+| `AvalonDockCodeApp` | `net48` | Flagship v5 reference IDE: `ToggleDockingManager`, `AvalonDock.Mvvm.CommunityToolkit`, DI, AvalonEdit syntax highlighting, live PowerShell terminal, XML layout save/load, and theme/priority switching. |
+| `MVVMTestApp` | `net48` | Classic MVVM using `DocumentsSource` / `AnchorablesSource` and `XmlLayoutSerializer`. |
+| `TestApp` | `net48` | Comprehensive classic `DockingManager` feature showcase. |
+| `MLibTest` | `net48` | Unified application + docking theming with `Dirkster.MLib`. |
+| `ExperimentalTestApp` | `net48` | *(NTLDR2 Fork v5.1.0)* Caliburn.Micro 6.0.15-beta reference: classic `DockingManager` driven by `DockLayout` + `IDockLayoutService`, `SimpleContainer`, conductor-synchronized documents, async close guards, `IEventAggregator`, 6-zone tool placement, `XmlLayoutSerializer`, VS2010 default theme. See the [Caliburn.Micro Integration]({{ site.baseurl }}{% link guides/caliburn-micro.md %}) guide. |
+| `WinFormsTestApp` | `net48` | Hosting AvalonDock inside a Windows Forms `ElementHost`. |
 
 Run the v5 reference IDE directly from the repository root:
 
 ```powershell
-dotnet run --project source/AvalonDockCodeApp --framework net8.0-windows
+dotnet run --project source/AvalonDockCodeApp --framework net48
 ```

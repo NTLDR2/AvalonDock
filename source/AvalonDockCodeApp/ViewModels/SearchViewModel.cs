@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -193,13 +194,18 @@ public partial class SearchViewModel : ObservableToolboxBase
 
 		var includePatterns = string.IsNullOrWhiteSpace(includeFilter)
 			? Array.Empty<string>()
-			: includeFilter.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+			: includeFilter.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+				.Select(s => s.Trim())
+				.Where(s => s.Length > 0)
+				.ToArray();
 
 		var excludeDirs = string.IsNullOrWhiteSpace(excludeFilter)
 			? new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
 				{ "bin", "obj", ".git", ".vs", "node_modules", "packages" }
 			: new System.Collections.Generic.HashSet<string>(
-				excludeFilter.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+				excludeFilter.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+					.Select(s => s.Trim())
+					.Where(s => s.Length > 0),
 				StringComparer.OrdinalIgnoreCase);
 
 		var files = new System.Collections.Generic.List<string>();
@@ -340,9 +346,9 @@ public partial class SearchViewModel : ObservableToolboxBase
 			FileName = Path.GetFileName(filePath),
 			LineNumber = lineNumber,
 			LineText = trimmed,
-			Prefix = adjStart > 0 ? trimmed[..adjStart] : string.Empty,
+			Prefix = adjStart > 0 ? trimmed.Substring(0, adjStart) : string.Empty,
 			MatchText = adjLength > 0 ? trimmed.Substring(adjStart, adjLength) : string.Empty,
-			Suffix = adjStart + adjLength < trimmed.Length ? trimmed[(adjStart + adjLength)..] : string.Empty
+			Suffix = adjStart + adjLength < trimmed.Length ? trimmed.Substring(adjStart + adjLength) : string.Empty
 		};
 	}
 

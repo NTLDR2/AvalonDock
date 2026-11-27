@@ -77,7 +77,7 @@ public partial class TerminalViewModel : ObservableToolboxBase, IDisposable
 
 	private void AppendOutput(string text)
 	{
-		_dispatcher.BeginInvoke(() => { Output += text + "\n"; });
+		_dispatcher.BeginInvoke(new Action(() => { Output += text + "\n"; }));
 	}
 
 	[RelayCommand]

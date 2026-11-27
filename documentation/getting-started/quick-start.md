@@ -14,11 +14,12 @@ This guide walks you through creating a complete WPF docking layout with tool wi
 
 ## Step 1: Create a WPF Project
 
-Create a new WPF application targeting `.NET 8` (or `.NET Framework 4.8`):
+Create an SDK-style WPF application targeting `.NET Framework 4.8` (`<TargetFramework>net48</TargetFramework>`):
 
 ```bash
-dotnet new wpf -n MyDockingApp --framework net8.0-windows
+dotnet new wpf -n MyDockingApp
 cd MyDockingApp
+# In MyDockingApp.csproj, set <TargetFramework>net48</TargetFramework>
 ```
 
 ## Step 2: Install AvalonDock and a Theme

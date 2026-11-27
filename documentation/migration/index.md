@@ -21,7 +21,7 @@ Because this documentation covers the **`NTLDR2/AvalonDock` (`v5.1.0`) fork** ra
 
 1. **`Upstream v5.0.0` ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Extracted `Serializer.Xml`, `Core`, `Mvvm`, `Mvvm.CommunityToolkit`, and `DependencyInjection` (`AddDockLayoutService` `#584`); replaced `IXmlSerializable` with plain DTOs (`#580`); added `ToggleDockingManager`, `DetachedAnchorableWindow`, `AllowFloatingWindows` / `AllowDetachedWindows` (`#637`), and `Themes.Arc`; dropped `< net48` and `.NET Core 3.x / .NET 5`. *(Note: upstream `v5.0.0` originally shipped **14 packages** on `nuget.org`, including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`.)*
 2. **`Upstream v5.0.2` & `v5.1.0`:** Added `net8.0-windows` (`v5.0.2`, `#673`) and `net11.0-windows` (`v5.1.0`).
-3. **`NTLDR2 Fork v5.1.0` ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)):** Surgically removes the 3 `System.Text.Json`-dependent packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), shipping **11 zero-`System.Text.Json` libraries** to eliminate `net48` binding-redirect DLL hell, prioritizes `.NET Framework 4.8` + WPF, and uses vendored `ProjectReference` / local `dotnet pack` distribution rather than publishing fork builds to `nuget.org`.
+3. **`NTLDR2 Fork v5.1.0` ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)):** Surgically removes the 3 `System.Text.Json`-dependent packages (`Serializer.Json`, `Themes.VS`, `Themes.VS2013`), shipping **11 zero-`System.Text.Json` libraries** to eliminate `net48` binding-redirect DLL hell, targets `.NET Framework 4.8` (`net48`) strictly across all WPF packages/samples/tests (with `netstandard2.0` UI-agnostic libraries), and uses vendored `ProjectReference` / local `dotnet pack` distribution rather than publishing fork builds to `nuget.org`.
 
 {: .important }
 Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{% link migration/breaking-changes.md %}) reference before starting your upgrade.
@@ -30,8 +30,8 @@ Review this guide alongside the complete [Breaking Changes]({{ site.baseurl }}{%
 
 ## Quick Upgrade Checklist
 
-- [ ] Ensure your WPF project targets `.NET 8+` (`-windows`), or `.NET Framework 4.8`
-- [ ] Update `Dirkster.AvalonDock` and theme `PackageReference` entries to `5.1.0` (or latest `5.x`)
+- [ ] Ensure your WPF project targets `.NET Framework 4.8` (`net48`)
+- [ ] Update `Dirkster.AvalonDock` and theme `PackageReference` / `ProjectReference` entries to `5.1.0`
 - [ ] Add `Dirkster.AvalonDock.Serializer.Xml` if you persist layouts
 - [ ] Update serializer namespaces (`AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` + `AvalonDock.Core`)
 - [ ] Migrate any custom `IXmlSerializable` layout hooks to `LayoutSerializerBase` / DTOs
@@ -48,12 +48,12 @@ Legacy out-of-support frameworks were dropped in `Upstream v5.0.0`, while `.NET 
 | v4.x Target | v5.1.0 Fork Status | Origin / Scope |
 |:------------|:-------------------|:---------------|
 | `.NET Framework 4.0` / `4.5.2` | ❌ Dropped — upgrade to `net48` | `Upstream v5.0.0` |
-| `.NET Framework 4.8` (`net48`) | ✅ **Supported (Primary Focus)** | `Upstream v5.0.0` + **Prioritized in `NTLDR2 Fork v5.1.0`** (Win7 SP1 64-bit – Win11) |
-| `.NET Core 3.0` / `3.1`, `.NET 5` | ❌ Dropped — upgrade to `net8.0-windows` | `Upstream v5.0.0` |
-| `.NET 8` (`net8.0-windows`) | ✅ **Supported** (rolls forward onto `.NET 9`–`.NET 11` runtimes) | `Upstream v5.0.2` (`#673`) & `NTLDR2 Fork v5.1.0` |
-| `.NET 9` (`net9.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
-| `.NET 10` (`net10.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.0.0` |
-| `.NET 11` (`net11.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` ships `net8.0-windows` + `net48`) | `Upstream v5.1.0` |
+| `.NET Framework 4.8` (`net48`) | ✅ **Supported (Exclusive Desktop Target)** | `Upstream v5.0.0` + **`NTLDR2 Fork v5.1.0`** (Win7 SP1 64-bit – Win11) |
+| `.NET Core 3.0` / `3.1`, `.NET 5` | ❌ Dropped | `Upstream v5.0.0` |
+| `.NET 8` (`net8.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.2` (`#673`) |
+| `.NET 9` (`net9.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.0` |
+| `.NET 10` (`net10.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.0.0` |
+| `.NET 11` (`net11.0-windows`) | Upstream only (`NTLDR2 Fork v5.1.0` targets `net48` strictly for WPF) | `Upstream v5.1.0` |
 
 ---
 

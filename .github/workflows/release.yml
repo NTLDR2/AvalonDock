@@ -75,14 +75,14 @@ jobs:
           --results-directory TestResults
           -m:1
 
-      - name: Test (FlaUI UI Tests, .NET 8)
+      - name: Test (FlaUI UI Tests, .NET Framework 4.8)
         run: >
           dotnet test source/AvalonDock.sln
           --configuration Release
           --no-restore
           --filter "Category=FlaUI"
-          --framework net8.0-windows
-          --logger "trx;LogFilePrefix=flaui-net8-test-results"
+          --framework net48
+          --logger "trx;LogFilePrefix=flaui-net48-test-results"
           --results-directory TestResults
           -m:1
 

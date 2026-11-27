@@ -38,14 +38,14 @@ dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnas
 ## Run Tests
 
 {: .important }
-Tests **must** run single-threaded (`-m:1`) because WPF requires STA threads and test projects multi-target `.NET Framework 4.8`, which cannot run in parallel without cross-window interference.
+Tests **must** run single-threaded (`-m:1`) because WPF requires STA threads on `.NET Framework 4.8`, which cannot run in parallel without cross-window interference.
 
 ### Test Suites
 
 | Suite | Command | Description |
 |:------|:--------|:------------|
-| **Unit Tests** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1` | Fast unit, XML serialization, DI, MVVM, and STA layout regression tests |
-| **FlaUI UI Tests (.NET 8)** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net8.0-windows -m:1` | Launches live WPF windows to automate drag-and-drop, floating, and toggle-dock gestures on .NET 8 |
+| **Unit Tests** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category!=FlaUI" -m:1` | Fast unit, XML serialization, DI, MVVM, and STA layout regression tests on `net48` |
+| **FlaUI UI Tests (.NET Framework 4.8)** | `dotnet test source/AvalonDock.sln --configuration Release --no-restore --filter "Category=FlaUI" --framework net48 -m:1` | Launches live WPF windows (`TestApp.exe` & `AvalonDockCodeApp.exe`) to automate drag-and-drop, floating, and toggle-dock gestures on `net48` |
 
 ---
 

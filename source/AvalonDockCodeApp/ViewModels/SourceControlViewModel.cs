@@ -214,14 +214,14 @@ public partial class SourceControlViewModel : ObservableToolboxBase
 		var output = RunGit(gitRoot, "status --porcelain=v1");
 		var items = new List<ChangeItem>();
 
-		foreach (var line in output.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+		foreach (var line in output.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
 		{
 			if (line.Length < 4)
 				continue;
 
 			var indexStatus = line[0];
 			var workTreeStatus = line[1];
-			var filePath = line[3..].Trim().Trim('"');
+			var filePath = line.Substring(3).Trim().Trim('"');
 
 			var fullPath = Path.Combine(gitRoot, filePath.Replace('/', Path.DirectorySeparatorChar));
 			var fileName = Path.GetFileName(filePath);

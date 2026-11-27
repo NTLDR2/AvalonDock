@@ -92,20 +92,22 @@ public partial class MainViewModel : ObservableObject
 	[RelayCommand]
 	private void OpenFolder()
 	{
-		var dialog = new Microsoft.Win32.OpenFolderDialog
+		using var dialog = new System.Windows.Forms.FolderBrowserDialog
 		{
-			Title = "Select a folder to open"
+			Description = "Select a folder to open",
+			ShowNewFolderButton = false
 		};
 
-		if (dialog.ShowDialog() == true)
+		if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+			!string.IsNullOrWhiteSpace(dialog.SelectedPath))
 		{
-			FolderExplorer?.LoadFolder(dialog.FolderName);
+			FolderExplorer?.LoadFolder(dialog.SelectedPath);
 
 			var search = _dockService.GetAnchorable<SearchViewModel>();
-			search?.SetRootPath(dialog.FolderName);
+			search?.SetRootPath(dialog.SelectedPath);
 
 			var sourceControl = _dockService.GetAnchorable<SourceControlViewModel>();
-			sourceControl?.SetRootPath(dialog.FolderName);
+			sourceControl?.SetRootPath(dialog.SelectedPath);
 		}
 	}
 
