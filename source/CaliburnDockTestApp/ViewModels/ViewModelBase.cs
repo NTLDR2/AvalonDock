@@ -1,32 +1,44 @@
 using Caliburn.Micro;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace CaliburnDockTestApp.ViewModels
 {
 	public abstract class ViewModelBase : Screen
 	{
-		public ViewModelBase()
+		private readonly IWindowManager _windowManager;
+		private readonly ILog _log;
+
+		protected ViewModelBase(IWindowManager windowManager)
 		{
+			_windowManager = windowManager ?? throw new ArgumentNullException(nameof(windowManager));
+			_log = LogManager.GetLog(GetType());
+			_id = GetType().Name;
 			DisplayName = GetType().Name;
+		}
+
+		private string _id;
+
+		public string Id
+		{
+			get => _id;
+			set => Set(ref _id, value);
 		}
 
 		private bool _isDirty;
 
 		public bool IsDirty
 		{
-			get { return _isDirty; }
-			set { Set(ref _isDirty, value); }
+			get => _isDirty;
+			set => Set(ref _isDirty, value);
 		}
 
 		private string _customText;
 
 		public string CustomText
 		{
-			get { return _customText; }
+			get => _customText;
 			set
 			{
 				if (Set(ref _customText, value))
@@ -34,38 +46,21 @@ namespace CaliburnDockTestApp.ViewModels
 			}
 		}
 
-		private RelayCommand _closeCommand;
-
-		public RelayCommand CloseCommand
-		{
-			get
-			{
-				return _closeCommand
-					?? (_closeCommand = new RelayCommand(_ => TryCloseAsync(null)));
-			}
-		}
-
-		protected bool CanClosePrompt()
+		public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
 		{
 			bool close = true;
 			if (IsDirty)
 			{
-				var result = MessageBox.Show($"Are you sure you want to close '{DisplayName}'?", DisplayName, MessageBoxButton.YesNo, MessageBoxImage.Question);
-				close = result == MessageBoxResult.Yes;
+				bool? result = await _windowManager.ShowDialogAsync(new ConfirmCloseViewModel(DisplayName));
+				close = result == true;
 			}
+			_log.Info("CanCloseAsync: close={0}", close);
 			return close;
-		}
-
-		public override Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
-		{
-			bool close = CanClosePrompt();
-			Trace.TraceInformation($"{GetType().Name}.CanCloseAsync: close={close}");
-			return Task.FromResult(close);
 		}
 
 		protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
 		{
-			Trace.TraceInformation($"{GetType().Name}.OnDeactivateAsync: close={close}");
+			_log.Info("OnDeactivateAsync: close={0}", close);
 			return base.OnDeactivateAsync(close, cancellationToken);
 		}
 	}

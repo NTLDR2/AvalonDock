@@ -1,6 +1,7 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace CaliburnDockTestApp
 {
@@ -20,12 +21,27 @@ namespace CaliburnDockTestApp
 
 		public void Info(string format, params object[] args)
 		{
-			Trace.TraceInformation($"{_type.Name}: " + format, args);
+			Trace.TraceInformation($"{_type.Name}: {FormatMessage(format, args)}");
 		}
 
 		public void Warn(string format, params object[] args)
 		{
-			Trace.TraceWarning($"{_type.Name}: " + format, args);
+			Trace.TraceWarning($"{_type.Name}: {FormatMessage(format, args)}");
+		}
+
+		private static string FormatMessage(string format, object[] args)
+		{
+			if (string.IsNullOrEmpty(format) || args == null || args.Length == 0)
+				return format ?? string.Empty;
+
+			try
+			{
+				return string.Format(CultureInfo.InvariantCulture, format, args);
+			}
+			catch (FormatException)
+			{
+				return format;
+			}
 		}
 	}
 }

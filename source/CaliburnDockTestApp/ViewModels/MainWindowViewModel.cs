@@ -1,110 +1,119 @@
 using Caliburn.Micro;
 using System;
-using System.Diagnostics;
+using System.Collections;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CaliburnDockTestApp.ViewModels
 {
+	// AvalonDock v5 supports two official MVVM binding modes:
+	//   - Mode A (DockLayout + IDockLayoutService + IDockable/IToolbox in AvalonDock.Mvvm): full IDE workspace
+	//     with documents + 6-zone tool windows, demonstrated in ExperimentalTestApp and ThemeSuperTestApp.
+	//   - Mode B (Direct DocumentsSource + ActiveContent on DockingManager): lightweight document-only binding
+	//     where an existing collection/conductor drives DockingManager directly with zero IDockable wrappers.
+	//
+	// CaliburnDockTestApp intentionally uses Mode B so DockingManager (DocumentsSource/ActiveContent) and
+	// standard WPF TabControl (ItemsSource/SelectedItem) bind 1:1 to the exact same Conductor.Items and
+	// Conductor.ActiveItem properties. Note: binding ActiveContent TwoWay directly to Conductor.ActiveItem is
+	// safe here ONLY because no AnchorablesSource tool panes are hosted (otherwise focusing a tool pane would
+	// push a non-document ViewModel into ActiveItem and Conductor.EnsureItem would add it to Items).
 	public class MainWindowViewModel : Conductor<Screen>.Collection.OneActive
 	{
 		private readonly IWindowManager _windowManager;
-		private RelayCommand _showACommand;
-		private RelayCommand _showBCommand;
-		private RelayCommand _showCCommand;
-		private RelayCommand _showDCommand;
-
-		public MainWindowViewModel()
-			: this(null)
-		{
-		}
-
-		public MainWindowViewModel(IWindowManager windowManager)
-		{
-			_windowManager = windowManager ?? new WindowManager();
-			SetShowCommand<TestViewModel>(ref _showACommand, "Test A");
-			SetShowCommand<TestViewModel>(ref _showBCommand, "Test B");
-			SetShowCommand<TestViewModel>(ref _showCCommand, "Test C");
-			SetShowCommand<TestViewModel>(ref _showDCommand, "Test D");
-		}
-
-		public RelayCommand ShowACommand { get { return _showACommand; } }
-		public RelayCommand ShowBCommand { get { return _showBCommand; } }
-		public RelayCommand ShowCCommand { get { return _showCCommand; } }
-		public RelayCommand ShowDCommand { get { return _showDCommand; } }
-
-		public Task ShowAbout() => _windowManager.ShowDialogAsync(new AboutViewModel());
-
-		private void SetShowCommand<T>(ref RelayCommand command, string displayName)
-			where T : ViewModelBase
-		{
-			command = new RelayCommand(_ => ActivateOrCreate<T>(displayName));
-		}
-
+		private readonly Func<TestViewModel> _testViewModelFactory;
+		private readonly Func<AboutViewModel> _aboutViewModelFactory;
+		private readonly ILog _log;
 		private int _createCount;
 
-		public Task ActivateOrCreate<T>(string displayName)
-			where T : ViewModelBase
+		public MainWindowViewModel(
+			IWindowManager windowManager,
+			Func<TestViewModel> testViewModelFactory,
+			Func<AboutViewModel> aboutViewModelFactory)
 		{
-			var item = Items.OfType<T>().FirstOrDefault(x => x.DisplayName == displayName);
+			_windowManager = windowManager ?? throw new ArgumentNullException(nameof(windowManager));
+			_testViewModelFactory = testViewModelFactory ?? throw new ArgumentNullException(nameof(testViewModelFactory));
+			_aboutViewModelFactory = aboutViewModelFactory ?? throw new ArgumentNullException(nameof(aboutViewModelFactory));
+			_log = LogManager.GetLog(GetType());
+			DisplayName = "Caliburn AvalonDock Test";
+		}
+
+		public Task OpenDocumentAsync(string displayName)
+		{
+			if (string.IsNullOrWhiteSpace(displayName))
+				return Task.CompletedTask;
+
+			string id = displayName.Replace(" ", string.Empty);
+			var item = Items.OfType<TestViewModel>().FirstOrDefault(x => x.Id == id);
 			if (item == null)
 			{
-				item = (T)Activator.CreateInstance(typeof(T));
+				item = _testViewModelFactory();
+				item.Id = id;
 				item.DisplayName = displayName;
 				item.IsDirty = ++_createCount % 2 > 0;
 			}
 			return ActivateItemAsync(item, CancellationToken.None);
 		}
 
-		private string GetListItemName(object obj)
+		public Task CloseDocumentAsync(Screen document)
+			=> document != null ? this.CloseItemAsync(document, CancellationToken.None) : Task.CompletedTask;
+
+		public Task ShowAboutAsync() => _windowManager.ShowDialogAsync(_aboutViewModelFactory());
+
+		private static string GetListItemName(object obj)
 		{
 			if (obj == null)
 				return "null";
-			else if (obj is IHaveDisplayName)
-				return ((IHaveDisplayName)obj).DisplayName;
-			else
-				return obj.GetType().Name;
+			if (obj is IHaveDisplayName named)
+				return named.DisplayName;
+			return obj.GetType().Name;
 		}
-		private string GetListTypes(System.Collections.IList list)
+
+		private static string GetListTypes(IList list)
 		{
 			if (list == null)
 				return "null";
-			else
-				return "[" + string.Join(",", list.Cast<object>().Select(x => GetListItemName(x))) + "]";
+			return "[" + string.Join(",", list.Cast<object>().Select(GetListItemName)) + "]";
 		}
 
-		private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			Trace.TraceInformation($"{GetType().Name}.Items_CollectionChanged: Action={e.Action}, OldItems={GetListTypes(e.OldItems)}, OldStartingIndex={e.OldStartingIndex}, NewItems={GetListTypes(e.NewItems)}, NewStartingIndex={e.NewStartingIndex}");
+			_log.Info(
+				"Items_CollectionChanged: Action={0}, OldItems={1}, OldStartingIndex={2}, NewItems={3}, NewStartingIndex={4}",
+				e.Action,
+				GetListTypes(e.OldItems),
+				e.OldStartingIndex,
+				GetListTypes(e.NewItems),
+				e.NewStartingIndex);
 		}
 
 		protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
 		{
-			Trace.TraceInformation($"{GetType().Name}.OnDeactivateAsync: close={close}");
+			_log.Info("OnDeactivateAsync: close={0}", close);
 			return base.OnDeactivateAsync(close, cancellationToken);
 		}
 
 		protected override Task OnInitializedAsync(CancellationToken cancellationToken)
 		{
-			Trace.TraceInformation($"{GetType().Name}.OnInitializedAsync");
+			_log.Info("OnInitializedAsync");
 
 			Items.CollectionChanged += Items_CollectionChanged;
-			_ = Execute.OnUIThreadAsync(StartInitialDocuments);
+			_ = Execute.OnUIThreadAsync(StartInitialDocumentsAsync);
 
 			return base.OnInitializedAsync(cancellationToken);
 		}
 
-		protected async Task StartInitialDocuments()
+		protected async Task StartInitialDocumentsAsync()
 		{
 			await Task.Delay(100);
-			await ActivateOrCreate<TestViewModel>("Test A");
+			await OpenDocumentAsync("Test A");
 			await Task.Delay(100);
-			await ActivateOrCreate<TestViewModel>("Test B");
+			await OpenDocumentAsync("Test B");
 			await Task.Delay(100);
-			await ActivateOrCreate<TestViewModel>("Test C");
+			await OpenDocumentAsync("Test C");
 			await Task.Delay(100);
-			await ActivateOrCreate<TestViewModel>("Test D");
+			await OpenDocumentAsync("Test D");
 		}
 	}
 }

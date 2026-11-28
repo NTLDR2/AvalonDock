@@ -1,11 +1,15 @@
-﻿<UserControl x:Class="CaliburnDockTestApp.Views.TestView"
+<UserControl x:Class="CaliburnDockTestApp.Views.TestView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CaliburnDockTestApp.Views"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+    <!--
+        Caliburn.Micro x:Name property conventions (ViewModelBinder.BindProperties + ConventionManager):
+        - CheckBox "IsDirty" binds ToggleButton.IsCheckedProperty TwoWay.
+        - TextBox "CustomText" binds TextBox.TextProperty TwoWay with UpdateSourceTrigger.PropertyChanged on WPF.
+    -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -16,9 +20,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0">IsDirty</Label>
-        <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding IsDirty}">Is Dirty</CheckBox>
+        <CheckBox x:Name="IsDirty" Grid.Row="0" Grid.Column="1" Content="Is Dirty"/>
 
         <Label Grid.Row="1" Grid.Column="0">Custom Text</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CustomText,UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="CustomText" Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </UserControl>

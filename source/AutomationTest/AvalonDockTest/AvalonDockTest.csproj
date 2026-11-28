@@ -33,6 +33,7 @@
 		<ProjectReference Include="..\..\Components\AvalonDock.Themes.Type2Hybrid\AvalonDock.Themes.Type2Hybrid.csproj"/>
 		<ProjectReference Include="..\..\Components\AvalonDock.Themes.Type3New\AvalonDock.Themes.Type3New.csproj"/>
 		<ProjectReference Include="..\..\ThemeSuperTestApp\ThemeSuperTestApp.csproj"/>
+		<ProjectReference Include="..\..\CaliburnDockTestApp\CaliburnDockTestApp.csproj"/>
 	</ItemGroup>
 
 </Project>

@@ -40,7 +40,7 @@ AvalonDock-V5-NEW/
 │   ├── contributing.md                # Contributor workflow & quality gates (nav_order: 9)
 │   └── images/                        # AvalonDockCodeApp Dark/Light PNG screenshots
 ├── source/
-│   ├── AvalonDock.sln                 # Master Visual Studio solution (16 projects)
+│   ├── AvalonDock.sln                 # Master Visual Studio solution (17 projects)
 │   ├── Directory.Build.props          # Centralized TFMs, VersionPrefix (5.1.0), analyzers, TreatWarningsAsErrors
 │   ├── .editorconfig                  # Code formatting & analyzer rules
 │   ├── Components/                    # 9 shipped Dirkster.AvalonDock* NuGet library & theme category projects
@@ -52,7 +52,7 @@ AvalonDock-V5-NEW/
 │   ├── MVVMTestApp/                   # Classic MVVM + XmlLayoutSerializer sample app
 │   ├── TestApp/                       # Classic XAML code-behind sample app
 │   ├── MLibTest/                      # Multi-project MLib theming sample
-│   ├── CaliburnDockTestApp/           # Upstream Caliburn.Micro 4 sample (standalone, outside AvalonDock.sln)
+│   ├── CaliburnDockTestApp/           # Caliburn.Micro 6 + classic DockingManager (DocumentsSource vs TabControl) sync harness
 │   ├── ExperimentalTestApp/           # Caliburn.Micro 6 + classic DockingManager (DockLayout) reference sample
 │   ├── ThemeSuperTestApp/             # Caliburn.Micro 6 + classic DockingManager 18-theme visual debugger, 6-tool profiler/auditor & Antigravity XML AgentBridge
 │   ├── WinFormsTestApp/               # WindowsFormsHost interop sample
@@ -171,8 +171,9 @@ All 3 theme category packages target `net48` exclusively with **zero external Nu
 | `source/TestApp/` | Classic XAML-first `DockingManager` sample application. |
 | `source/ExperimentalTestApp/` | *(NTLDR2 Fork)* Reference sample: Caliburn.Micro 6.0.15-beta (`SimpleContainer`, conductor, actions, `IEventAggregator`) hosting the classic `DockingManager` through `DockLayout` + `IDockLayoutService`. Sample-internal `IDockable`/`IToolbox` boilerplate (`Boilerplate/`) and WPF glue (`Docking/`). Targets `net48`, in `AvalonDock.sln`. See its `README.md`. |
 | `source/ThemeSuperTestApp/` | *(NTLDR2 Fork)* Caliburn.Micro 6.0.15-beta + classic `DockingManager` (`DockLayout` + `IDockLayoutService`) **18-theme visual debugger, 6-tool profiler/auditor, dual-mode WPF/Win32 DWM screenshot stitcher, and Antigravity XML `AgentBridge`** (`F12` snapshot push + 16-verb `inbox/` -> `outbox/` command loop, paired with `.agents/skills/theme-super-test-bridge/SKILL.md`). Targets `net48` with zero `System.Text.Json`, in `AvalonDock.sln`. See its `README.md`. |
-| `source/CaliburnDockTestApp/`, `source/MLibTest/`, `source/WinFormsTestApp/`, `source/AvalonDocPanelMemoryLeaks/` | Legacy/specialized test harnesses for upstream Caliburn.Micro 4, MLib theming, WinForms `WindowsFormsHost` interop, and memory-leak regression checks. |
-| `source/AutomationTest/AvalonDockTest/` | Automated test suite (`net48`):<br>• **Unit & STA Tests (`Category!=FlaUI`):** Layout tree manipulation, XML serialization & `LayoutDtoMapper` round-trips, `LayoutSyncBridge`, MVVM/DI, theme & parser verification (`VsJsonThemeParserTests`, `VsThemeParserTests`, `VsThemeToggleDockingManagerTests`), `ThemeSuperTestApp` diagnostics & XML bridge verification (`ThemeSuperTestAppDiagnosticsTests`, `ThemeSuperTestAppAgentBridgeTests`), and memory/unload tests.<br>• **FlaUI UI Tests (`FlaUI/`, `Category=FlaUI`):** End-to-end Windows UI Automation driving real WPF windows (`TestApp` and `AvalonDockCodeApp`). |
+| `source/CaliburnDockTestApp/` | *(NTLDR2 Fork — Modernized)* Side-by-side Caliburn.Micro 6.0.15-beta (`SimpleContainer`, pure `x:Name` conventions, `DocumentCloseBehavior`, system-default async `ConfirmCloseView`) diagnostic harness comparing `DockingManager.DocumentsSource` against WPF `TabControl.ItemsSource` (`cal:View.Context="TabControl"` isolation). Targets `net48` with zero `System.Text.Json`, in `AvalonDock.sln`. See its `README.md`. |
+| `source/MLibTest/`, `source/WinFormsTestApp/`, `source/AvalonDocPanelMemoryLeaks/` | Specialized test harnesses for MLib theming, WinForms `WindowsFormsHost` interop, and memory-leak regression checks. |
+| `source/AutomationTest/AvalonDockTest/` | Automated test suite (`net48`):<br>• **Unit & STA Tests (`Category!=FlaUI`):** Layout tree manipulation, XML serialization & `LayoutDtoMapper` round-trips, `LayoutSyncBridge`, MVVM/DI, theme & parser verification (`VsJsonThemeParserTests`, `VsThemeParserTests`, `VsThemeToggleDockingManagerTests`), `CaliburnDockTestApp` synchronization & async close verification (`CaliburnDockTestAppTests`), `ThemeSuperTestApp` diagnostics & XML bridge verification (`ThemeSuperTestAppDiagnosticsTests`, `ThemeSuperTestAppAgentBridgeTests`), and memory/unload tests.<br>• **FlaUI UI Tests (`FlaUI/`, `Category=FlaUI`):** End-to-end Windows UI Automation driving real WPF windows (`TestApp` and `AvalonDockCodeApp`). |
 
 ---
 

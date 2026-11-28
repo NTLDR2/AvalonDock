@@ -1,0 +1,46 @@
+<Window x:Class="CaliburnDockTestApp.Views.ConfirmCloseView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="420"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <!--
+        Pure Caliburn.Micro conventions (zero manual {Binding} or cal:Message.Attach):
+        - Window.Title is bound automatically to ConfirmCloseViewModel.DisplayName by WindowManager.CreateWindowAsync.
+        - TextBlock "Message" binds OneWay (get-only property).
+        - Buttons "Confirm" and "Cancel" match ConfirmAsync() / CancelAsync() via ViewModelBinder.BindActions
+          ("Async"-suffix stripping runs before BindProperties, preserving Content="_Yes" and "_No").
+    -->
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="Message"
+                   Grid.Row="0"
+                   Margin="0,0,0,12"
+                   TextWrapping="Wrap"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button x:Name="Confirm"
+                    Content="_Yes"
+                    MinWidth="75"
+                    Padding="12,3"
+                    Margin="0,0,8,0"
+                    IsDefault="True"/>
+            <Button x:Name="Cancel"
+                    Content="_No"
+                    MinWidth="75"
+                    Padding="12,3"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>
