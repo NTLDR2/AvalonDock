@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace AvalonDock.Themes
+namespace AvalonDock.Themes.Type1Legacy
 {
 	/// <inheritdoc/>
 	public class GenericTheme : Theme

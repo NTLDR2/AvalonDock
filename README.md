@@ -19,7 +19,7 @@ This fork ([NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock)) refines [D
 
 **Mission & Core Goals:**
 
-- **Eliminate `System.Text.Json` DLL Hell:** Never reference or transitively import `System.Text.Json`. On `.NET Framework 4.8`, `System.Text.Json` drags in out-of-band `System.Memory`, `System.Buffers`, `System.Runtime.CompilerServices.Unsafe`, and `Microsoft.Bcl.AsyncInterfaces` packages—a notorious source of runtime `FileLoadException` binding-redirect conflicts in complex desktop hosts. `Serializer.Json` has been omitted in favor of inbox XML DTO persistence, and `Themes.VS` (`VsJsonThemeParser`) + `Themes.VS2013` have been refactored to pure zero-dependency C#.
+- **Eliminate `System.Text.Json` DLL Hell:** Never reference or transitively import `System.Text.Json`. On `.NET Framework 4.8`, `System.Text.Json` drags in out-of-band `System.Memory`, `System.Buffers`, `System.Runtime.CompilerServices.Unsafe`, and `Microsoft.Bcl.AsyncInterfaces` packages—a notorious source of runtime `FileLoadException` binding-redirect conflicts in complex desktop hosts. `Serializer.Json` has been omitted in favor of inbox XML DTO persistence, and `Themes.Type3New` (`VsJsonThemeParser`) + `Themes.Type2Hybrid` have been refactored to pure zero-dependency C#.
 - **Target `.NET Framework 4.8` & WPF Strictly:** Target `net48` exclusively across all WPF controls, themes, samples, and automated test suites—never treating `.NET Framework 4.8` as an afterthought—paired with `netstandard2.0` UI-agnostic contracts (`Core`, `Mvvm*`, `DependencyInjection`, `Serializer.Xml`).
 - **Vendored Docking Dependency for SomaFrameQD:** Maintain a self-contained, warning-free (`--warnaserror`) component tree engineered to serve as the vendored docking engine inside [NTLDR2/SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD).
 - **Caliburn.Micro MVVM Comfort:** Provide the modernized [ExperimentalTestApp](source/ExperimentalTestApp/README.md) reference sample (`Caliburn.Micro 6.0.15-beta` + classic `DockingManager`, documented in [Caliburn.Micro Integration](documentation/guides/caliburn-micro.md)) and plan an optional **Caliburn.Micro** Base Class Library (`AvalonDock.Mvvm.CaliburnMicro`), guided by [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) and detailed in [ROADMAP.md](ROADMAP.md).
@@ -35,10 +35,11 @@ Before installing or migrating code from upstream tutorials, note the deliberate
 
 | Area | Upstream (`Dirkster99/AvalonDock`) | This Fork (`NTLDR2/AvalonDock`) |
 |:-----|:-----------------------------------|:--------------------------------|
-| **Shipped Libraries** | 14 packages | **13 packages** — `Dirkster.AvalonDock.Serializer.Json` (and `VS2013Test`) is **permanently omitted**; `Themes.VS` and `Themes.VS2013` are refactored to zero `System.Text.Json` |
+| **Shipped Libraries** | 14 packages | **9 packages** — `Serializer.Json` and `Themes.Arc` are **permanently omitted**; the remaining themes are consolidated into 3 zero-`System.Text.Json` category assemblies (`Type1Legacy`, `Type2Hybrid`, `Type3New`) |
 | **`System.Text.Json` Policy** | Used by JSON serializer and VS2026 JSON theme parser | **Zero `System.Text.Json` anywhere** across all library, sample, and test projects to prevent `net48` DLL hell |
 | **Layout Persistence** | XML (`Serializer.Xml`) + JSON (`Serializer.Json`) | **XML DTO persistence (`AvalonDock.Serializer.Xml`)** using inbox `System.Xml.Serialization` (backward-compatible with v4 XML) + `LayoutSerializerBase` for custom formats |
-| **Available Themes** | `Arc`, `VS` (2015/2022/2026), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **All 7 theme packages (`Arc`, `VS` [2015/2022/2026], `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`) + `GenericTheme`** (20 built-in themes, all zero-dependency on `net48`) |
+| **XAML Namespace URI** | `https://github.com/Dirkster99/AvalonDock` | **`https://github.com/NTLDR2/AvalonDock`** across core `AvalonDock` and all 18 built-in themes |
+| **Available Themes** | `Arc`, `VS` (2015/2022/2026), `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, `Generic` | **3 theme category packages (`Type1Legacy` [Aero, Expression, Metro, VS2010], `Type2Hybrid` [VS2013], `Type3New` [VS 2015/2022/2026 + `VsTheme`]) + `GenericTheme`** (18 built-in themes, all zero-dependency on `net48`) |
 | **Primary Runtime Focus** | Modern `.NET` + `net48` published via `nuget.org` | **Strict `.NET Framework 4.8` (`net48`) + WPF** (plus `netstandard2.0` UI-agnostic packages), built from source / local NuGet pack / vendored directly (targeting [SomaFrameQD](https://github.com/NTLDR2/SomaFrameQD)) |
 | **Package & Brand Identity** | `Dirkster.AvalonDock*` on `nuget.org` | Retains `Dirkster.AvalonDock*` assembly/package names temporarily for vendored compatibility; **planned rebrand to `AvalonDox`** ([ROADMAP.md](ROADMAP.md)) prior to any standalone NuGet publishing |
 | **Documentation & AI Tooling** | Docs site & GitHub Wiki | **41-page [documentation/](documentation/index.md) site** + **[AGENTS.md](AGENTS.md)** + **[avalondock-internals SKILL.md](.agents/skills/avalondock-internals/SKILL.md)** + **[ROADMAP.md](ROADMAP.md)** |
@@ -52,7 +53,7 @@ Because this fork removes upstream `System.Text.Json` dependencies and targets v
 git clone https://github.com/NTLDR2/AvalonDock.git
 cd AvalonDock
 
-# Build all 13 libraries (net48 + netstandard2.0)
+# Build all 9 component libraries + samples & tests (net48 + netstandard2.0)
 dotnet restore source/AvalonDock.sln
 dotnet build source/AvalonDock.sln --configuration Release --no-restore --warnaserror
 
@@ -69,27 +70,26 @@ In a `.NET Framework 4.8` (`net48`) WPF host project, reference only the modules
   <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Core\AvalonDock.Core.csproj" />
   <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Mvvm\AvalonDock.Mvvm.csproj" />
   <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Serializer.Xml\AvalonDock.Serializer.Xml.csproj" />
-  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Themes.Arc\AvalonDock.Themes.Arc.csproj" />
+  <ProjectReference Include="..\vendor\AvalonDock\source\Components\AvalonDock.Themes.Type3New\AvalonDock.Themes.Type3New.csproj" />
 </ItemGroup>
 ```
 
-*(If consuming from a local NuGet feed, the package IDs remain `Dirkster.AvalonDock`, `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm`, `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, `Dirkster.AvalonDock.DependencyInjection`, `Dirkster.AvalonDock.Serializer.Xml`, and `Dirkster.AvalonDock.Themes.{Arc,VS,VS2013,VS2010,Expression,Metro,Aero}`.)*
+*(If consuming from a local NuGet feed, the package IDs are `Dirkster.AvalonDock`, `Dirkster.AvalonDock.Core`, `Dirkster.AvalonDock.Mvvm`, `Dirkster.AvalonDock.Mvvm.CommunityToolkit`, `Dirkster.AvalonDock.DependencyInjection`, `Dirkster.AvalonDock.Serializer.Xml`, and `Dirkster.AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}`.)*
 
 ### Step 2: Declare a Docking Layout in XAML
 
-The XAML namespace URI (`https://github.com/Dirkster99/AvalonDock`) is preserved for full compatibility with existing XAML views:
+Use the fork's unified XAML namespace URI (`https://github.com/NTLDR2/AvalonDock`), which resolves `DockingManager`, `ToggleDockingManager`, and all 18 built-in themes without separate `clr-namespace:` declarations:
 
 ```xml
 <Window x:Class="MyDockingApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:themes="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Arc"
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"
         Title="My WPF Docking Workspace" Height="600" Width="960">
 
     <avalonDock:DockingManager x:Name="dockManager">
         <avalonDock:DockingManager.Theme>
-            <themes:ArcDarkTheme />
+            <avalonDock:VS2026DarkTheme />
         </avalonDock:DockingManager.Theme>
 
         <avalonDock:LayoutRoot>
@@ -148,9 +148,9 @@ For the full walkthrough, see [Quick Start](documentation/getting-started/quick-
 
 ---
 
-## Modular Component Packages (13 Libraries)
+## Modular Component Packages (9 Libraries)
 
-All 13 libraries ship with embedded XML IntelliSense documentation (`CS1591` enforced under `--warnaserror`) and strong-name assembly signing.
+All 9 libraries ship with embedded XML IntelliSense documentation (`CS1591` enforced under `--warnaserror`) and strong-name assembly signing.
 
 ### Core, MVVM & Dependency Injection
 
@@ -171,17 +171,13 @@ All 13 libraries ship with embedded XML IntelliSense documentation (`CS1591` enf
 |:---------------------|:------------------|:------------|
 | `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | XML layout serializer (`XmlLayoutSerializer`) backed by inbox `System.Xml.Serialization` with v4 XML layout compatibility — **zero external dependencies** |
 
-### Themes
+### Theme Category Packages (`net48`, Zero External Dependencies)
 
-| Project / Package ID | Target Frameworks | Variants & Style |
-|:---------------------|:------------------|:-----------------|
-| `Dirkster.AvalonDock.Themes.Arc` | `net48` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE theme with rounded tabs |
-| `Dirkster.AvalonDock.Themes.VS` | `net48` | `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, plus `VsTheme` (`.vstheme` / `.vstheme.gz` / pure-C# VS2026 JSON) in `AvalonDock.Themes.VS` |
-| `Dirkster.AvalonDock.Themes.VS2013` | `net48` | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` — flat Visual Studio 2013 themes |
-| `Dirkster.AvalonDock.Themes.VS2010` | `net48` | `VS2010Theme` — classic Visual Studio 2010 gradient docking theme |
-| `Dirkster.AvalonDock.Themes.Expression` | `net48` | `ExpressionDarkTheme`, `ExpressionLightTheme` — Expression Blend-inspired studio themes |
-| `Dirkster.AvalonDock.Themes.Metro` | `net48` | `MetroTheme` — clean, flat Metro / WinUI style |
-| `Dirkster.AvalonDock.Themes.Aero` | `net48` | `AeroTheme` — classic Windows Aero appearance |
+| Project / Package ID | CLR Namespace & Direct Base | Variants & Style |
+|:---------------------|:----------------------------|:-----------------|
+| `Dirkster.AvalonDock.Themes.Type1Legacy` | `AvalonDock.Themes.Type1Legacy` (`Theme` URI) | `AeroTheme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `VS2010Theme` *(paired with core `GenericTheme`)* |
+| `Dirkster.AvalonDock.Themes.Type2Hybrid` | `AvalonDock.Themes.Type2Hybrid` (`DictionaryTheme`) | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` — flat Visual Studio 2013 themes from embedded `.vstheme.gz` |
+| `Dirkster.AvalonDock.Themes.Type3New` | `AvalonDock.Themes.Type3New` (`VsTheme : DictionaryTheme`) | `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, plus `VsTheme` (`.vstheme` / `.vstheme.gz` / pure-C# VS2026 JSON) |
 
 ---
 
@@ -409,7 +405,7 @@ AvalonDock.Core                       UI-agnostic contracts & 17 serialization D
 ├── AvalonDock.Serializer.Xml         Inbox XML DTO layout persistence (netstandard2.0, zero external deps)
 └── AvalonDock                        WPF DockingManager, ToggleDockingManager, Layout*, Controls*
     │                                 (net48)
-    └── AvalonDock.Themes.*           Arc, VS, VS2013, VS2010, Expression, Metro, Aero WPF theme libraries
+    └── AvalonDock.Themes.*           Type1Legacy, Type2Hybrid, Type3New WPF theme category libraries
 ```
 
 | Target Framework | Role in This Fork | OS Support |
@@ -424,17 +420,21 @@ AvalonDock.Core                       UI-agnostic contracts & 17 serialization D
 Switch themes in XAML or live at runtime in C#:
 
 ```csharp
-dockManager.Theme = new ArcDarkTheme();         // Modern compact dark theme
-dockManager.Theme = new ArcLightTheme();        // Modern compact light theme
-dockManager.Theme = new VS2026DarkTheme();      // Visual Studio 2026 dark theme (AvalonDock.Themes.VS)
-dockManager.Theme = new Vs2013DarkTheme();      // Flat Visual Studio 2013 dark theme
-dockManager.Theme = new VS2010Theme();          // Classic Visual Studio 2010 style
-dockManager.Theme = new ExpressionDarkTheme();  // Expression Blend dark style
-dockManager.Theme = new MetroTheme();           // Flat Metro style
-dockManager.Theme = new AeroTheme();            // Classic Windows Aero style
+using AvalonDock.Themes.Type1Legacy;
+using AvalonDock.Themes.Type2Hybrid;
+using AvalonDock.Themes.Type3New;
+
+dockManager.Theme = new VS2026DarkTheme();      // Visual Studio 2026 dark theme (Type3New)
+dockManager.Theme = new VS2022LightTheme();     // Visual Studio 2022 light theme (Type3New)
+dockManager.Theme = new Vs2013DarkTheme();      // Flat Visual Studio 2013 dark theme (Type2Hybrid)
+dockManager.Theme = new VS2010Theme();          // Classic Visual Studio 2010 style (Type1Legacy)
+dockManager.Theme = new ExpressionDarkTheme();  // Expression Blend dark style (Type1Legacy)
+dockManager.Theme = new MetroTheme();           // Flat Metro style (Type1Legacy)
+dockManager.Theme = new AeroTheme();            // Classic Windows Aero style (Type1Legacy)
+dockManager.Theme = new GenericTheme();         // Built-in core system fallback (Type1Legacy)
 ```
 
-For custom XAML brush overrides (`AvalonDock.Themes.Arc.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](documentation/guides/theming.md), [Custom Themes](documentation/guides/custom-themes.md), [THEMES.md](source/Components/THEMES.md), and [THEMES-ANALYSIS-AND-BEST-PRACTICES.md](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md). To inspect, profile, audit, or live-capture all 20 themes on `net48` (with multimodal Antigravity XML `AgentBridge` support), launch [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md).
+For custom XAML brush overrides (`AvalonDock.Themes.Type3New.Themes.ResourceKeys`) or `DictionaryTheme` subclasses, see [Theming](documentation/guides/theming.md), [Custom Themes](documentation/guides/custom-themes.md), [THEMES.md](source/Components/THEMES.md), and [THEMES-ANALYSIS-AND-BEST-PRACTICES.md](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md). To inspect, profile, audit, or live-capture all 18 themes on `net48` (with multimodal Antigravity XML `AgentBridge` support), launch [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md).
 
 ---
 
@@ -448,7 +448,7 @@ This repository tracks a **fork-specific `v5.1.0` baseline** built upon Dirkster
 | `IXmlSerializable` removed from layout classes | **Upstream `v5.0.0`** | Medium | Subclass `AvalonDock.Core.LayoutSerializerBase` over `LayoutRootDto` for custom formats |
 | Unresolved deserialized anchorables removed by default | **Upstream `v5.0.0`** | Medium | Opt into `UnresolvedContentHandling.Hide` if lazy-loading plugin panes after layout restore |
 | Frameworks `< net48` & `.NET Core 3.x / 5` dropped; `.NET 8`–`11` added upstream | **Upstream `v5.0.0`–`v5.1.0`** | High | Target `net48` in `NTLDR2 Fork v5.1.0` (`Upstream v5.0.2+` also ships `net8.0-windows`–`net11.0-windows`) |
-| `Serializer.Json` omitted (14 → 13 libraries); `Themes.VS` & `Themes.VS2013` refactored to pure C# | **`NTLDR2 Fork v5.1.0`** *(shipped in upstream `v5.0.0`)* | Medium | Use `XmlLayoutSerializer` (`Themes.VS` & `Themes.VS2013` remain available with zero `System.Text.Json` on `net48`) |
+| `Serializer.Json` & `Themes.Arc` omitted; themes consolidated into `Themes.{Type1Legacy,Type2Hybrid,Type3New}`; XAML URI cut over to `https://github.com/NTLDR2/AvalonDock` (`9` libraries) | **`NTLDR2 Fork v5.1.0`** | High | Use `XmlLayoutSerializer`, `xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"`, and `AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}` |
 
 Read the complete [Migration Guide](documentation/migration/index.md) and [Breaking Changes Reference](documentation/migration/breaking-changes.md).
 
@@ -543,7 +543,7 @@ See [Building from Source](documentation/getting-started/building-from-source.md
 - **[Caliburn.Micro AI-Ready Internals (`NTLDR2/Caliburn.Micro`)](https://github.com/NTLDR2/Caliburn.Micro)** — Companion AI-friendly repository documenting Caliburn.Micro internals inside-out for implementing `AvalonDock.Mvvm.CaliburnMicro`
 - **[AI Agent Orientation (`AGENTS.md`)](AGENTS.md)** — Guardrails, build/test commands, v4 → v5 anti-hallucination rules, and documentation lookup map
 - **[Engine Internals Deep Dive (`SKILL.md`)](.agents/skills/avalondock-internals/SKILL.md)** — Inside-out explanation of the 3 parallel trees, `LayoutItem` depth ordering, `LayoutSyncBridge`, 6-zone sidebars, windowing/airspace, and DTO fixup
-- **[Theme Architecture, Best Practices & Visual Debugger (`THEMES.md`)](source/Components/THEMES.md)** — Complete 20-theme inventory, [WPF Theme Best Practices (`THEMES-ANALYSIS-AND-BEST-PRACTICES.md`)](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md), and the 6-tool [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md) (`F12` dual-mode screenshots + Antigravity XML `AgentBridge`)
+- **[Theme Architecture, Best Practices & Visual Debugger (`THEMES.md`)](source/Components/THEMES.md)** — Complete 18-theme inventory, [WPF Theme Best Practices (`THEMES-ANALYSIS-AND-BEST-PRACTICES.md`)](source/Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md), and the 6-tool [ThemeSuperTestApp](source/ThemeSuperTestApp/README.md) (`F12` dual-mode screenshots + Antigravity XML `AgentBridge`)
 - **[Repository Map (`REPO_MAP.md`)](REPO_MAP.md)** & **[SLOC Report (`SLOC_Report.md`)](SLOC_Report.md)** — Complete directory map and source metrics
 - **[Contributing Guidelines (`CONTRIBUTING.md`)](CONTRIBUTING.md)** & **[License — Ms-PL (`LICENSE`)](LICENSE)**
 - **Upstream Creator Repository:** [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) | [Upstream Releases](https://github.com/Dirkster99/AvalonDock/releases)

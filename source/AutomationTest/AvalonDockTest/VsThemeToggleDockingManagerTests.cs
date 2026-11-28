@@ -15,11 +15,13 @@ namespace AvalonDockTest
 	using AvalonDock;
 	using AvalonDock.Controls;
 	using AvalonDock.Themes;
-	using AvalonDock.Themes.VS;
+	using AvalonDock.Themes.Type1Legacy;
+	using AvalonDock.Themes.Type2Hybrid;
+	using AvalonDock.Themes.Type3New;
 
 	/// <summary>
-	/// Regression tests for #683 and v5.1.0 theme invariants across <see cref="VS2010Theme"/>,
-	/// <c>AvalonDock.Themes.VS2013</c>, and <c>AvalonDock.Themes.VS</c> (VS2015, VS2022, VS2026):
+	/// Regression tests for #683 and v5.1.0 theme invariants across <see cref="VS2010Theme"/> (<c>Type1Legacy</c>),
+	/// <c>AvalonDock.Themes.Type2Hybrid</c> (VS2013), and <c>AvalonDock.Themes.Type3New</c> (VS2015, VS2022, VS2026):
 	/// frozen palette brushes, <see cref="ToggleDockingManager"/> styles, detached window context-menu
 	/// wiring, and leak-free runtime <see cref="DictionaryTheme"/> switching.
 	/// </summary>
@@ -144,12 +146,62 @@ namespace AvalonDockTest
 			var customTheme = VsTheme.FromJson(stream, basePalette);
 
 			Assert.That(customTheme.ThemeResourceDictionary, Is.Not.Null);
-			var accentColor = (Color)customTheme.ThemeResourceDictionary[AvalonDock.Themes.VS.Themes.ResourceKeys.ControlAccentColorKey];
+			var accentColor = (Color)customTheme.ThemeResourceDictionary[AvalonDock.Themes.Type3New.Themes.ResourceKeys.ControlAccentColorKey];
 			Assert.That(accentColor, Is.EqualTo(Color.FromArgb(0xFF, 0xE0, 0x6C, 0x75)));
 
-			var accentBrush = customTheme.ThemeResourceDictionary[AvalonDock.Themes.VS.Themes.ResourceKeys.ControlAccentBrushKey] as SolidColorBrush;
+			var accentBrush = customTheme.ThemeResourceDictionary[AvalonDock.Themes.Type3New.Themes.ResourceKeys.ControlAccentBrushKey] as SolidColorBrush;
 			Assert.That(accentBrush, Is.Not.Null);
 			Assert.That(accentBrush!.IsFrozen, Is.True);
+		}
+
+		[Test]
+		public void Type2Hybrid_Vs2013Themes_ExposeSingleMergedDictionaryAccentColorAndFrozenMenuKeys()
+		{
+			_ = new Border();
+			var themes = new DictionaryTheme[]
+			{
+				new Vs2013BlueTheme(),
+				new Vs2013DarkTheme(),
+				new Vs2013LightTheme(),
+			};
+
+			var requiredMenuKeys = new[]
+			{
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.MenuSeparatorBorderBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.SubmenuItemBackgroundKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.MenuItemHighlightedBackgroundKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.SubmenuItemBackgroundHighlightedKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.CheckMarkBackgroundBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.CheckMarkBorderBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.CheckMarkForegroundBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.DisabledSubMenuItemBackgroundBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.DisabledSubMenuItemBorderBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.TextBrushKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.ItemBackgroundSelectedKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.ItemTextDisabledKey,
+				AvalonDock.Themes.Type2Hybrid.Themes.Menu.MenuKeys.ItemBackgroundHoverKey,
+			};
+
+			foreach (var theme in themes)
+			{
+				var dict = theme.ThemeResourceDictionary;
+				Assert.That(dict.MergedDictionaries.Count, Is.EqualTo(1),
+					$"{theme.Name} must merge only Generic.xaml without duplicate OverlayButtons.xaml.");
+
+				var accentColorObj = dict[AvalonDock.Themes.Type2Hybrid.Themes.ResourceKeys.ControlAccentColorKey];
+				Assert.That(accentColorObj, Is.TypeOf<Color>(), $"{theme.Name} must define ControlAccentColorKey.");
+				var accentBrush = dict[AvalonDock.Themes.Type2Hybrid.Themes.ResourceKeys.ControlAccentBrushKey] as SolidColorBrush;
+				Assert.That(accentBrush, Is.Not.Null);
+				Assert.That(accentBrush!.IsFrozen, Is.True);
+				Assert.That(accentBrush.Color, Is.EqualTo((Color)accentColorObj));
+
+				foreach (var menuKey in requiredMenuKeys)
+				{
+					var brush = dict[menuKey] as SolidColorBrush;
+					Assert.That(brush, Is.Not.Null, $"{theme.Name} is missing MenuKeys.{menuKey.ResourceId}.");
+					Assert.That(brush!.IsFrozen, Is.True, $"{theme.Name} MenuKeys.{menuKey.ResourceId} must be frozen.");
+				}
+			}
 		}
 
 		[Test]

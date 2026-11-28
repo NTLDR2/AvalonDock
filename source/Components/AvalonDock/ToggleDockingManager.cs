@@ -409,7 +409,7 @@ public class ToggleDockingManager : DockingManager
 		{
 			// Schedule re-setup after the new theme resources are fully available.
 			// OnApplyTemplate may not fire when switching between themes that share
-			// the same template structure (e.g. Arc Dark ↔ Arc Light).
+			// the same template structure (e.g. VS2026 Dark ↔ VS2026 Light).
 			Dispatcher.BeginInvoke(
 				System.Windows.Threading.DispatcherPriority.Loaded,
 				new System.Action(ReapplyThemeStyles));

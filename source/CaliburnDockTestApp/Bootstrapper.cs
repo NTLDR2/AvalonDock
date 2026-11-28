@@ -17,7 +17,7 @@ namespace CaliburnDockTestApp
 			base.Configure();
 
 			// Verified on Caliburn.Micro 6.0.15-beta; stress-test again once full AvalonDock v5 features
-			// (Themes.Arc, DockLayout, and DetachedAnchorableWindow tool panes) are enabled: rapidly switch,
+			// (Themes.Type3New, DockLayout, and DetachedAnchorableWindow tool panes) are enabled: rapidly switch,
 			// split, swap themes, float, and detach tabs while typing in both panes to confirm zero view-theft
 			// or stale ViewAware cache references.
 			var defaultLocateTypeForModelType = ViewLocator.LocateTypeForModelType;

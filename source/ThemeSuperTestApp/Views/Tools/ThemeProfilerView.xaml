@@ -74,14 +74,14 @@
 					Margin="0,0,6,0"
 					Padding="8,3"
 					cal:Message.Attach="BenchmarkColdConstructors"
-					Content="Benchmark All 20 Cold Constructors"
+					Content="Benchmark All 18 Cold Constructors"
 					FontWeight="SemiBold"
 					ToolTip="Constructs a fresh instance of every registered theme and measures cold .ctor latency and managed byte allocation" />
 				<Button
 					Margin="0,0,6,0"
 					Padding="8,3"
 					cal:Message.Attach="SweepAllThemes"
-					Content="Sweep &amp; Time Apply Across All 20 Themes"
+					Content="Sweep &amp; Time Apply Across All 18 Themes"
 					ToolTip="Applies every theme sequentially on DockingManager and measures OnThemeChanged + WPF Render pass latency" />
 				<Button
 					Margin="0,0,6,0"
@@ -93,7 +93,7 @@
 					Padding="8,3"
 					cal:Message.Attach="CopyBenchmarkMarkdown"
 					Content="Copy Markdown Report"
-					ToolTip="Copies the full 20-theme architecture and benchmark Markdown table to the clipboard" />
+					ToolTip="Copies the full 18-theme architecture and benchmark Markdown table to the clipboard" />
 			</StackPanel>
 
 			<TextBlock
@@ -105,7 +105,7 @@
 				TextTrimming="CharacterEllipsis" />
 		</DockPanel>
 
-		<!-- 20-Theme Architecture & Timing Matrix -->
+		<!-- 18-Theme Architecture & Timing Matrix -->
 		<DataGrid
 			cal:Message.Attach="[Event MouseDoubleClick] = [Action ApplyRowOnDoubleClick]"
 			AlternatingRowBackground="#F9FAFB"

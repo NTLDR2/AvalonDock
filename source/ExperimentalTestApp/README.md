@@ -11,9 +11,9 @@ It uses the **classic `DockingManager`** driven through the modern v5 MVVM surfa
 |:--|:--|
 | **Target framework** | `net48` |
 | **Caliburn.Micro** | NuGet `Caliburn.Micro` **6.0.15-beta**. It is built from upstream commit `83e93b34`, which is part of the [NTLDR2/Caliburn.Micro](https://github.com/NTLDR2/Caliburn.Micro) fork history; the fork adds documentation only. Dependencies: `Caliburn.Micro.Core` (no dependencies) and `Microsoft.Xaml.Behaviors.Wpf` (no dependencies). |
-| **AvalonDock** | `AvalonDock`, `AvalonDock.Core`, `AvalonDock.Mvvm` (for `DockLayoutService`), `AvalonDock.Serializer.Xml`, and all seven theme packages (`VS2010`, `VS2013`, `VS` [2015/2022/2026], `Arc`, `Metro`, `Expression`, `Aero`, plus built-in `GenericTheme`) |
+| **AvalonDock** | `AvalonDock`, `AvalonDock.Core`, `AvalonDock.Mvvm` (for `DockLayoutService`), `AvalonDock.Serializer.Xml`, and all three theme category packages (`Type1Legacy` [VS2010, Metro, Expression, Aero], `Type2Hybrid` [VS2013], `Type3New` [VS 2015/2022/2026], plus built-in `GenericTheme` — 18 themes total) |
 | **Container** | Caliburn.Micro `SimpleContainer` |
-| **Default theme** | `VS2010` (`AvalonDock.Themes.VS2010`) |
+| **Default theme** | `VS2010` (`AvalonDock.Themes.Type1Legacy.VS2010Theme`) |
 
 ## Running it
 

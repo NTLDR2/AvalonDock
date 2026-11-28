@@ -7,7 +7,9 @@ using AvalonDock;
 using AvalonDock.Core;
 using AvalonDock.Mvvm;
 using AvalonDock.Themes;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type1Legacy;
+using AvalonDock.Themes.Type2Hybrid;
+using AvalonDock.Themes.Type3New;
 using Caliburn.Micro;
 using ExperimentalTestApp.Infrastructure;
 using ExperimentalTestApp.Services;
@@ -30,7 +32,7 @@ namespace ExperimentalTestApp
 	/// </remarks>
 	public sealed class Bootstrapper : BootstrapperBase
 	{
-		/// <summary>The AvalonDock theme applied at start-up (<c>AvalonDock.Themes.VS2010</c>).</summary>
+		/// <summary>The AvalonDock theme applied at start-up (<c>AvalonDock.Themes.Type1Legacy.VS2010Theme</c>).</summary>
 		public const string DefaultThemeName = "VS2010";
 
 		private readonly SimpleContainer _container = new SimpleContainer();
@@ -86,8 +88,6 @@ namespace ExperimentalTestApp
 				new VS2026LightTheme(),
 				new VS2026BlueTheme(),
 				new VS2026DarkTheme(),
-				new ArcLightTheme(),
-				new ArcDarkTheme(),
 				new MetroTheme(),
 				new ExpressionLightTheme(),
 				new ExpressionDarkTheme(),

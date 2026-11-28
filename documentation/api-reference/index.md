@@ -35,7 +35,10 @@ Source-verified reference documentation for AvalonDock v5 controls, layout model
 | `AvalonDock` | `Dirkster.AvalonDock` | `DockingManager`, `ToggleDockingManager`, `ILayoutEngine`, `DefaultLayoutEngine`, `ToggleLayoutEngine`, `ThemeManager`, and root `*EventArgs` classes. |
 | `AvalonDock.Layout` | `Dirkster.AvalonDock` | Layout tree models (`LayoutRoot`, `LayoutPanel`, `LayoutDocument`, `LayoutAnchorable`, panes, floating window models), `AnchorSide`, `AnchorableShowStrategy`, and `ILayout*` interfaces. |
 | `AvalonDock.Controls` | `Dirkster.AvalonDock` | WPF visual controls, `LayoutItem` wrappers, `ToggleDock`, `ToggleDockButtonBar`, `LayoutFloatingWindowControl`, `DetachedAnchorableWindow`, and `NavigatorWindow`. |
-| `AvalonDock.Themes` | `Dirkster.AvalonDock`, `Dirkster.AvalonDock.Themes.*` | `Theme`, `GenericTheme`, `DictionaryTheme`, and concrete theme classes (`ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `AeroTheme`). |
+| `AvalonDock.Themes` | `Dirkster.AvalonDock` | Abstract theme contracts: `Theme` (`GetResourceUri()`) and `DictionaryTheme` (`ThemeResourceDictionary`). |
+| `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock`, `Dirkster.AvalonDock.Themes.Type1Legacy` | `GenericTheme` (in `AvalonDock`) plus URI-based classic themes (`VS2010Theme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `AeroTheme`, `AeroColors`). |
+| `AvalonDock.Themes.Type2Hybrid` | `Dirkster.AvalonDock.Themes.Type2Hybrid` | `DictionaryTheme`-based Visual Studio 2013 theme classes (`Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme`). |
+| `AvalonDock.Themes.Type3New` | `Dirkster.AvalonDock.Themes.Type3New` | `VsTheme` and Visual Studio 2015, 2022, and 2026 theme classes (`VS2015{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2026{Dark,Light,Blue}Theme`) plus `.vstheme` / JSON parsers. |
 | `AvalonDock.Commands` | `Dirkster.AvalonDock` | Internal/template command helpers (`RelayCommand`). |
 | `AvalonDock.Converters` | `Dirkster.AvalonDock` | Value converters used inside control templates (`BoolToVisibilityConverter`, `NullToDoNothingConverter`, `AnchorSideToOrientationConverter`, etc.). |
 | `AvalonDock.Serialization` | `Dirkster.AvalonDock` | `LayoutDtoMapper` (`ILayoutDtoMapper` implementation mapping WPF `LayoutRoot` ↔ `LayoutRootDto`). |

@@ -11,7 +11,7 @@ description: >-
 
 # ThemeSuperTestApp Multimodal Bridge (`theme-super-test-bridge`)
 
-`ThemeSuperTestApp` (`source/ThemeSuperTestApp/`) is AvalonDock v5's dedicated `net48` + `Caliburn.Micro 6.0.15-beta` visual debugger, performance profiler, and best-practices auditor for all **20 built-in themes** (plus runtime `.vstheme` / `.vstheme.gz` / VS2026 `.json` themes).
+`ThemeSuperTestApp` (`source/ThemeSuperTestApp/`) is AvalonDock v5's dedicated `net48` + `Caliburn.Micro 6.0.15-beta` visual debugger, performance profiler, and best-practices auditor for all **18 built-in themes** (plus runtime `.vstheme` / `.vstheme.gz` / VS2026 `.json` themes).
 
 It exposes a workspace-local, zero-`System.Text.Json`, pure-XML (`System.Xml.Linq.XDocument`) file mailbox and dual-mode screenshot engine rooted at:
 
@@ -38,7 +38,7 @@ Use this skill in either of two workflows:
    - The user presses **`F12`** (or clicks **Send Snapshot to Antigravity (F12)** in Row 2 or Tool 6 `Ctrl+Alt+A`) inside `ThemeSuperTestApp` and asks you to inspect a visual glitch, contrast issue, tab header template, DWM title bar, or resource/binding warning.
    - Read `latest-context.md` and `latest-composite.png` in parallel via `read_file` (no live commands required unless you want follow-up comparisons).
 2. **Active Remote Control (Live `inbox/` -> `outbox/` XML Commands):**
-   - You want to switch themes, toggle DWM dark title bars or custom tab headers, spawn overflow tabs / floating windows / standalone OS `DetachedAnchorableWindow`s, test a live VS2026 inline JSON palette override, benchmark cold constructors, or run an automated 20-theme screenshot sweep.
+   - You want to switch themes, toggle DWM dark title bars or custom tab headers, spawn overflow tabs / floating windows / standalone OS `DetachedAnchorableWindow`s, test a live VS2026 inline JSON palette override, benchmark cold constructors, or run an automated 18-theme screenshot sweep.
    - Check `heartbeat.xml` first, write `<AgentCommand>` XML to `inbox/<requestId>.xml`, wait briefly for `outbox/<requestId>-response.xml`, and inspect the resulting XML + PNGs.
 
 ---
@@ -54,8 +54,8 @@ Before dropping commands into `inbox/`, read `source/ThemeSuperTestApp/AgentBrid
   StartedAtUtc="2026-11-27T17:45:10.1234567+00:00"
   UpdatedAtUtc="2026-11-27T17:52:35.8912345+00:00"
   ProcessedCommandCount="3"
-  ActiveThemeId="ArcDark"
-  ActiveThemeName="Arc Dark"
+  ActiveThemeId="ExpressionDark"
+  ActiveThemeName="Expression Dark"
   ActiveBaseClass="Theme (URI)"
   WpfTraceErrorCount="0"
   InboxDirectory="c:\SOFTDEV\AvalonDock-V5-NEW\source\ThemeSuperTestApp\AgentBridge\inbox"
@@ -112,7 +112,7 @@ Antigravity's `read_file` tool supports multimodal `.png` inspection alongside `
 ### Execution Pattern for Antigravity
 
 1. Write `source/ThemeSuperTestApp/AgentBridge/inbox/<requestId>.xml` using `write_file` (`Overwrite: true`).
-2. Wait cleanly without shell-sleep polling: schedule a short one-shot wakeup via `schedule` (`DurationSeconds: 2` for single commands; `DurationSeconds: 8` for `sweep-all-20-screenshots`) and end your turn so `ThemeSuperTestApp` renders and flushes PNGs/XML on the STA thread.
+2. Wait cleanly without shell-sleep polling: schedule a short one-shot wakeup via `schedule` (`DurationSeconds: 2` for single commands; `DurationSeconds: 8` for `sweep-all-18-screenshots`) and end your turn so `ThemeSuperTestApp` renders and flushes PNGs/XML on the STA thread.
 3. On wakeup, call `read_file` on `source/ThemeSuperTestApp/AgentBridge/outbox/<requestId>-response.xml` (and in parallel on `latest/latest-composite.png` when `Capture="true"`).
 
 ### Response Schema (`AgentBridge/outbox/<requestId>-response.xml`)
@@ -122,7 +122,7 @@ Antigravity's `read_file` tool supports multimodal `.png` inspection alongside `
 ```xml
 <AgentResponse Id="req-01-vs2022dark" Action="apply-theme" Status="Ok" DurationMs="44.85" TimestampUtc="2026-11-27T17:55:02.1140000+00:00">
   <Message>Applied 'VS 2022 Dark' [VsTheme : DictionaryTheme].</Message>
-  <ActiveTheme Id="VS2022Dark" DisplayName="VS 2022 Dark" BaseClass="VsTheme : DictionaryTheme" ClrNamespace="AvalonDock.Themes.VS" XmlnsMapped="false" />
+  <ActiveTheme Id="VS2022Dark" DisplayName="VS 2022 Dark" BaseClass="VsTheme : DictionaryTheme" ClrNamespace="AvalonDock.Themes.Type3New" XmlnsMapped="true" />
   <OsState Version="Windows 11 (Build 26100)" AppsMode="Explicit Dark" SystemMode="Explicit Dark" HighContrast="Off" AccentHex="#FF0078D4" />
   <Diagnostics UnfrozenFreezables="0" ThemedWindowHosts="1" DistinctDictionaries="1" WpfTraceErrors="0" />
   <Artifacts
@@ -164,16 +164,15 @@ Antigravity's `read_file` tool supports multimodal `.png` inspection alongside `
 | 13 | `benchmark-cold-ctors` | *(none)* | Constructs fresh instances of all registered themes, measuring cold `.ctor` ms and managed KB delta; writes Markdown table to `outbox/<Id>-benchmark.md` (`ReportPath`). |
 | 14 | `export-full-report` | *(none)* | Exports the complete 6-section Markdown diagnostic report to `outbox/<Id>-full-report.md` (`ReportPath`). |
 | 15 | `load-inline-json` | `<Payload>` (**required**; or `Json` param), `BasePalette` (`VS2022Dark` [default] \| `VS2022Light` \| `VS2022Blue` \| `VS2015Dark` \| `None`), `TemplateSet` (`VS2022` [default] \| `VS2015`), `DisplayName` (default `Agent Inline JSON`), `Capture` (`bool`, default `true`) | Parses a VS2026 JSON color-token array via zero-dependency `VsJsonThemeParser`, merges onto `BasePalette`, registers `Runtime.AgentInlineJson`, applies it live, and captures screenshots (or returns line/column `FormatException` in `Status="Error"`). |
-| 16 | `sweep-all-20-screenshots` | *(none)* | Applies all 20 built-in themes sequentially on `DockingManager` (`Render` pass + unfrozen `Freezable` audit each), saves `01..<20>-<ThemeId>-wpf.png` & `-dwm.png` + `sweep-index.md` under `captures/sweep-<Id>/` (`ReportPath`), and restores the prior active theme. |
+| 16 | `sweep-all-18-screenshots` *(aliases: `sweep-all-screenshots`, `sweep-all-20-screenshots`)* | *(none)* | Applies all 18 built-in themes sequentially on `DockingManager` (`Render` pass + unfrozen `Freezable` audit each), saves `01..<18>-<ThemeId>-wpf.png` & `-dwm.png` + `sweep-index.md` under `captures/sweep-<Id>/` (`ReportPath`), and restores the prior active theme. |
 
-### Complete Catalog of 20 Built-In `ThemeId` Values
+### Complete Catalog of 18 Built-In `ThemeId` Values
 
-- **Arc (`Theme` URI, `AvalonDock.Themes`):** `ArcDark` *(startup default)*, `ArcLight`
-- **Visual Studio 2026 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.VS`):** `VS2026Dark`, `VS2026Blue`, `VS2026Light`
-- **Visual Studio 2022 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.VS`):** `VS2022Dark`, `VS2022Blue`, `VS2022Light`
-- **Visual Studio 2015 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.VS`):** `VS2015Dark`, `VS2015Blue`, `VS2015Light`
-- **Visual Studio 2013 (`DictionaryTheme`, `AvalonDock.Themes.VS2013`):** `Vs2013Dark`, `Vs2013Blue`, `Vs2013Light`
-- **Classic URI & Built-In Core (`Theme`, `AvalonDock.Themes`):** `VS2010`, `ExpressionDark`, `ExpressionLight`, `Metro`, `Aero`, `Generic`
+- **Visual Studio 2026 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.Type3New`):** `VS2026Dark`, `VS2026Blue`, `VS2026Light`
+- **Visual Studio 2022 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.Type3New`):** `VS2022Dark`, `VS2022Blue`, `VS2022Light`
+- **Visual Studio 2015 (`VsTheme : DictionaryTheme`, `AvalonDock.Themes.Type3New`):** `VS2015Dark`, `VS2015Blue`, `VS2015Light`
+- **Visual Studio 2013 (`DictionaryTheme`, `AvalonDock.Themes.Type2Hybrid`):** `Vs2013Dark`, `Vs2013Blue`, `Vs2013Light`
+- **Classic URI & Built-In Core (`Theme`, `AvalonDock.Themes.Type1Legacy`):** `VS2010`, `ExpressionDark` *(startup default)*, `ExpressionLight`, `Metro`, `Aero`, `Generic`
 
 ---
 
@@ -280,9 +279,9 @@ Antigravity's `read_file` tool supports multimodal `.png` inspection alongside `
 </AgentCommand>
 ```
 
-### Full 20-Theme Visual Screenshot Sweep (`sweep-all-20-screenshots`)
+### Full 18-Theme Visual Screenshot Sweep (`sweep-all-18-screenshots`)
 ```xml
-<AgentCommand Id="req-sweep-20" Action="sweep-all-20-screenshots" />
+<AgentCommand Id="req-sweep-18" Action="sweep-all-18-screenshots" />
 ```
 
 ---

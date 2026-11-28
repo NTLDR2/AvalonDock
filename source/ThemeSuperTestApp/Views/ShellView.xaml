@@ -2,7 +2,7 @@
 	x:Class="ThemeSuperTestApp.Views.ShellView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+	xmlns:ad="https://github.com/NTLDR2/AvalonDock"
 	xmlns:cal="http://caliburnmicro.com"
 	xmlns:docking="clr-namespace:ThemeSuperTestApp.Docking"
 	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -284,7 +284,7 @@
 						VerticalAlignment="Center"
 						BorderThickness="1"
 						CornerRadius="3"
-						ToolTip="Whether the theme's CLR namespace is registered in [assembly: XmlnsDefinition] for https://github.com/Dirkster99/AvalonDock">
+						ToolTip="Whether the theme's CLR namespace is registered in [assembly: XmlnsDefinition] for https://github.com/NTLDR2/AvalonDock">
 						<Border.Style>
 							<Style TargetType="{x:Type Border}">
 								<Setter Property="Background" Value="#DCFCE7" />

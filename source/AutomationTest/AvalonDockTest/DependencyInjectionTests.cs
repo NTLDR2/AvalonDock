@@ -451,8 +451,8 @@ namespace AvalonDockTest
 			var tm = provider.GetRequiredService<IThemeManager>();
 
 			Assert.That(tm.CurrentThemeName, Is.Null);
-			tm.ApplyTheme("ArcDark");
-			Assert.That(tm.CurrentThemeName, Is.EqualTo("ArcDark"));
+			tm.ApplyTheme("VS2026Dark");
+			Assert.That(tm.CurrentThemeName, Is.EqualTo("VS2026Dark"));
 		}
 
 		[Test]

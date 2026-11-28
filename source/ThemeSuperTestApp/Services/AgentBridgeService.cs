@@ -52,7 +52,7 @@ namespace ThemeSuperTestApp.Services
 		/// Initializes a new instance of the <see cref="AgentBridgeService"/> class.
 		/// </summary>
 		/// <param name="paths">Bridge folder paths.</param>
-		/// <param name="themeCatalog">20-theme catalog service.</param>
+		/// <param name="themeCatalog">18-theme catalog service.</param>
 		/// <param name="osThemeService">Windows OS theme service.</param>
 		/// <param name="auditService">ResourceDictionary &amp; Freezable audit service.</param>
 		/// <param name="windowTracker">Multi-window dictionary sharing tracker.</param>
@@ -497,10 +497,12 @@ namespace ThemeSuperTestApp.Services
 				case "load-inline-json":
 					return await ExecuteLoadInlineJsonAsync(cmd).ConfigureAwait(true);
 
+				case "sweep-all-18-screenshots":
 				case "sweep-all-20-screenshots":
+				case "sweep-all-screenshots":
 				{
-					var reportPath = await ExecuteAll20ScreenshotSweepAsync(cmd.RequestId).ConfigureAwait(true);
-					return ("sweep-all-20-screenshots", "Completed 20-theme visual screenshot sweep.", null, reportPath);
+					var (reportPath, builtInCount) = await ExecuteAllBuiltInScreenshotSweepAsync(cmd.RequestId).ConfigureAwait(true);
+					return (verb, $"Completed {builtInCount}-theme visual screenshot sweep.", null, reportPath);
 				}
 
 				default:
@@ -678,7 +680,7 @@ namespace ThemeSuperTestApp.Services
 				bundle?.LatestContextMarkdownPath);
 		}
 
-		private async Task<string> ExecuteAll20ScreenshotSweepAsync(string requestId)
+		private async Task<(string ReportPath, int BuiltInCount)> ExecuteAllBuiltInScreenshotSweepAsync(string requestId)
 		{
 			var target = ResolveCaptureTarget();
 			var sweepDir = Path.Combine(_paths.CapturesDirectory, $"sweep-{SanitizeId(requestId)}");
@@ -688,7 +690,7 @@ namespace ThemeSuperTestApp.Services
 			var builtIns = _themeCatalog.Themes.Where(t => !t.IsCustomRuntimeTheme).ToList();
 
 			var sb = new StringBuilder();
-			sb.AppendLine($"# 20-Theme Visual Screenshot Sweep — `{requestId}`");
+			sb.AppendLine($"# {builtIns.Count}-Theme Visual Screenshot Sweep — `{requestId}`");
 			sb.AppendLine();
 			sb.AppendLine("| # | Theme | Base Class | Apply (ms) | Unfrozen Freezables | WPF Screenshot | DWM Screenshot |");
 			sb.AppendLine("| ---: | :--- | :--- | ---: | ---: | :--- | :--- |");
@@ -741,7 +743,7 @@ namespace ThemeSuperTestApp.Services
 
 			var indexPath = Path.Combine(sweepDir, "sweep-index.md");
 			WindowScreenshotService.SaveTextAtomic(sb.ToString(), indexPath);
-			return indexPath;
+			return (indexPath, builtIns.Count);
 		}
 
 		private async Task<ScreenshotCaptureBundle?> CaptureIfPossibleAsync(string slug, string? note, bool includeDwm)

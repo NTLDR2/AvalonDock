@@ -31,7 +31,7 @@ The patterns in this tutorial mirror `source/AvalonDockCodeApp` in the AvalonDoc
 dotnet add package Dirkster.AvalonDock
 dotnet add package Dirkster.AvalonDock.Mvvm
 dotnet add package Dirkster.AvalonDock.DependencyInjection
-dotnet add package Dirkster.AvalonDock.Themes.Arc
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet add package CommunityToolkit.Mvvm
 ```

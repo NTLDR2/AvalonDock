@@ -133,7 +133,7 @@ namespace AvalonDockTest
 
 			var manager = CreateArrangedDockingManager(480.0, 300.0);
 			catalog.Attach(manager);
-			Assert.That(catalog.ApplyTheme("ArcDark"), Is.True);
+			Assert.That(catalog.ApplyTheme("ExpressionDark"), Is.True);
 			ArrangeDockingManager(manager, 480.0, 300.0);
 			bridge.AttachVisualRoot(manager);
 
@@ -144,7 +144,7 @@ namespace AvalonDockTest
 			Assert.That(initialHeartbeat.Root, Is.Not.Null);
 			Assert.That(initialHeartbeat.Root.Name.LocalName, Is.EqualTo("AgentBridgeHeartbeat"));
 			Assert.That((string)initialHeartbeat.Root.Attribute("State"), Is.EqualTo("Listening"));
-			Assert.That((string)initialHeartbeat.Root.Attribute("ActiveThemeId"), Is.EqualTo("ArcDark"));
+			Assert.That((string)initialHeartbeat.Root.Attribute("ActiveThemeId"), Is.EqualTo("ExpressionDark"));
 
 			File.WriteAllText(
 				Path.Combine(paths.InboxDirectory, "01-test-ping.xml"),

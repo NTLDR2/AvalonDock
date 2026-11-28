@@ -25,7 +25,7 @@ namespace ThemeSuperTestApp.ViewModels.Documents
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThemeOverviewDocumentViewModel"/> class.
 		/// </summary>
-		/// <param name="themeCatalog">The shared 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The shared 18-theme catalog service.</param>
 		/// <param name="auditService">The resource dictionary audit service.</param>
 		public ThemeOverviewDocumentViewModel(ThemeCatalogService themeCatalog, ResourceDictionaryAuditService auditService)
 		{

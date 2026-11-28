@@ -14,7 +14,7 @@ This page catalogs every source, binary, package, target-framework, and behavior
 **Explicit Scope Labels:** Every change on this page is labeled by its exact origin so readers comparing against upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) release notes can distinguish upstream v5 changes from fork-specific policy:
 - **`Upstream v5.0.0`** — Architectural breaking changes introduced in Dirkster99's `v5.0.0` release (which shipped 14 packages, including `Serializer.Json`, `Themes.VS`, and `Themes.VS2013`).
 - **`Upstream v5.0.2` / `Upstream v5.1.0`** — Target framework expansions (`net8.0-windows` in `v5.0.2`; `net11.0-windows` in `v5.1.0`) and layout restore fixes (`#696`).
-- **`NTLDR2 Fork v5.1.0`** — Fork-specific omission of `Serializer.Json` (14 → 13 libraries) and zero-dependency pure-C# refactoring of `Themes.VS` / `Themes.VS2013` to guarantee zero `System.Text.Json` DLL hell on `.NET Framework 4.8`.
+- **`NTLDR2 Fork v5.1.0`** — Fork-specific omission of `Serializer.Json` and removal of `Themes.Arc`, consolidation of themes into 3 category assemblies (`Themes.{Type1Legacy,Type2Hybrid,Type3New}`, 14 → 9 libraries), XAML XML namespace cutover to `https://github.com/NTLDR2/AvalonDock`, and zero-dependency pure-C# refactoring of `VsJsonThemeParser` / `VsThemePaletteFactory` to guarantee zero `System.Text.Json` DLL hell on `.NET Framework 4.8`.
 
 ---
 
@@ -40,14 +40,16 @@ This page catalogs every source, binary, package, target-framework, and behavior
 + using AvalonDock.Serializer.Xml;
 ```
 
-### Omission of `Serializer.Json` & Zero-Dependency `Themes.VS` / `Themes.VS2013` Refactoring
+### Fork Theme Taxonomy (`Type1Legacy` / `Type2Hybrid` / `Type3New`), XAML Namespace URI & Omission of `Serializer.Json`
 
 **Origin / Scope:** **`NTLDR2 Fork v5.1.0` (Fork-Specific)** + `Upstream v5.0.0` (`#572` XAML dictionary removal in `Themes.VS2013`)  
-**Impact:** Medium — affects projects using `Serializer.Json` from upstream `v5.0.0` or merging removed v4 `Themes.VS2013` XAML files.
+**Impact:** High — affects XAML `xmlns` headers, theme `ProjectReference`/`PackageReference` entries, and concrete theme `using` directives.
 
-To guarantee clean, binding-redirect-free deployment on `.NET Framework 4.8` from Windows 7 SP1 64-bit through Windows 11 with zero out-of-band `System.Text.Json` or `System.Memory` assemblies, **`NTLDR2/AvalonDock` (`v5.1.0` fork)** ships **13 libraries**:
-- `Dirkster.AvalonDock.Serializer.Json` is **omitted** — use `Dirkster.AvalonDock.Serializer.Xml` (`XmlLayoutSerializer`), or implement a custom `LayoutSerializerBase` subclass in your own project if JSON persistence is required.
-- `Dirkster.AvalonDock.Themes.VS` & `Dirkster.AvalonDock.Themes.VS2013` **are included** with zero `System.Text.Json` dependencies (`VsJsonThemeParser` uses a pure-C# parser that throws `FormatException` instead of `JsonException` on invalid JSON syntax). Note that `Themes.VS2013` replaced its v4 loose XAML files (`DarkBrushs.xaml`, `DarkTheme.xaml`) with embedded `.vstheme.gz` resources in v5 (`#572`); base custom XAML merged-dictionary themes on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (or `LightTheme.xaml`) with `AvalonDock.Themes.Arc.Themes.ResourceKeys`.
+To guarantee clean, binding-redirect-free deployment on `.NET Framework 4.8` from Windows 7 SP1 64-bit through Windows 11 with zero out-of-band `System.Text.Json` or `System.Memory` assemblies and an unambiguous 3-tier theme architecture, **`NTLDR2/AvalonDock` (`v5.1.0` fork)** ships **9 libraries**:
+- **XAML Namespace URI Cutover:** Update `xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"` to **`xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"`** across all XAML files.
+- **3-Tier Theme Assemblies & CLR Namespaces:** Abstract `Theme` and `DictionaryTheme` stay in `AvalonDock.Themes`, while concrete themes are consolidated into `Dirkster.AvalonDock.Themes.Type1Legacy` (`AvalonDock.Themes.Type1Legacy`), `Dirkster.AvalonDock.Themes.Type2Hybrid` (`AvalonDock.Themes.Type2Hybrid`), and `Dirkster.AvalonDock.Themes.Type3New` (`AvalonDock.Themes.Type3New`).
+- `Dirkster.AvalonDock.Serializer.Json` and `Dirkster.AvalonDock.Themes.Arc` are **omitted** — use `Dirkster.AvalonDock.Serializer.Xml` (`XmlLayoutSerializer`) for persistence and `Themes.Type3New` (`VS2026*` / `VS2022*` / `VS2015*`) or `Themes.Type1Legacy` (`Expression*`) for dark/light themes.
+- `Themes.Type3New` & `Themes.Type2Hybrid` ship with zero `System.Text.Json` dependencies (`VsJsonThemeParser` uses a pure-C# parser that throws `FormatException` instead of `JsonException` on invalid JSON syntax). Note that `VS2013` (`Type2Hybrid`) replaced its v4 loose XAML files (`DarkBrushs.xaml`, `DarkTheme.xaml`) with embedded `.vstheme.gz` resources in v5 (`#572`); override `ThemeResourceDictionary` in C# or merge `/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml` with `AvalonDock.Themes.Type3New.Themes.ResourceKeys`.
 
 ### UI-Agnostic Core Package Extracted
 
@@ -188,12 +190,12 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 
 | Feature | Package | Description |
 |:--------|:--------|:------------|
-| `ToggleDockingManager` | `Dirkster.AvalonDock` | VS Code / JetBrains Rider-style 6-zone sidebar toggle docking control (supported across all 7 theme packages and `GenericTheme`). |
+| `ToggleDockingManager` | `Dirkster.AvalonDock` | VS Code / JetBrains Rider-style 6-zone sidebar toggle docking control (supported across all 3 theme category packages and `GenericTheme`). |
 | Standalone Windows | `Dirkster.AvalonDock` | `DetachAnchorableToWindow` detaches a tool window into a top-level OS window with its own taskbar entry (**View Mode → Window**), persisted via `LayoutAnchorable.IsDetached`. |
 | Window Policy Switches | `Dirkster.AvalonDock` | `AllowFloatingWindows` and `AllowDetachedWindows` on `DockingManager`, `IRootDock`, and `DockingOptions` disable floating and/or standalone windows manager-wide. |
 | Toolbox Shortcuts | `Dirkster.AvalonDock` | `IToolbox.Shortcut` registers a host-window `KeyBinding` to toggle a toolbox and appends the shortcut to its sidebar tooltip. |
 | Tab KeyBinding Bypass | `Dirkster.AvalonDock` | `DockingManager.IgnoreTabControlKeyBindings` (`#508`) prevents `TabControlEx` from intercepting `Home`/`End` and other shortcuts needed by inner controls. |
-| Arc Theme | `Dirkster.AvalonDock.Themes.Arc` | Modern compact dark and light themes (`ArcDarkTheme`, `ArcLightTheme`) with `ResourceKeys` brush customization. |
+| VS Themes (`.vstheme` & JSON) | `Dirkster.AvalonDock.Themes.Type3New` | Visual Studio 2015, 2022, and 2026 dark/light/blue themes plus runtime `.vstheme` and VS2026 JSON loading (`VsTheme`). *(Upstream `v5.0.0` named this `Themes.VS` and added `Themes.Arc`, omitted in `NTLDR2 Fork`.)* |
 | MVVM Packages | `AvalonDock.Mvvm` & `.CommunityToolkit` | Zero-dependency (`DockableBase`, `ToolboxBase`, `DockLayoutService`, `SideToggleManager`) and `CommunityToolkit.Mvvm` (`ObservableDockableBase`, `ObservableToolboxBase`) view-model bases. |
 | DI Builder | `AvalonDock.DependencyInjection` | `AddDockLayoutService(dock => ...)` builder and `AddAvalonDock<TFactory>()` service extensions. |
 
@@ -204,8 +206,10 @@ Pane insertion order for `DocumentPaneDockRight` / `DocumentPaneDockBottom` and 
 | Category | Change | Origin / Scope | Impact | Required Action |
 |:---------|:-------|:---------------|:-------|:----------------|
 | **Packages** | XML serializer extracted to `Dirkster.AvalonDock.Serializer.Xml` | `Upstream v5.0.0` | High | Reference `Dirkster.AvalonDock.Serializer.Xml` |
-| **Packages** | `Serializer.Json` omitted; `Themes.VS` (`VsJsonThemeParser`) refactored to pure C# (`FormatException` on invalid JSON) | **`NTLDR2 Fork v5.1.0`** | Medium | Use `Serializer.Xml` (`XmlLayoutSerializer`) for layout persistence |
-| **Themes** | `Themes.VS2013` loose XAML dictionaries (`DarkBrushs.xaml`, `DarkTheme.xaml`) replaced by embedded `.vstheme.gz` (`#572`) | `Upstream v5.0.0` | Medium | Base custom XAML themes on `Themes.Arc` or override `Vs2013*Theme.ThemeResourceDictionary` in C# |
+| **XAML URI** | `https://github.com/Dirkster99/AvalonDock` → **`https://github.com/NTLDR2/AvalonDock`** | **`NTLDR2 Fork v5.1.0`** | High | Update `xmlns` declarations in XAML |
+| **Themes** | Concrete themes consolidated into `Themes.{Type1Legacy,Type2Hybrid,Type3New}`; `Themes.Arc` removed | **`NTLDR2 Fork v5.1.0`** | High | Update theme package references & `using AvalonDock.Themes.Type*;` |
+| **Packages** | `Serializer.Json` omitted; `VsJsonThemeParser` refactored to pure C# (`FormatException` on invalid JSON) | **`NTLDR2 Fork v5.1.0`** | Medium | Use `Serializer.Xml` (`XmlLayoutSerializer`) for layout persistence |
+| **Themes** | `VS2013` (`Type2Hybrid`) loose XAML dictionaries (`DarkBrushs.xaml`, `DarkTheme.xaml`) replaced by embedded `.vstheme.gz` (`#572`) | `Upstream v5.0.0` | Medium | Override `ThemeResourceDictionary` in C# or merge `Type3New` / `Type1Legacy` dictionaries |
 | **Namespaces** | `AvalonDock.Layout.Serialization` → `AvalonDock.Serializer.Xml` | `Upstream v5.0.0` | High | Update `using` statements |
 | **Serialization** | `IXmlSerializable` replaced by DTOs & `LayoutSerializerBase` | `Upstream v5.0.0` | Medium | Move custom `ReadXml`/`WriteXml` logic to DTOs |
 | **Frameworks** | `.NET < 4.8` & `.NET Core 3.x / 5` dropped; `.NET 8` & `.NET 11` added upstream | `Upstream v5.0.0`–`v5.1.0` | High | Target `net48` in `NTLDR2 Fork v5.1.0` (`Upstream v5.0.2+` also ships `net8.0-windows`–`net11.0-windows`) |

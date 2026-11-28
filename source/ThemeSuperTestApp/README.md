@@ -3,8 +3,8 @@
 `ThemeSuperTestApp` is a dedicated WPF visual inspection, performance-profiling, best-practices auditing, and multimodal Antigravity bridge workbench for **AvalonDock v5** themes on **`.NET Framework 4.8` (`net48`)**.
 
 > **Companion Technical Reports & Agent Skill:**
-> - [THEMES.md](../Components/THEMES.md) — Complete inventory of all 20 built-in themes across 8 assemblies.
-> - [THEMES-ANALYSIS-AND-BEST-PRACTICES.md](../Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md) — Architectural analysis of `Theme` (`AvalonDock.Themes`) vs. `VsTheme : DictionaryTheme` (`AvalonDock.Themes.VS`) and `net48` vs. modern `.NET` WPF best practices.
+> - [THEMES.md](../Components/THEMES.md) — Complete inventory of all 18 built-in themes across 4 assemblies (`AvalonDock` + `AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}`).
+> - [THEMES-ANALYSIS-AND-BEST-PRACTICES.md](../Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md) — Architectural analysis of `Type1Legacy` (`Theme`), `Type2Hybrid` (`DictionaryTheme`), and `Type3New` (`VsTheme : DictionaryTheme`) and `net48` vs. modern `.NET` WPF best practices.
 > - [.agents/skills/theme-super-test-bridge/SKILL.md](../../.agents/skills/theme-super-test-bridge/SKILL.md) — Workspace skill enabling Antigravity to inspect `F12` snapshots and remote-control a live `ThemeSuperTestApp.exe` session over XML.
 
 ---
@@ -14,7 +14,7 @@
 - **Target Framework:** `.NET Framework 4.8` (`net48`) exclusively — zero `System.Text.Json`, `System.Memory`, or `Microsoft.Bcl.*` assemblies.
 - **MVVM & IoC:** Hosted by **`Caliburn.Micro` `6.0.15-beta`** (`SimpleContainer`, action messages with leaf `FrameworkElement` `KeyTrigger`s, async `Screen` / `Conductor` lifecycles, and `IDockLayoutService` + `DockLayout`).
 - **Root Docking Surface:** Classic **`DockingManager`** with `AllowFloatingWindows = true` and `AllowDetachedWindows = true`, using an implicit `<DataTemplate DataType="{x:Type boilerplate:DockableScreen}">` so views resolve identically in docked panes, tear-off `LayoutFloatingWindowControl`s, and standalone `DetachedAnchorableWindow`s.
-- **Non-Invasive Auditing:** Inspects all 20 built-in themes as-is without mutating their `ResourceDictionary` or `Freezable` state.
+- **Non-Invasive Auditing:** Inspects all 18 built-in themes as-is without mutating their `ResourceDictionary` or `Freezable` state.
 
 ---
 
@@ -23,7 +23,7 @@
 At the top of `ShellView`, an always-visible two-row command header provides instant architectural visibility:
 
 1. **Row 1 — Active Theme & Base-Class Strip:**
-   - **Theme Dropdown (`F8` / `Shift+F8`):** Lists all 20 built-in themes (plus any runtime-loaded `.vstheme` / `.json` themes) with polarity dots, color-coded base-class badges (`Theme (URI)` in teal, `DictionaryTheme` in amber, `VsTheme : DictionaryTheme` in purple), and CLR namespaces (`AvalonDock.Themes` vs. `AvalonDock.Themes.VS`).
+   - **Theme Dropdown (`F8` / `Shift+F8`):** Lists all 18 built-in themes (plus any runtime-loaded `.vstheme` / `.json` themes) with polarity dots, color-coded base-class badges (`Theme (URI)` in teal, `DictionaryTheme` in amber, `VsTheme : DictionaryTheme` in purple), and CLR namespaces (`AvalonDock.Themes.Type1Legacy`, `AvalonDock.Themes.Type2Hybrid`, `AvalonDock.Themes.Type3New`).
    - **Inheritance, `[XmlnsDefinition]` & Bridge Readout:** Displays the exact CLR inheritance chain (e.g., `VS2026DarkTheme -> VsTheme -> DictionaryTheme -> Theme`), `GetResourceUri()` tooltip, green/amber `[XmlnsDefinition]` mapping badge, `.ctor` / `Apply` latency pill, **`Custom Icon Tab Header`** toggle (`IconDocumentHeaderTemplate` vs. `<null>` native theme header template), and the live **`Antigravity Bridge: Listening (N)`** status badge (`Paused (N)` in amber when paused).
 2. **Row 2 — Live Windows OS Dark/Light/High-Contrast Detector, Chrome & Snapshot Controls:**
    - Queries real OS build via `ntdll!RtlGetVersion`, explicit `HKCU\...\Personalize\AppsUseLightTheme` & `SystemUsesLightTheme` (`Explicit Dark`, `Explicit Light`, `Unset / Legacy OS`), `SystemParameters.HighContrast`, and `DWM\AccentColor` + `DWM\ColorPrevalence`, updating live via `WM_SETTINGCHANGE` / `WM_DWMCOLORIZATIONCOLORCHANGED`.
@@ -35,7 +35,7 @@ At the top of `ShellView`, an always-visible two-row command header provides ins
 
 | Tool | Shortcut | Best-Practice Issue Diagnosed |
 | :--- | :--- | :--- |
-| **1. Theme Architecture & Profiler** (`ThemeProfilerViewModel`) | `Ctrl+Alt+P` | Measures cold `new XxxTheme()` constructor latency and managed `KB` allocation (`Theme (URI)` `~0.2 ms / 8 KB` vs. eager `DictionaryTheme` `~2–58 ms / 500–1,700 KB`), full 20-theme `OnThemeChanged` + WPF `Render` sweep latency, and missing `[XmlnsDefinition]` mappings. |
+| **1. Theme Architecture & Profiler** (`ThemeProfilerViewModel`) | `Ctrl+Alt+P` | Measures cold `new XxxTheme()` constructor latency and managed `KB` allocation (`Theme (URI)` `~0.2 ms / 8 KB` vs. eager `DictionaryTheme` `~2–58 ms / 500–1,700 KB`), full 18-theme `OnThemeChanged` + WPF `Render` sweep latency, and missing `[XmlnsDefinition]` mappings. |
 | **2. Resource & `Freezable` Auditor** (`ResourceAuditorViewModel`) | `Ctrl+Alt+R` | Walks root and nested `MergedDictionaries` in exact WPF lookup precedence order, renders color swatches and `#AARRGGBB` hex codes, flags **unfrozen `Freezable`s** (`!IsFrozen`), and computes cross-theme semantic `ResourceKeys` / `ImplicitStyle` parity diffs. |
 | **3. Multi-Window Dict Sharing** (`WindowSharingTrackerViewModel`) | `Ctrl+Alt+W` | Uses `RuntimeHelpers.GetHashCode(dict)` across `DockingManager`, `LayoutFloatingWindowControl`, `DetachedAnchorableWindow`, `NavigatorWindow`, and `OverlayWindow` to contrast `DictionaryTheme`'s `O(1)` shared `Ref #1` instance against URI `Theme`s' per-window duplicated BAML parses. |
 | **4. WPF XAML Binding & Resource Trace** (`WpfTraceListenerViewModel`) | `Ctrl+Alt+T` | Hooks `PresentationTraceSources` (`DataBindingSource`, `ResourceDictionarySource`, `MarkupSource`) in-process on `net48` to catch `System.Windows.Data Error: 40` and `{DynamicResource}` misses tagged with the active theme. |
@@ -83,9 +83,9 @@ At the top of `ShellView`, an always-visible two-row command header provides ins
 | Category | Verbs (`Action="..."`) | Key Parameters & Output |
 | :--- | :--- | :--- |
 | **Presence & Snapshot** | `ping`, `get-state`, `capture-snapshot` | `Note` / `<Payload>`, `IncludeDwm` (`true`) -> live `<ActiveTheme>`, `<OsState>`, `<Diagnostics>`, and `latest/*` PNG + `.md` bundle. |
-| **Theme & Chrome Control** | `apply-theme`, `set-dwm-mode`, `set-shell-options` | `ThemeId` (any of 20 built-ins or runtime IDs), `ForceCold` (`false`), `Mode` (`DefaultUntouched` \| `MatchWindowsOsMode` \| `MatchActiveAvalonDockTheme`), `StyleOuterShell`, `UseCustomHeader`, `AutoSyncOs`, `Capture`. |
+| **Theme & Chrome Control** | `apply-theme`, `set-dwm-mode`, `set-shell-options` | `ThemeId` (any of 18 built-ins or runtime IDs), `ForceCold` (`false`), `Mode` (`DefaultUntouched` \| `MatchWindowsOsMode` \| `MatchActiveAvalonDockTheme`), `StyleOuterShell`, `UseCustomHeader`, `AutoSyncOs`, `Capture`. |
 | **Layout & Window Stress** | `spawn-overflow-tabs`, `close-overflow-tabs`, `spawn-floating`, `spawn-detached`, `dock-all`, `reset-layout` | Optional `Capture` (`true` by default on `spawn-*`, `false` on close/dock/reset) -> multi-window `latest-composite.png`. |
-| **Profiling, JSON & Sweep** | `benchmark-cold-ctors`, `export-full-report`, `load-inline-json`, `sweep-all-20-screenshots` | Writes `outbox/<Id>-benchmark.md`, `outbox/<Id>-full-report.md`, live `CustomRuntimeVsTheme` (`BasePalette`, `TemplateSet`, `DisplayName`, `<Payload>`), or all 20 theme PNGs + `captures/sweep-<Id>/sweep-index.md`. |
+| **Profiling, JSON & Sweep** | `benchmark-cold-ctors`, `export-full-report`, `load-inline-json`, `sweep-all-18-screenshots` | Writes `outbox/<Id>-benchmark.md`, `outbox/<Id>-full-report.md`, live `CustomRuntimeVsTheme` (`BasePalette`, `TemplateSet`, `DisplayName`, `<Payload>`), or all 18 theme PNGs + `captures/sweep-<Id>/sweep-index.md`. |
 
 ---
 

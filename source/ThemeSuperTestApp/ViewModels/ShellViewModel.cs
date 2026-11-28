@@ -78,7 +78,7 @@ namespace ThemeSuperTestApp.ViewModels
 		/// Initializes a new instance of the <see cref="ShellViewModel"/> class.
 		/// </summary>
 		/// <param name="layoutService">The AvalonDock layout service.</param>
-		/// <param name="themeCatalog">The lazy 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The lazy 18-theme catalog service.</param>
 		/// <param name="osThemeService">The Windows OS Dark/Light/High-Contrast detector service.</param>
 		/// <param name="dwmChromeHelper">The opt-in Win32 DWM title-bar helper.</param>
 		/// <param name="layoutPersistence">The XML layout persistence service.</param>

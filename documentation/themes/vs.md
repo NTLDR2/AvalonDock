@@ -2,36 +2,36 @@
 title: VS Theme
 layout: default
 parent: Themes
-nav_order: 2
+nav_order: 1
 description: "Visual Studio 2015, 2022, and 2026 themes plus custom .vstheme, .vstheme.gz, and zero-dependency VS2026 JSON palette loading."
 ---
 
-# VS Theme (`.vstheme` & VS2026 JSON)
+# VS Theme (`Type3New` — `.vstheme` & VS2026 JSON)
 
-`Dirkster.AvalonDock.Themes.VS` brings authentic Visual Studio 2015, Visual Studio 2022, and Visual Studio 2026 docking themes to AvalonDock, along with a runtime theme engine (`VsTheme`) capable of loading custom `.vstheme` XML files, gzip-compressed `.vstheme.gz` resources, and Visual Studio 2026 JSON override files — targeting `.NET Framework 4.8` (`net48`) exclusively with **zero external NuGet dependencies**.
+`Dirkster.AvalonDock.Themes.Type3New` (`AvalonDock.Themes.Type3New`) brings authentic Visual Studio 2015, Visual Studio 2022, and Visual Studio 2026 docking themes to AvalonDock, along with a runtime theme engine (`VsTheme : DictionaryTheme`) capable of loading custom `.vstheme` XML files, gzip-compressed `.vstheme.gz` resources, and Visual Studio 2026 JSON override files — targeting `.NET Framework 4.8` (`net48`) exclusively with **zero external NuGet dependencies**.
 
 {: .note }
-**Fork Scope (`NTLDR2 Fork v5.1.0` vs. Upstream `v5.0.0`–`v5.1.0`):** Upstream `Dirkster.AvalonDock.Themes.VS` referenced `System.Text.Json` on `net48` to parse VS2026 JSON overrides. In **`NTLDR2 Fork v5.1.0`**, `VsJsonThemeParser` uses a self-contained, zero-dependency pure-C# recursive-descent parser (retaining 100% public API compatibility while throwing `FormatException` with `(Line X, Column Y)` diagnostics on malformed JSON syntax), keeping `net48` completely free of `System.Text.Json` and `System.Memory` assemblies.
+**Fork Scope (`NTLDR2 Fork v5.1.0` vs. Upstream `v5.0.0`–`v5.1.0`):** Upstream shipped this package as `Dirkster.AvalonDock.Themes.VS` (`AvalonDock.Themes.VS`) with a `System.Text.Json` dependency on `net48` and omitted it from `[XmlnsDefinition]`. In **`NTLDR2 Fork v5.1.0`**, it is renamed to `AvalonDock.Themes.Type3New`, uses a self-contained zero-dependency pure-C# recursive-descent parser (`VsJsonThemeParser`), and maps onto `https://github.com/NTLDR2/AvalonDock` via `[XmlnsDefinition]`.
 
 ---
 
 ## Installation
 
 ```bash
-dotnet add package Dirkster.AvalonDock.Themes.VS
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
 ```
 
 | Property | Value |
 |:---------|:------|
-| **NuGet Package** | `Dirkster.AvalonDock.Themes.VS` |
-| **Assembly** | `AvalonDock.Themes.VS` |
+| **NuGet Package** | `Dirkster.AvalonDock.Themes.Type3New` |
+| **Assembly** | `AvalonDock.Themes.Type3New` |
 | **Target Framework** | `net48` *(zero external NuGet dependencies)* |
-| **CLR Namespace** | **`AvalonDock.Themes.VS`** |
-| **Resource Keys Class** | `AvalonDock.Themes.VS.Themes.ResourceKeys` |
+| **CLR Namespace** | **`AvalonDock.Themes.Type3New`** |
+| **Resource Keys Class** | `AvalonDock.Themes.Type3New.Themes.ResourceKeys` |
 | **Built-in Variants** | `VS2026DarkTheme`, `VS2026LightTheme`, `VS2026BlueTheme`, `VS2022DarkTheme`, `VS2022LightTheme`, `VS2022BlueTheme`, `VS2015DarkTheme`, `VS2015LightTheme`, `VS2015BlueTheme` |
 
 {: .important }
-All types in this package reside in the **`AvalonDock.Themes.VS`** namespace (not `AvalonDock.Themes`). In XAML, always map an explicit `xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS"` prefix.
+In C#, all types in this package reside in **`AvalonDock.Themes.Type3New`** (`using AvalonDock.Themes.Type3New;`). In XAML on **`NTLDR2 Fork v5.1.0`**, `AvalonDock.Themes.Type3New` is registered via `[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Themes.Type3New")]`, so `<avalonDock:VS2026DarkTheme />` and `{avalonDock:VsTheme Path=...}` resolve directly under `xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"`.
 
 ---
 
@@ -39,10 +39,10 @@ All types in this package reside in the **`AvalonDock.Themes.VS`** namespace (no
 
 ### Visual Studio 2026 (`VS2026*Theme`)
 
-Visual Studio 2026 introduced Fluent accents and independent color tokens for tool headers and tab strips (`EnvironmentHeader`, `EnvironmentHeaderInactive`, `EnvironmentTab`, `EnvironmentTabInactive`) layered via JSON overrides on top of modern rounded-corner VS2022 control templates (`/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml`):
+Visual Studio 2026 introduced Fluent accents and independent color tokens for tool headers and tab strips (`EnvironmentHeader`, `EnvironmentHeaderInactive`, `EnvironmentTab`, `EnvironmentTabInactive`) layered via JSON overrides on top of modern rounded-corner VS2022 control templates (`/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml`):
 
 ```csharp
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 dockManager.Theme = new VS2026DarkTheme();
 dockManager.Theme = new VS2026LightTheme();
@@ -51,10 +51,10 @@ dockManager.Theme = new VS2026BlueTheme();
 
 ### Visual Studio 2022 (`VS2022*Theme`)
 
-Uses VS2022 control templates (`/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml`) with embedded `.vstheme` color palettes:
+Uses VS2022 control templates (`/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml`) with embedded `.vstheme` color palettes:
 
 ```csharp
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 dockManager.Theme = new VS2022DarkTheme();
 dockManager.Theme = new VS2022LightTheme();
@@ -63,10 +63,10 @@ dockManager.Theme = new VS2022BlueTheme();
 
 ### Visual Studio 2015 (`VS2015*Theme`)
 
-Uses classic flat VS2015 control templates (`/AvalonDock.Themes.VS;component/Themes/Generic.xaml`) with embedded `.vstheme` color palettes:
+Uses classic flat VS2015 control templates (`/AvalonDock.Themes.Type3New;component/Themes/Generic.xaml`) with embedded `.vstheme` color palettes:
 
 ```csharp
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 dockManager.Theme = new VS2015DarkTheme();
 dockManager.Theme = new VS2015LightTheme();
@@ -79,12 +79,11 @@ dockManager.Theme = new VS2015BlueTheme();
 <Window x:Class="MyApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS">
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock">
 
     <avalonDock:DockingManager x:Name="dockManager">
         <avalonDock:DockingManager.Theme>
-            <vs:VS2026DarkTheme />
+            <avalonDock:VS2026DarkTheme />
         </avalonDock:DockingManager.Theme>
 
         <!-- Layout -->
@@ -104,7 +103,7 @@ dockManager.Theme = new VS2015BlueTheme();
 
 ```csharp
 using System.IO;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 // From file path
 dockManager.Theme = new VsTheme("Themes/solarized-dark.vstheme");
@@ -120,7 +119,7 @@ Embed compressed themes as `<EmbeddedResource Include="Resources\mytheme.vstheme
 
 ```csharp
 using System.Reflection;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 byte[] gzipBytes = VsThemeResourceLoader.Load(
     Assembly.GetExecutingAssembly(),
@@ -131,15 +130,14 @@ dockManager.Theme = new VsTheme(gzipBytes);
 
 ### XAML Markup Extension (`VsThemeExtension`)
 
-Load a `.vstheme` file directly in XAML using `{vs:VsTheme Path=...}` (paths may be absolute or relative to the entry assembly directory):
+Load a `.vstheme` file directly in XAML using `{avalonDock:VsTheme Path=...}` (paths may be absolute or relative to the entry assembly directory):
 
 ```xml
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS">
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock">
 
-    <avalonDock:DockingManager Theme="{vs:VsTheme Path=Themes/custom.vstheme}" />
+    <avalonDock:DockingManager Theme="{avalonDock:VsTheme Path=Themes/custom.vstheme}" />
 </Window>
 ```
 
@@ -162,11 +160,11 @@ Because VS2026 JSON files are override-only, pass an optional `basePalette` (and
 
 ```csharp
 using System;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 var basePalette = VsThemeParser.ParseFile("Themes/vs2022dark.vstheme");
 var vs2022Templates = new Uri(
-    "/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml",
+    "/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml",
     UriKind.Relative);
 
 dockManager.Theme = VsTheme.FromJson(
@@ -181,7 +179,7 @@ If `basePalette` is `null`, `VsThemeResourceBuilder` supplies sensible dark-them
 
 ## Public Parsing & Resource Builder API
 
-For advanced scenarios—such as inspecting theme colors to style your own application's `Menu`, `ToolBar`, or `StatusBar`, or merging multiple override layers—use the public parser and builder types in `AvalonDock.Themes.VS`:
+For advanced scenarios—such as inspecting theme colors to style your own application's `Menu`, `ToolBar`, or `StatusBar`, or merging multiple override layers—use the public parser and builder types in `AvalonDock.Themes.Type3New`:
 
 | Type | Key Public Members | Purpose |
 |:-----|:-------------------|:--------|
@@ -190,11 +188,11 @@ For advanced scenarios—such as inspecting theme colors to style your own appli
 | `VsThemeColorPalette` | `GetBackground(string)`, `GetForeground(string)`, `GetBackgroundOrDefault(string, Color)`, `GetForegroundOrDefault(string, Color)`, `Merge(VsThemeColorPalette)`, `Contains(string)`, `Count` | Immutable-mergeable lookup table of parsed VS color tokens |
 | `VsThemeColorEntry` | `Background` (`Color?`), `Foreground` (`Color?`) | Single token's background and foreground colors |
 | `VsThemeResourceLoader` | `Load(Assembly, string)` | Reads an embedded manifest resource into a `byte[]` |
-| `VsThemeResourceBuilder` | `Build(VsThemeColorPalette)`, `Build(VsThemeColorPalette, Uri)` | Maps a `VsThemeColorPalette` to `AvalonDock.Themes.VS.Themes.ResourceKeys` and merges `Generic.xaml` |
+| `VsThemeResourceBuilder` | `Build(VsThemeColorPalette)`, `Build(VsThemeColorPalette, Uri)` | Maps a `VsThemeColorPalette` to `AvalonDock.Themes.Type3New.Themes.ResourceKeys` and merges `Generic.xaml` |
 
 ```csharp
 using System.Windows.Media;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 var basePalette = VsThemeParser.ParseFile("Themes/vs2022dark.vstheme");
 var userOverrides = VsJsonThemeParser.ParseFile("Themes/user-accent.json");
@@ -212,5 +210,5 @@ dockManager.Theme = new VsTheme(merged);
 
 ## See Also
 
-- [VS2013 Theme]({{ site.baseurl }}{% link themes/vs2013.md %}) — Dedicated Visual Studio 2013 Dark, Light, and Blue themes.
+- [VS2013 Theme]({{ site.baseurl }}{% link themes/vs2013.md %}) — Dedicated Visual Studio 2013 Dark, Light, and Blue themes (`Type2Hybrid`).
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Compare JSON palettes, `DictionaryTheme`, and XAML `ResourceKeys` overrides.

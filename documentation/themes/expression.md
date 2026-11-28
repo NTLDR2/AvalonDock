@@ -2,28 +2,29 @@
 title: Expression Theme
 layout: default
 parent: Themes
-nav_order: 5
+nav_order: 4
 description: "Expression Blend-inspired Dark and Light themes for creative, media, and design tools."
 ---
 
-# Expression Theme
+# Expression Theme (`Type1Legacy`)
 
-`Dirkster.AvalonDock.Themes.Expression` delivers the high-contrast charcoal **Dark** and neutral **Light** styling inspired by Microsoft Expression Blend. It is well suited for creative tools, 3D viewports, node editors, timelines, and inspection panels, and renders `IconSource` icons directly in both document and tool window tabs.
+`ExpressionDarkTheme` and `ExpressionLightTheme` (shipped in `Dirkster.AvalonDock.Themes.Type1Legacy`) deliver the high-contrast charcoal **Dark** and neutral **Light** styling inspired by Microsoft Expression Blend. They are well suited for creative tools, 3D viewports, node editors, timelines, and inspection panels, and render `IconSource` icons directly in both document and tool window tabs.
 
 ---
 
 ## Installation
 
 ```bash
-dotnet add package Dirkster.AvalonDock.Themes.Expression
+dotnet add package Dirkster.AvalonDock.Themes.Type1Legacy
 ```
 
 | Property | Value |
 |:---------|:------|
-| **NuGet Package** | `Dirkster.AvalonDock.Themes.Expression` |
-| **Assembly** | `AvalonDock.Themes.Expression` |
-| **CLR Namespace** | `AvalonDock.Themes` |
+| **NuGet Package** | `Dirkster.AvalonDock.Themes.Type1Legacy` |
+| **Assembly** | `AvalonDock.Themes.Type1Legacy` |
+| **CLR Namespace** | `AvalonDock.Themes.Type1Legacy` |
 | **Theme Classes** | `ExpressionDarkTheme`, `ExpressionLightTheme` |
+| **Spline Control** | `AvalonDock.Themes.Type1Legacy.Controls.ExpressionSplineBorder` |
 | **Document Tab Icons** | Supported (`IconSource` displayed directly in tab headers) |
 
 ---
@@ -36,13 +37,12 @@ dotnet add package Dirkster.AvalonDock.Themes.Expression
 <Window x:Class="MyApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:expr="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Expression">
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock">
 
     <avalonDock:DockingManager x:Name="dockManager">
         <avalonDock:DockingManager.Theme>
-            <expr:ExpressionDarkTheme />
-            <!-- Or: <expr:ExpressionLightTheme /> -->
+            <avalonDock:ExpressionDarkTheme />
+            <!-- Or: <avalonDock:ExpressionLightTheme /> -->
         </avalonDock:DockingManager.Theme>
 
         <!-- Layout -->
@@ -53,7 +53,7 @@ dotnet add package Dirkster.AvalonDock.Themes.Expression
 ### Code-Behind
 
 ```csharp
-using AvalonDock.Themes;
+using AvalonDock.Themes.Type1Legacy;
 
 dockManager.Theme = new ExpressionDarkTheme();
 // Switch to Expression Light:
@@ -66,11 +66,11 @@ dockManager.Theme = new ExpressionLightTheme();
 
 | Pack URI | Description |
 |:---------|:------------|
-| `/AvalonDock.Themes.Expression;component/DarkTheme.xaml` | Dark variant returned by `ExpressionDarkTheme.GetResourceUri()` |
-| `/AvalonDock.Themes.Expression;component/LightTheme.xaml` | Light variant returned by `ExpressionLightTheme.GetResourceUri()` |
-| `/AvalonDock.Themes.Expression;component/DarkBrushes.xaml` | Charcoal brush palette (`AvalonDock_Expression_BaseColor1`.. keys) |
-| `/AvalonDock.Themes.Expression;component/LightBrushes.xaml` | Light brush palette (`AvalonDock_Expression_BaseColor1`.. keys) |
-| `/AvalonDock.Themes.Expression;component/Theme.xaml` | Shared control templates merged by `DarkTheme.xaml` and `LightTheme.xaml` |
+| `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkTheme.xaml` | Dark variant returned by `ExpressionDarkTheme.GetResourceUri()` |
+| `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/LightTheme.xaml` | Light variant returned by `ExpressionLightTheme.GetResourceUri()` |
+| `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkBrushes.xaml` | Charcoal brush palette (`AvalonDock_Expression_BaseColor1`.. keys) |
+| `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/LightBrushes.xaml` | Light brush palette (`AvalonDock_Expression_BaseColor1`.. keys) |
+| `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/Theme.xaml` | Shared control templates merged by `DarkTheme.xaml` and `LightTheme.xaml` |
 
 {: .note }
 AvalonDock v5 includes updated docking target overlay hints (`#494`, `#634`) and native [`ToggleDockingManager`]({{ site.baseurl }}{% link guides/toggle-docking-manager.md %}) sidebar support (`#636`) in both `ExpressionDarkTheme` and `ExpressionLightTheme`.
@@ -79,5 +79,5 @@ AvalonDock v5 includes updated docking target overlay hints (`#494`, `#634`) and
 
 ## See Also
 
-- [Arc Theme]({{ site.baseurl }}{% link themes/arc.md %}) — Modern compact dark and light themes.
+- [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) — Visual Studio 2015, 2022, and 2026 themes (`Type3New`).
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Customize brushes or build your own `Theme` subclass.

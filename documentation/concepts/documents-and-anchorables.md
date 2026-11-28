@@ -71,7 +71,7 @@ A `LayoutDocument` represents primary user content in the document well. Closing
 | `ToolTip` | `object` | `null` | Optional tab tooltip (not serialized; bind from the view or `LayoutItemContainerStyle`). |
 
 {: .note }
-**Tab Icons Across Themes:** Classic themes (`GenericTheme`, `Aero`, `Metro`, `VS2010`, `Expression`) render `IconSource` in document and tool headers automatically. The modern flat `Arc` theme intentionally renders clean title-only document tabs by default; supply a custom `DockingManager.DocumentHeaderTemplate` if you want tab icons in `Arc`.
+**Tab Icons Across Themes:** All 18 built-in themes (`VS` 2015/2022/2026, `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, and `GenericTheme`) render `IconSource` in document and tool headers automatically; you can supply a custom `DockingManager.DocumentHeaderTemplate` or `AnchorableHeaderTemplate` whenever you want custom tab header chrome.
 
 ---
 

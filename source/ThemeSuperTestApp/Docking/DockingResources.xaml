@@ -1,7 +1,7 @@
 <ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+	xmlns:ad="https://github.com/NTLDR2/AvalonDock"
 	xmlns:adconv="clr-namespace:AvalonDock.Converters;assembly=AvalonDock"
 	xmlns:boilerplate="clr-namespace:ThemeSuperTestApp.Boilerplate"
 	xmlns:cal="http://caliburnmicro.com"
@@ -21,7 +21,7 @@
 
 	<!--
 		Optional icon-enabled DocumentHeaderTemplate (DataContext = LayoutDocument, Content = ViewModel).
-		Renders IconSource + Title + unsaved indicator across all themes (including Arc).
+		Renders IconSource + Title + unsaved indicator across all themes.
 		ShellView can toggle DockingManager.DocumentHeaderTemplate between this template and null
 		to compare custom vs. theme-native tab header rendering.
 	-->

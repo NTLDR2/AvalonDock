@@ -14,7 +14,7 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 
 1. [What Is AvalonDock v5?](#1-what-is-avalondock-v5)
 2. [v4 → v5 Differences & LLM Anti-Hallucination Guardrails](#2-v4--v5-differences--llm-anti-hallucination-guardrails)
-3. [Package & Layer Architecture (13 NuGet Packages)](#3-package--layer-architecture-13-nuget-packages)
+3. [Package & Layer Architecture (9 NuGet Packages)](#3-package--layer-architecture-9-nuget-packages)
 4. [How AvalonDock v5 Works — Core Invariants & Internals Skill](#4-how-avalondock-v5-works--core-invariants--internals-skill)
 5. [Build, Test & Verification Commands](#5-build-test--verification-commands)
 6. [Testing Architecture & Critical STA / FlaUI Rules](#6-testing-architecture--critical-sta--flaui-rules)
@@ -26,14 +26,14 @@ Authoritative technical orientation for **AvalonDock v5** (`v5.1.0` on `master`,
 
 ## 1. What Is AvalonDock v5?
 
-AvalonDock is a WPF document and tool-window docking layout system (`https://github.com/Dirkster99/AvalonDock` XAML namespace, Ms-PL license) built around six v5 pillars:
+AvalonDock is a WPF document and tool-window docking layout system (`https://github.com/NTLDR2/AvalonDock` XAML namespace in this fork, Ms-PL license) built around six v5 pillars:
 
 1. **Strict UI-Agnostic / WPF Split & Zero `System.Text.Json`:** `Core`, `Mvvm`, `Mvvm.CommunityToolkit`, `DependencyInjection`, and `Serializer.Xml` target **`netstandard2.0`** (zero WPF deps); WPF packages, samples, and tests target **`net48`** (Windows 7 SP1 64-bit–Windows 11, **zero `System.Text.Json`**).
 2. **Two Root Controls:** **`DockingManager`** (classic VS 4-edge auto-hide flyouts, tabbed documents, splits, `DocumentsSource`/`AnchorablesSource`, `DockLayout`) and **`ToggleDockingManager`** *(subclasses `DockingManager`)* (VS Code / Rider 6-zone click-to-toggle sidebars, `DockLayoutPriority`, `IToolbox.Shortcut`, 6-zone drag overlay).
 3. **First-Class MVVM & DI:** Zero-dependency `AvalonDock.Mvvm`, source-generator-ready `AvalonDock.Mvvm.CommunityToolkit`, `IDockLayoutService` + `SideToggleManager`, and `services.AddDockLayoutService(dock => ...)` (`AvalonDock.DependencyInjection`).
 4. **DTO XML Persistence:** Bidirectional mapping between `LayoutRoot` and 17 plain DTOs (`AvalonDock.Core.Serialization.Dto`), powering `XmlLayoutSerializer` (`Dirkster.AvalonDock.Serializer.Xml`, v4 XML backward-compatible) and custom `LayoutSerializerBase` subclasses.
 5. **Dual Multi-Window Modes:** Owned borderless tear-off floating windows (`LayoutFloatingWindowControl`, gated by `AllowFloatingWindows`) **plus** unowned top-level OS tool windows with taskbar entries (`DetachedAnchorableWindow` / **"Window"** mode, gated by `AllowDetachedWindows`).
-6. **Modernized Theme Engine:** 7 zero-dependency theme packages (`Themes.Arc`, `Themes.VS`, `Themes.VS2013`, `Themes.VS2010`, `Themes.Expression`, `Themes.Metro`, `Themes.Aero`) + built-in `GenericTheme` and `DictionaryTheme`, styling both `DockingManager` and `ToggleDockingManager` with live runtime switching.
+6. **Modernized 3-Tier Theme Engine:** 3 zero-dependency theme category packages (`AvalonDock.Themes.Type1Legacy` [Aero, Expression, Metro, VS2010], `AvalonDock.Themes.Type2Hybrid` [VS2013], and `AvalonDock.Themes.Type3New` [VS2015/2022/2026 + `VsTheme`]; *`Themes.Arc` is removed in the NTLDR2 fork*) + built-in `GenericTheme` (`Type1Legacy`) and abstract `Theme`/`DictionaryTheme` (`AvalonDock.Themes`), styling both `DockingManager` and `ToggleDockingManager` with live runtime switching.
 
 ---
 
@@ -44,13 +44,14 @@ AI models trained on older repositories frequently emit **AvalonDock v4** (or re
 | Area | Legacy / Removed Pattern (DO NOT USE) | Current v5 Pattern (USE THIS) |
 | :--- | :--- | :--- |
 | **XML Serializer Package & Namespace** | Bundled in `Dirkster.AvalonDock` under `using AvalonDock.Layout.Serialization;` | Extracted to **`Dirkster.AvalonDock.Serializer.Xml`** under `using AvalonDock.Serializer.Xml;` + `using AvalonDock.Core;` |
-| **Removed `System.Text.Json` Modules** | Referencing `System.Text.Json` or `Dirkster.AvalonDock.Serializer.Json` | **Surgically removed** to prevent `System.Text.Json` DLL hell on `net48`. Never re-introduce `System.Text.Json`. Use `Dirkster.AvalonDock.Serializer.Xml` (`Themes.VS` & `Themes.VS2013` ship refactored to pure zero-dependency C#) |
+| **Removed `System.Text.Json` Modules** | Referencing `System.Text.Json` or `Dirkster.AvalonDock.Serializer.Json` | **Surgically removed** to prevent `System.Text.Json` DLL hell on `net48`. Never re-introduce `System.Text.Json`. Use `Dirkster.AvalonDock.Serializer.Xml` (`Themes.Type3New` & `Themes.Type2Hybrid` ship refactored to pure zero-dependency C#) |
 | **Custom Serialization Hooks** | `IXmlSerializable` (`ReadXml` / `WriteXml` on `LayoutRoot`, `LayoutContent`, etc.) | **`IXmlSerializable` is removed** from all layout classes. Subclass `AvalonDock.Core.LayoutSerializerBase` (`SerializeCore` / `DeserializeCore` over `LayoutRootDto`) |
 | **Serialization Callback Model Type** | `args.Model` typed as WPF `LayoutContent` | `args.Model` typed as UI-agnostic `ISerializableLayoutContent` (`AvalonDock.Core.Serialization`) |
 | **Unresolved Deserialized Anchorables** | Left indefinitely in `LayoutRoot.Hidden` | **Removed by default** (`UnresolvedContentHandling.Remove` → `RemoveFromLayout()`). Opt into `UnresolvedContentHandling.Hide` globally or per-item on `args` for lazy-loaded plugins |
 | **Serialized `ToolTip`** | Written as an XML attribute | **Not serialized** in v5 (ignored when loading v4 XML). Bind `ToolTip` in XAML styles, templates, or ViewModels |
-| **Custom XAML Dictionary Merges** | Merging `/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml` or `DarkTheme.xaml` | **Removed in v5 (`#572`)** (`Themes.VS2013` builds dictionaries from embedded `.vstheme.gz` resources). Base XAML merges on `/AvalonDock.Themes.Arc;component/DarkTheme.xaml` (`DarkBrushs.xaml` without `e`) + `Arc.Themes.ResourceKeys`, or subclass `DictionaryTheme` / override `Vs2013*Theme.ThemeResourceDictionary` |
-| **Theme Namespaces** | Putting `VS2015*` / `VS2022*` / `VS2026*` in `AvalonDock.Themes` or other themes in sub-namespaces | `VS2015*Theme`, `VS2022*Theme`, `VS2026*Theme`, and `VsTheme` live in **`AvalonDock.Themes.VS`**; all other built-in themes (`Arc*`, `Vs2013*`, `VS2010`, `Expression*`, `Metro`, `Aero`, `GenericTheme`) live in **`AvalonDock.Themes`** |
+| **XAML XML Namespace URI** *(NTLDR2 Fork)* | `xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"` *(upstream v4/v5 URI — removed in this fork)* | **`xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"`** across core `AvalonDock` and all 3 theme category assemblies (`18` built-in themes + `{avalonDock:VsTheme}`) |
+| **Custom XAML Dictionary Merges** | Merging `/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml` or old per-skin assemblies (or removed `Themes.Arc`) | **Consolidated into 3 category assemblies in NTLDR2 fork** (`Themes.Type2Hybrid` builds dictionaries from embedded `.vstheme.gz` resources, and `Themes.Arc` is removed). Subclass `DictionaryTheme` / `VsTheme`, override `ThemeResourceDictionary` (`Type3New.Themes.ResourceKeys` or `Type2Hybrid.Themes.ResourceKeys`), or base XAML merges on `/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkTheme.xaml` (or `/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml`) |
+| **Theme Namespaces** | Putting concrete themes directly in `AvalonDock.Themes` or `AvalonDock.Themes.VS` | Abstract `Theme` and `DictionaryTheme` live in root **`AvalonDock.Themes`**; concrete URI themes (`GenericTheme`, `VS2010`, `Expression*`, `Metro`, `Aero`) live in **`AvalonDock.Themes.Type1Legacy`**; `Vs2013*Theme` live in **`AvalonDock.Themes.Type2Hybrid`**; `VsTheme`, `VS2015*`, `VS2022*`, and `VS2026*` live in **`AvalonDock.Themes.Type3New`** |
 | **MVVM Identifier Property Name** | Ad-hoc `ContentId` property on custom VMs | `IDockable` / `DockableBase` / `ToolboxBase` / `ObservableDockableBase` name their ID **`Id`**, while WPF `LayoutItem` names its DP **`ContentId`**. In `LayoutItemContainerStyle`, bind `<Setter Property="ContentId" Value="{Binding Model.Id}" />` |
 | **DI Registration** | Early preview `services.AddToolbox<T>()` / `AddToggleDockOptions(...)` | Consolidated builder: `services.AddDockLayoutService(dock => { dock.ConfigureToggleDock(...); dock.ConfigureDocking(...); dock.AddToolbox<T>(); })` |
 | **Document Body Template Property** | Inventing `DockingManager.DocumentTemplate` (does not exist) | Use `DockingManager.LayoutItemTemplate`, `LayoutItemTemplateSelector`, or implicit `<DataTemplate DataType="{x:Type ...}">` resources |
@@ -62,7 +63,7 @@ AI models trained on older repositories frequently emit **AvalonDock v4** (or re
 
 ---
 
-## 3. Package & Layer Architecture (13 NuGet Packages)
+## 3. Package & Layer Architecture (9 NuGet Packages)
 
 ```text
 Host App
@@ -70,25 +71,21 @@ Host App
   ├── AvalonDock.DependencyInjection (netstandard2.0) ──► AvalonDock.Mvvm + AvalonDock.Core
   ├── AvalonDock.Mvvm (netstandard2.0, zero external deps) ──► AvalonDock.Core
   ├── AvalonDock.Serializer.Xml (netstandard2.0, zero external deps) ──► AvalonDock.Core
-  ├── AvalonDock.Themes.{Arc,VS,VS2013,VS2010,Expression,Metro,Aero} (WPF, net48) ──► AvalonDock
+  ├── AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New} (WPF, net48) ──► AvalonDock
   └── AvalonDock (WPF: DockingManager, ToggleDockingManager, Layout*, Controls*) ──► AvalonDock.Core
 ```
 
 | Project (`source/Components/…`) | NuGet Package | TFM | Primary Namespace(s) |
 | :--- | :--- | :--- | :--- |
 | `AvalonDock.Core` | `Dirkster.AvalonDock.Core` | `netstandard2.0` | `AvalonDock.Core`, `AvalonDock.Core.Events`, `AvalonDock.Core.Serialization`, `AvalonDock.Core.Serialization.Dto`, `AvalonDock.Controls` *(pure geometry rules)* |
-| `AvalonDock` | `Dirkster.AvalonDock` | `net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Converters`, `AvalonDock.Commands`, `AvalonDock.Serialization` |
+| `AvalonDock` | `Dirkster.AvalonDock` | `net48` | `AvalonDock`, `AvalonDock.Layout`, `AvalonDock.Controls`, `AvalonDock.Themes`, `AvalonDock.Themes.Type1Legacy`, `AvalonDock.Converters`, `AvalonDock.Commands`, `AvalonDock.Serialization` |
 | `AvalonDock.Mvvm` | `Dirkster.AvalonDock.Mvvm` | `netstandard2.0` | `AvalonDock.Mvvm` |
 | `AvalonDock.Mvvm.CommunityToolkit` | `Dirkster.AvalonDock.Mvvm.CommunityToolkit` | `netstandard2.0` | `AvalonDock.Mvvm.CommunityToolkit` |
 | `AvalonDock.DependencyInjection` | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `AvalonDock.DependencyInjection` |
 | `AvalonDock.Serializer.Xml` | `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | `AvalonDock.Serializer.Xml` |
-| `AvalonDock.Themes.Arc` | `Dirkster.AvalonDock.Themes.Arc` | `net48` | `AvalonDock.Themes`, `AvalonDock.Themes.Arc.Themes` |
-| `AvalonDock.Themes.VS` | `Dirkster.AvalonDock.Themes.VS` | `net48` | `AvalonDock.Themes.VS`, `AvalonDock.Themes.VS.Themes` |
-| `AvalonDock.Themes.VS2013` | `Dirkster.AvalonDock.Themes.VS2013` | `net48` | `AvalonDock.Themes`, `AvalonDock.Themes.VS2013.Themes` |
-| `AvalonDock.Themes.VS2010` | `Dirkster.AvalonDock.Themes.VS2010` | `net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Expression` | `Dirkster.AvalonDock.Themes.Expression` | `net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Metro` | `Dirkster.AvalonDock.Themes.Metro` | `net48` | `AvalonDock.Themes` |
-| `AvalonDock.Themes.Aero` | `Dirkster.AvalonDock.Themes.Aero` | `net48` | `AvalonDock.Themes` |
+| `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | `net48` | `AvalonDock.Themes.Type1Legacy`, `AvalonDock.Themes.Type1Legacy.Controls` |
+| `AvalonDock.Themes.Type2Hybrid` | `Dirkster.AvalonDock.Themes.Type2Hybrid` | `net48` | `AvalonDock.Themes.Type2Hybrid`, `AvalonDock.Themes.Type2Hybrid.Themes` |
+| `AvalonDock.Themes.Type3New` | `Dirkster.AvalonDock.Themes.Type3New` | `net48` | `AvalonDock.Themes.Type3New`, `AvalonDock.Themes.Type3New.Themes` |
 
 ---
 
@@ -104,7 +101,7 @@ Key invariants covered in full in `.agents/skills/avalondock-internals/SKILL.md`
 4. **MVVM Sync & Placement:** `LayoutSyncBridge` (`_contentToSide` recorded *before* `_anchorableModels.Add`; one-way `IRootDock` window policy sync), `ILayoutUpdateStrategy` (`DockAlignmentStrategy` / `ToggleLayoutStrategy`), and `ILayoutEngine` (`DefaultLayoutEngine` / `ToggleLayoutEngine`).
 5. **`ToggleDockingManager` 6-Zone Sidebars:** Two vertical `DockPanel` rails hosting 6 `ToggleDockButtonBar`s (`ToggleDockBar_LeftTop`..`BottomRight`), exclusive-per-zone / simultaneous-across-zones toggling, saved-layout-safe `IToolbox.IsOpen` sync, and host-window `IToolbox.Shortcut` `KeyBinding`s.
 6. **Dual Windowing & Airspace:** Tear-off `LayoutFloatingWindowControl` (`AllowFloatingWindows`) vs standalone unowned `DetachedAnchorableWindow` (`AllowDetachedWindows`, single-presenter `View` transfer + off-screen monitor clamping); single reused `OverlayWindow` per host (`ContentDocking` fired *before* mutation); `FocusElementManager` + `LayoutAutoHideWindowControl : HwndHost`.
-7. **DTO XML Serialization & Themes:** `LayoutDtoMapper` (`LayoutRoot` ↔ 17 DTOs), `XmlLayoutSerializer` (v4 encoding & `"True"`/`"False"` normalization), `FixupLayout` (`PreviousContainerId` relinking on content & `LayoutAnchorGroup`, `UnresolvedContentHandling.Remove` → `RemoveFromLayout()`, `CollectGarbage()`), and live `Theme` / `DictionaryTheme` (`VS`, `VS2013`, `Arc` `ResourceKeys`) switching.
+7. **DTO XML Serialization & Themes:** `LayoutDtoMapper` (`LayoutRoot` ↔ 17 DTOs), `XmlLayoutSerializer` (v4 encoding & `"True"`/`"False"` normalization), `FixupLayout` (`PreviousContainerId` relinking on content & `LayoutAnchorGroup`, `UnresolvedContentHandling.Remove` → `RemoveFromLayout()`, `CollectGarbage()`), and live `Theme` / `DictionaryTheme` (`Type1Legacy`, `Type2Hybrid`, `Type3New` `ResourceKeys`) switching.
 
 ---
 
@@ -172,7 +169,7 @@ Configured via `source/Directory.Build.props` and `source/.editorconfig`:
 | **UI-agnostic contracts, MVVM ViewModels, `IDockLayoutService`, `LayoutSyncBridge`** | `Components/AvalonDock.Core/Interfaces/*.cs`, `FactoryBase*.cs`, `Components/AvalonDock.Mvvm/*.cs`, `Components/AvalonDock.Mvvm.CommunityToolkit/*.cs`, `Components/AvalonDock/LayoutSyncBridge.cs`, `DockAlignmentStrategy.cs` | `guides/mvvm.md`, `api-reference/core-and-mvvm.md`, `tutorials/mvvm-ide.md` |
 | **Dependency Injection (`AddDockLayoutService`, `DockingOptions`, `ToggleDockOptions`)** | `Components/AvalonDock.DependencyInjection/*.cs`, `Components/AvalonDock/ThemeManager.cs` | `guides/dependency-injection.md`, `tutorials/dependency-injection-app.md` |
 | **XML Serialization & DTO mapping** | `Components/AvalonDock.Core/Serialization/*.cs`, `Dto/*.cs`, `Components/AvalonDock/Serialization/LayoutDtoMapper.cs`, `Components/AvalonDock.Serializer.Xml/XmlLayoutSerializer.cs` | `guides/serialization.md`, `tutorials/layout-persistence.md` |
-| **Themes (`Arc`, `VS`, `VS2013`, `VS2010`, `Expression`, `Metro`, `Aero`, custom themes)** | `Components/AvalonDock/Themes/*.cs`, `Components/AvalonDock.Themes.*`, `Components/THEMES.md`, `Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md`, `ThemeSuperTestApp/` (`README.md`) | `guides/theming.md`, `guides/custom-themes.md`, `themes/index.md`, `themes/arc.md`, `themes/vs.md`, `themes/vs2013.md`, `.agents/skills/theme-super-test-bridge/SKILL.md` |
+| **Themes (`Type1Legacy`, `Type2Hybrid`, `Type3New`, custom themes)** | `Components/AvalonDock/Themes/*.cs`, `Components/AvalonDock.Themes.*`, `Components/THEMES.md`, `Components/THEMES-ANALYSIS-AND-BEST-PRACTICES.md`, `ThemeSuperTestApp/` (`README.md`) | `guides/theming.md`, `guides/custom-themes.md`, `themes/index.md`, `themes/vs.md`, `themes/vs2013.md`, `.agents/skills/theme-super-test-bridge/SKILL.md` |
 | **Migrating v4 apps & breaking changes** | — | `migration/index.md`, `migration/breaking-changes.md` |
 | **Caliburn.Micro hosting (`ExperimentalTestApp`) & optional BCL (`AvalonDock.Mvvm.CaliburnMicro`)** | `ExperimentalTestApp/` (`Boilerplate/`, `Docking/`, `README.md`), `Components/AvalonDock/LayoutSyncBridge.cs`, `Components/AvalonDock.Mvvm/DockLayoutService.cs` | `guides/caliburn-micro.md`, root `ROADMAP.md` + `https://github.com/NTLDR2/Caliburn.Micro` |
 | **Unit tests & FlaUI UI automation tests** | `AutomationTest/AvalonDockTest/*.cs` (`ThemeSuperTestApp*Tests.cs`), `TestHelpers/*.cs`, `FlaUI/*.cs` | `getting-started/building-from-source.md`, `contributing.md` |
@@ -189,8 +186,7 @@ Before finishing any code change or generating sample code for AvalonDock v5, ve
 - [ ] **Window policy configured in one place:** When `DockLayout` is bound, set `AllowFloatingWindows` / `AllowDetachedWindows` on `IRootDock` or `DockingOptions` (`LayoutSyncBridge` overwrites XAML attributes).
 - [ ] **Adding vs restoring anchorables:** Use `AddToLayout` only when `Parent == null` (`!IsVisible && !IsHidden`); use `Show()` when `IsHidden == true`; use `RemoveFromLayout()` to detach without firing close events or disturbing auto-hide siblings.
 - [ ] **DTO round-trip parity:** Add new persisted properties to `AvalonDock.Core.Serialization.Dto` (`ShouldSerialize*()` / `[DefaultValue]` guards), map in both `ToDto` and `FromDto` in `LayoutDtoMapper.cs`, and test with `XmlLayoutSerializer`.
-- [ ] **Tab icons in `Arc`:** `Arc` renders title-only document tabs by default; supply a custom `DocumentHeaderTemplate` if tab icons are required in `Arc`.
 - [ ] **`DockLayout` owns the sources:** With `DockLayout` bound, never also bind `DocumentsSource`, `AnchorablesSource`, or `ActiveContent`. Derive focus from `IRootDock.ActiveDockable` and guard closes via `DocumentClosing`.
 - [ ] **View hosting:** Prefer implicit `DataTemplate`s keyed by ViewModel type over `LayoutItemTemplate` when binding to `DataContext` (`DataContext` differs between docked/floating panes and `DetachedAnchorableWindow`).
-- [ ] **Explicit scope labeling in docs:** Distinguish `Upstream v5.0.0`–`v5.1.0` changes from `NTLDR2 Fork v5.1.0` changes (omitting `Serializer.Json`, refactoring `Themes.VS` / `Themes.VS2013` to zero `System.Text.Json`).
+- [ ] **Explicit scope labeling in docs:** Distinguish `Upstream v5.0.0`–`v5.1.0` changes from `NTLDR2 Fork v5.1.0` changes (omitting `Serializer.Json`, removing `Themes.Arc`, consolidating into `Themes.{Type1Legacy,Type2Hybrid,Type3New}`, cutting over XAML URI to `https://github.com/NTLDR2/AvalonDock`, and refactoring VS/VS2013 parsers to zero `System.Text.Json`).
 - [ ] **Zero warnings & `-m:1` tests:** `dotnet build source/AvalonDock.sln --configuration Release --warnaserror` passes with 0 warnings, and `dotnet test ... -m:1` passes without calling `Application.Current.Shutdown()`.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using AvalonDock.Core;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 using Microsoft.Win32;
 using ThemeSuperTestApp.Boilerplate;
 using ThemeSuperTestApp.Models;
@@ -43,7 +43,7 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// Initializes a new instance of the <see cref="VsBasePaletteOption"/> class.
 		/// </summary>
 		/// <param name="displayName">Display label.</param>
-		/// <param name="manifestResourceName">Embedded <c>.vstheme</c> resource name in <c>AvalonDock.Themes.VS</c>, or <see langword="null"/> for standalone fallbacks.</param>
+		/// <param name="manifestResourceName">Embedded <c>.vstheme</c> resource name in <c>AvalonDock.Themes.Type3New</c>, or <see langword="null"/> for standalone fallbacks.</param>
 		/// <param name="polarity">Visual polarity of the base palette.</param>
 		public VsBasePaletteOption(string displayName, string? manifestResourceName, ThemePolarity polarity)
 		{
@@ -55,7 +55,7 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// <summary>Gets the display label.</summary>
 		public string DisplayName { get; }
 
-		/// <summary>Gets the manifest resource name in <c>AvalonDock.Themes.VS</c>, or <see langword="null"/>.</summary>
+		/// <summary>Gets the manifest resource name in <c>AvalonDock.Themes.Type3New</c>, or <see langword="null"/>.</summary>
 		public string? ManifestResourceName { get; }
 
 		/// <summary>Gets the default visual polarity.</summary>
@@ -107,19 +107,19 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 			{
 				new VsTemplateSetOption(
 					"VS 2022 / 2026 Rounded (Themes/VS2022/Generic.xaml)",
-					new Uri("/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml", UriKind.Relative)),
+					new Uri("/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml", UriKind.Relative)),
 				new VsTemplateSetOption(
 					"VS 2015 Classic (Themes/Generic.xaml)",
-					new Uri("/AvalonDock.Themes.VS;component/Themes/Generic.xaml", UriKind.Relative)),
+					new Uri("/AvalonDock.Themes.Type3New;component/Themes/Generic.xaml", UriKind.Relative)),
 			};
 			_selectedTemplateSet = TemplateSets[0];
 
 			BasePalettes = new[]
 			{
-				new VsBasePaletteOption("VS 2022 Dark Base", "AvalonDock.Themes.Resources.vs2022dark.vstheme", ThemePolarity.Dark),
-				new VsBasePaletteOption("VS 2022 Light Base", "AvalonDock.Themes.Resources.vs2022light.vstheme", ThemePolarity.Light),
-				new VsBasePaletteOption("VS 2022 Blue Base", "AvalonDock.Themes.Resources.vs2022blue.vstheme", ThemePolarity.Blue),
-				new VsBasePaletteOption("VS 2015 Dark Base", "AvalonDock.Themes.Resources.vs2015dark.vstheme", ThemePolarity.Dark),
+				new VsBasePaletteOption("VS 2022 Dark Base", "AvalonDock.Themes.Type3New.Resources.vs2022dark.vstheme", ThemePolarity.Dark),
+				new VsBasePaletteOption("VS 2022 Light Base", "AvalonDock.Themes.Type3New.Resources.vs2022light.vstheme", ThemePolarity.Light),
+				new VsBasePaletteOption("VS 2022 Blue Base", "AvalonDock.Themes.Type3New.Resources.vs2022blue.vstheme", ThemePolarity.Blue),
+				new VsBasePaletteOption("VS 2015 Dark Base", "AvalonDock.Themes.Type3New.Resources.vs2015dark.vstheme", ThemePolarity.Dark),
 				new VsBasePaletteOption("None (Builder Defaults Only)", null, ThemePolarity.Dark),
 			};
 			_selectedBasePalette = BasePalettes[0];

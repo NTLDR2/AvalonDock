@@ -10,7 +10,9 @@ namespace AvalonDockTest
 
 	using AvalonDock.Controls;
 	using AvalonDock.Themes;
-	using AvalonDock.Themes.VS;
+	using AvalonDock.Themes.Type1Legacy;
+	using AvalonDock.Themes.Type2Hybrid;
+	using AvalonDock.Themes.Type3New;
 
 	/// <summary>
 	/// Regression tests for #684: the <see cref="MenuItemEx"/> style used by the document overflow

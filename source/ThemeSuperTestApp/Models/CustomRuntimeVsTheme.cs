@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Windows;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 
 namespace ThemeSuperTestApp.Models
 {
@@ -47,8 +47,8 @@ namespace ThemeSuperTestApp.Models
 			var merged = basePalette != null ? basePalette.Merge(overrides) : overrides;
 
 			var genericUri = templateKey.IndexOf("2015", StringComparison.OrdinalIgnoreCase) >= 0
-				? new Uri("/AvalonDock.Themes.VS;component/Themes/Generic.xaml", UriKind.Relative)
-				: new Uri("/AvalonDock.Themes.VS;component/Themes/VS2022/Generic.xaml", UriKind.Relative);
+				? new Uri("/AvalonDock.Themes.Type3New;component/Themes/Generic.xaml", UriKind.Relative)
+				: new Uri("/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml", UriKind.Relative);
 
 			return (() => new CustomRuntimeVsTheme(customTitle, VsThemeResourceBuilder.Build(merged, genericUri)), overrides.Count);
 		}
@@ -58,13 +58,13 @@ namespace ThemeSuperTestApp.Models
 			if (string.Equals(baseKey, "None", StringComparison.OrdinalIgnoreCase))
 				return null;
 
-			var resourceName = "AvalonDock.Themes.Resources.vs2022dark.vstheme";
+			var resourceName = "AvalonDock.Themes.Type3New.Resources.vs2022dark.vstheme";
 			if (baseKey.IndexOf("2022Light", StringComparison.OrdinalIgnoreCase) >= 0)
-				resourceName = "AvalonDock.Themes.Resources.vs2022light.vstheme";
+				resourceName = "AvalonDock.Themes.Type3New.Resources.vs2022light.vstheme";
 			else if (baseKey.IndexOf("2022Blue", StringComparison.OrdinalIgnoreCase) >= 0)
-				resourceName = "AvalonDock.Themes.Resources.vs2022blue.vstheme";
+				resourceName = "AvalonDock.Themes.Type3New.Resources.vs2022blue.vstheme";
 			else if (baseKey.IndexOf("2015Dark", StringComparison.OrdinalIgnoreCase) >= 0)
-				resourceName = "AvalonDock.Themes.Resources.vs2015dark.vstheme";
+				resourceName = "AvalonDock.Themes.Type3New.Resources.vs2015dark.vstheme";
 
 			var bytes = VsThemeResourceLoader.Load(typeof(VS2022DarkTheme).Assembly, resourceName);
 			using var ms = new MemoryStream(bytes);

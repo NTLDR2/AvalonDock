@@ -53,7 +53,7 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ResourceAuditorViewModel"/> class.
 		/// </summary>
-		/// <param name="themeCatalog">The shared 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The shared 18-theme catalog service.</param>
 		/// <param name="auditService">The resource dictionary audit and diff service.</param>
 		public ResourceAuditorViewModel(ThemeCatalogService themeCatalog, ResourceDictionaryAuditService auditService)
 		{

@@ -55,20 +55,16 @@ Tests **must** run single-threaded (`-m:1`) because WPF requires STA threads on 
 source/
 ├── AvalonDock.sln                          # Main Visual Studio / dotnet CLI solution
 ├── Directory.Build.props                   # Shared TFMs, version, license, and analyzer settings
-├── Components/                             # 13 NuGet package projects
+├── Components/                             # 9 NuGet package projects
 │   ├── AvalonDock/                         # Main WPF docking library (DockingManager, ToggleDockingManager)
 │   ├── AvalonDock.Core/                    # UI-agnostic interfaces, enums, and serialization DTOs (netstandard2.0)
 │   ├── AvalonDock.Mvvm/                    # Zero-dependency MVVM base classes & DockLayoutService (netstandard2.0)
 │   ├── AvalonDock.Mvvm.CommunityToolkit/   # CommunityToolkit.Mvvm ObservableObject base classes (netstandard2.0)
 │   ├── AvalonDock.DependencyInjection/     # IServiceCollection & DockLayoutBuilder extensions (netstandard2.0)
 │   ├── AvalonDock.Serializer.Xml/          # XML layout serializer (netstandard2.0)
-│   ├── AvalonDock.Themes.Arc/              # Modern Arc Dark & Light themes
-│   ├── AvalonDock.Themes.VS/               # VS2015, VS2022 & VS2026 themes + .vstheme / JSON loader
-│   ├── AvalonDock.Themes.VS2013/           # Visual Studio 2013 Dark, Light & Blue themes
-│   ├── AvalonDock.Themes.VS2010/           # Visual Studio 2010 theme
-│   ├── AvalonDock.Themes.Expression/       # Expression Dark & Light themes
-│   ├── AvalonDock.Themes.Metro/            # Metro flat theme
-│   └── AvalonDock.Themes.Aero/             # Classic Windows Aero theme
+│   ├── AvalonDock.Themes.Type1Legacy/      # Classic URI themes (Aero, Expression Dark/Light, Metro, VS2010)
+│   ├── AvalonDock.Themes.Type2Hybrid/      # DictionaryTheme Visual Studio 2013 Dark, Light & Blue themes
+│   └── AvalonDock.Themes.Type3New/         # VsTheme Visual Studio 2015, 2022 & 2026 themes + .vstheme / JSON loader
 ├── AutomationTest/                         # NUnit unit tests & FlaUI UI automation tests
 ├── AvalonDockCodeApp/                      # v5 reference app (ToggleDockingManager + MVVM + DI)
 ├── MVVMTestApp/                            # Classic MVVM sample (DocumentsSource / AnchorablesSource + XML)
@@ -76,7 +72,7 @@ source/
 ├── MLibTest/                               # MLib application theming integration demo
 ├── CaliburnDockTestApp/                    # Upstream Caliburn.Micro 4 integration sample (standalone)
 ├── ExperimentalTestApp/                    # Caliburn.Micro 6 + classic DockingManager (DockLayout) reference sample
-├── ThemeSuperTestApp/                      # 20-theme visual debugger, 6-tool profiler/auditor & Antigravity XML AgentBridge
+├── ThemeSuperTestApp/                      # 18-theme visual debugger, 6-tool profiler/auditor & Antigravity XML AgentBridge
 ├── WinFormsTestApp/                        # Windows Forms ElementHost interop demo
 └── AvalonDocPanelMemoryLeaks/              # Memory-leak regression harness (standalone)
 ```

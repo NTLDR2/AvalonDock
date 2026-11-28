@@ -32,7 +32,7 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// Initializes a new instance of the <see cref="WpfTraceListenerViewModel"/> class.
 		/// </summary>
 		/// <param name="traceService">The in-process WPF trace capture service.</param>
-		/// <param name="themeCatalog">The shared 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The shared 18-theme catalog service.</param>
 		public WpfTraceListenerViewModel(WpfTraceCaptureService traceService, ThemeCatalogService themeCatalog)
 		{
 			_traceService = traceService ?? throw new ArgumentNullException(nameof(traceService));

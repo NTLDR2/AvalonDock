@@ -30,7 +30,7 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WindowSharingTrackerViewModel"/> class.
 		/// </summary>
-		/// <param name="themeCatalog">The shared 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The shared 18-theme catalog service.</param>
 		/// <param name="trackerService">The multi-window dictionary tracker service.</param>
 		public WindowSharingTrackerViewModel(ThemeCatalogService themeCatalog, WindowDictionaryTrackerService trackerService)
 		{

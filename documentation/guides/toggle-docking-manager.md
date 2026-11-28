@@ -13,7 +13,7 @@ description: "Build VS Code and JetBrains Rider-style 6-zone sidebar toggle inte
 
 `ToggleDockingManager` extends `DockingManager` with a modern **VS Code / JetBrains Rider-style** sidebar interface. Instead of classic slide-out auto-hide flyouts, tool windows collapse onto vertical **toggle button bars** along the left and right edges, complete with vector or bitmap icons, keyboard shortcuts, 6-zone drag-and-drop relocation, standalone window detachment, and Rider/VS Code layout restructuring modes.
 
-![ToggleDockingManager with Toolbox Open in Arc Dark Theme]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Toolbox.png)
+![ToggleDockingManager with Toolbox Open]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Toolbox.png)
 
 {: .tip }
 See `source/AvalonDockCodeApp` in the repository for the complete reference application, or build one step by step in [Tutorial: Build an MVVM IDE Application]({{ site.baseurl }}{% link tutorials/mvvm-ide.md %}). For complete class and member tables, see the [ToggleDockingManager API Reference]({{ site.baseurl }}{% link api-reference/toggle-docking-manager.md %}).
@@ -31,7 +31,7 @@ See `source/AvalonDockCodeApp` in the repository for the complete reference appl
     LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}">
 
     <avalonDock:ToggleDockingManager.Theme>
-        <avalonDockThemes:ArcDarkTheme />
+        <avalonDock:VS2026DarkTheme />
     </avalonDock:ToggleDockingManager.Theme>
 
     <avalonDock:LayoutRoot>
@@ -55,14 +55,13 @@ dockManager.LayoutPriority = DockLayoutPriority.BottomFullWidth;
 
 ### Theme Support
 
-`ToggleDockingManager` works out of the box with **every** AvalonDock theme package:
-- `Dirkster.AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`)
-- `Dirkster.AvalonDock.Themes.VS` (`VS2015*`, `VS2022*`, `VS2026*`) and `Dirkster.AvalonDock.Themes.VS2013` (`Vs2013*`)
-- `Dirkster.AvalonDock.Themes.VS2010`, `Expression`, `Metro`, `Aero`, and built-in `GenericTheme`
+`ToggleDockingManager` works out of the box with **every** AvalonDock theme category package:
+- `Dirkster.AvalonDock.Themes.Type3New` (`VS2015*`, `VS2022*`, `VS2026*`) and `Dirkster.AvalonDock.Themes.Type2Hybrid` (`Vs2013*`)
+- `Dirkster.AvalonDock.Themes.Type1Legacy` (`VS2010`, `Expression`, `Metro`, `Aero`) and built-in `GenericTheme`
 
-| Arc Dark | Arc Light |
-|:---------|:----------|
-| ![ToggleDockingManager Arc Dark]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Toolbox.png) | ![ToggleDockingManager Arc Light]({{ site.baseurl }}/images/AvalonDockCodeApp_Light_Toolbox.png) |
+| Dark Theme | Light Theme |
+|:-----------|:------------|
+| ![ToggleDockingManager Dark]({{ site.baseurl }}/images/AvalonDockCodeApp_Dark_Toolbox.png) | ![ToggleDockingManager Light]({{ site.baseurl }}/images/AvalonDockCodeApp_Light_Toolbox.png) |
 
 ---
 

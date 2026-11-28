@@ -2,7 +2,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Windows.Media;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 using NUnit.Framework;
 
 namespace AvalonDockTest

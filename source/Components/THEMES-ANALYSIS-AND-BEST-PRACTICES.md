@@ -1,8 +1,8 @@
 # AvalonDock v5 Theme Architecture Analysis & WPF Best Practices (`net48` vs. Modern `.NET`)
 
-> **Companion Document:** See [THEMES.md](THEMES.md) for the complete inventory of all 20 concrete themes across 8 assemblies and [ROADMAP.md](../../ROADMAP.md) for the planned Phase 5 `AvalonDox` cutover.
+> **Companion Document:** See [THEMES.md](THEMES.md) for the complete inventory of all 18 concrete themes across 4 assemblies (`AvalonDock` + `AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}`) and [ROADMAP.md](../../ROADMAP.md) for the planned Phase 5 `AvalonDox` cutover.
 
-This document analyzes AvalonDock's two theme base-class hierarchies and namespaces — **`Theme` (`AvalonDock.Themes`)** versus **`VsTheme : DictionaryTheme` (`AvalonDock.Themes.VS`)** — across three engineering questions:
+This document analyzes AvalonDock's three-tier theme taxonomy — **`Theme` (`AvalonDock.Themes.Type1Legacy`)**, **`DictionaryTheme` (`AvalonDock.Themes.Type2Hybrid`)**, and **`VsTheme : DictionaryTheme` (`AvalonDock.Themes.Type3New`)** (built on the abstract root contracts `Theme` and `DictionaryTheme` in `AvalonDock.Themes`) — across three engineering questions:
 
 1. **Chronology:** Which architecture is newer, and why do two patterns and two namespaces exist?
 2. **Trade-Offs:** What are the concrete runtime, memory, XAML tooling, and extensibility pros and cons of `Theme` (`GetResourceUri()`) vs. `VsTheme : DictionaryTheme` (`ThemeResourceDictionary`)?
@@ -12,7 +12,7 @@ This document analyzes AvalonDock's two theme base-class hierarchies and namespa
 
 ## 1. Chronology: Which Architecture Is Newer?
 
-There is an important distinction between the **two abstract base classes in `AvalonDock.dll`** (which are equally old) and **`VsTheme : DictionaryTheme` in `AvalonDock.Themes.VS`** (which is the newest theme subsystem in the repository).
+There is an important distinction between the **two abstract base classes in `AvalonDock.dll`** (which are equally old) and **`VsTheme : DictionaryTheme` in `AvalonDock.Themes.Type3New`** *(introduced upstream as `AvalonDock.Themes.VS`, the newest theme subsystem in the repository)*.
 
 ### 1.1 Class & Namespace Hierarchy
 
@@ -20,20 +20,18 @@ Both `Theme` (`AvalonDock/Themes/Theme.cs`) and `DictionaryTheme` (`AvalonDock/T
 
 ```text
 System.Windows.DependencyObject
-  └── AvalonDock.Themes.Theme                              (v2/v3 era — URI-based: GetResourceUri())
-        ├── GenericTheme                                   (AvalonDock.Themes, in AvalonDock.dll)
-        ├── ArcDarkTheme, ArcLightTheme                    (AvalonDock.Themes, added April 2026)
-        ├── VS2010Theme                                    (AvalonDock.Themes, legacy v3/v4)
-        ├── ExpressionDarkTheme, ExpressionLightTheme      (AvalonDock.Themes, legacy v3/v4)
-        ├── MetroTheme                                     (AvalonDock.Themes, legacy v3/v4)
-        ├── AeroTheme                                      (AvalonDock.Themes, legacy v3/v4)
-        └── AvalonDock.Themes.DictionaryTheme              (v2/v3 era — instance-based: ThemeResourceDictionary)
-              ├── Vs2013BlueTheme, Vs2013DarkTheme,        (AvalonDock.Themes — migrated onto DictionaryTheme
-              │   Vs2013LightTheme                          in June 2026, kept in AvalonDock.Themes for v4 compat)
-              └── AvalonDock.Themes.VS.VsTheme             (AvalonDock.Themes.VS — created June 2026)
-                    ├── VS2015BlueTheme, VS2015DarkTheme, VS2015LightTheme   (June 2026)
-                    ├── VS2022BlueTheme, VS2022DarkTheme, VS2022LightTheme   (June 2026)
-                    └── VS2026BlueTheme, VS2026DarkTheme, VS2026LightTheme   (July 2026)
+  └── AvalonDock.Themes.Theme                              (abstract root contract in AvalonDock.dll — URI-based: GetResourceUri())
+        ├── AvalonDock.Themes.Type1Legacy.GenericTheme     (in AvalonDock.dll)
+        ├── AvalonDock.Themes.Type1Legacy.VS2010Theme      (in AvalonDock.Themes.Type1Legacy.dll)
+        ├── AvalonDock.Themes.Type1Legacy.Expression*Theme (in AvalonDock.Themes.Type1Legacy.dll)
+        ├── AvalonDock.Themes.Type1Legacy.MetroTheme       (in AvalonDock.Themes.Type1Legacy.dll)
+        ├── AvalonDock.Themes.Type1Legacy.AeroTheme        (in AvalonDock.Themes.Type1Legacy.dll)
+        └── AvalonDock.Themes.DictionaryTheme              (abstract root contract in AvalonDock.dll — ThemeResourceDictionary)
+              ├── AvalonDock.Themes.Type2Hybrid.Vs2013{Blue,Dark,Light}Theme  (in AvalonDock.Themes.Type2Hybrid.dll)
+              └── AvalonDock.Themes.Type3New.VsTheme       (in AvalonDock.Themes.Type3New.dll)
+                    ├── VS2015BlueTheme, VS2015DarkTheme, VS2015LightTheme
+                    ├── VS2022BlueTheme, VS2022DarkTheme, VS2022LightTheme
+                    └── VS2026BlueTheme, VS2026DarkTheme, VS2026LightTheme
 ```
 
 ### 1.2 Git Commit Timeline
@@ -42,7 +40,7 @@ System.Windows.DependencyObject
 | :--- | :--- | :--- |
 | **2012–2018** | `5dc8fae` (AvalonDock 2.x–3.4) | Both `Theme` and `DictionaryTheme` already existed in Xceed's AvalonDock, yet **every** built-in theme (`Aero`, `Metro`, `Expression`, `VS2010`, and v3/v4 `VS2013`) subclassed URI-based `Theme`. |
 | **Jul–Aug 2020** | `54be57e` → `ec3c74f` (`#189`) | Because zero built-in themes subclassed `DictionaryTheme`, upstream deleted it as unused code in July 2020 — then restored it a month later when external consumers reported subclassing `DictionaryTheme` to pass runtime-generated `MahApps.Metro` / accent `ResourceDictionary` instances into AvalonDock. |
-| **Apr 11, 2026** | `0a42be0` (`#537`) | `AvalonDock.Themes.Arc` (`ArcDarkTheme`, `ArcLightTheme`) was introduced using the classic URI-based `Theme` (`GetResourceUri()`) pattern in `namespace AvalonDock.Themes`. |
+| **Apr 11, 2026** | `0a42be0` (`#537`) | Upstream introduced `AvalonDock.Themes.Arc` using the classic URI-based `Theme` (`GetResourceUri()`) pattern *(subsequently removed in **`NTLDR2 Fork`** so URI-based `Theme` holds strictly the 6 classic themes)*. |
 | **Jun 1, 2026** | `6086b15` (`#538`) | **`AvalonDock.Themes.VS` created** in `namespace AvalonDock.Themes.VS` (`VsTheme : DictionaryTheme`, `VsThemeParser`, `VsThemeResourceBuilder`, `{vs:VsTheme}`, `VS2015*Theme`) — the **first time first-party AvalonDock themes used `DictionaryTheme`**. |
 | **Jun 4, 2026** | `6478689` (`#572`) | **`AvalonDock.Themes.VS2013` migrated** off static XAML brush dictionaries (`DarkBrushs.xaml` / `DarkTheme.xaml` via `Theme`) onto `DictionaryTheme` + embedded `.vstheme.gz` resources (`VsThemePaletteFactory`), while keeping `Vs2013*Theme` in `namespace AvalonDock.Themes` for v4 source compatibility. |
 | **Jun 9, 2026** | `e32ac8f` (`#582`) | `VS2022{Blue,Dark,Light}Theme : VsTheme` added with rounded/modern `Themes/VS2022/Generic.xaml` templates sharing the same C# token builder. |
@@ -50,15 +48,15 @@ System.Windows.DependencyObject
 
 ### 1.3 Why Do Two Namespaces (`AvalonDock.Themes` vs. `AvalonDock.Themes.VS`) Exist?
 
-Inspecting `AvalonDock.Themes.*/Properties/AssemblyInfo.cs` across all 7 theme libraries reveals that the namespace split was an **accidental upstream inconsistency**:
+Inspecting `AvalonDock.Themes.*/Properties/AssemblyInfo.cs` across all 7 theme libraries reveals that the namespace split originated as an **accidental upstream inconsistency**:
 
-- All 7 theme assemblies — **including `AvalonDock.Themes.VS/Properties/AssemblyInfo.cs` (lines 13–15)** — declare:
+- Upstream's other 6 theme assemblies declared:
   ```csharp
   [assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock.Themes")]
   [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Themes")]
   ```
-- Upstream copied `AssemblyInfo.cs` from `AvalonDock.Themes.Arc` into `AvalonDock.Themes.VS`, placed the new classes inside `namespace AvalonDock.Themes.VS`, and **omitted `[assembly: XmlnsDefinition(..., "AvalonDock.Themes.VS")]`**.
-- Consequently, XAML consumers can instantiate `<avalonDock:ArcDarkTheme />` or `<avalonDock:Vs2013DarkTheme />` under the standard AvalonDock XML namespace, whereas `AvalonDock.Themes.VS` requires declaring a separate `xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS"`.
+- Upstream (`v5.0.0`–`v5.1.0`) copied `AssemblyInfo.cs` from `AvalonDock.Themes.Arc` into `AvalonDock.Themes.VS`, placed the new classes inside `namespace AvalonDock.Themes.VS`, and **omitted `[assembly: XmlnsDefinition(..., "AvalonDock.Themes.VS")]`** — forcing XAML consumers on upstream to declare `xmlns:vs="clr-namespace:AvalonDock.Themes.VS;assembly=AvalonDock.Themes.VS"`.
+- **Resolved in `NTLDR2 Fork v5.1.0`:** Concrete themes are organized into 3 explicit CLR namespaces and 3 matching assemblies (`AvalonDock.Themes.Type1Legacy`, `AvalonDock.Themes.Type2Hybrid`, `AvalonDock.Themes.Type3New`), while abstract `Theme` and `DictionaryTheme` remain in `AvalonDock.Themes`. Every assembly registers its namespace via `[XmlnsDefinition]` onto **`"https://github.com/NTLDR2/AvalonDock"`** (and `"http://schemas.microsoft.com/winfx/2006/xaml/presentation"`), so all **18 / 18** built-in themes (plus `{avalonDock:VsTheme Path=...}`) resolve uniformly in XAML.
 
 ---
 
@@ -92,7 +90,7 @@ else
 
 ### 2.2 Side-by-Side Architectural Comparison
 
-| Dimension | `Theme` (`GetResourceUri()` — `Arc`, `VS2010`, `Expression`, `Metro`, `Aero`) | `VsTheme : DictionaryTheme` (`ThemeResourceDictionary` — `VS`, `VS2013`) |
+| Dimension | `Theme` (`GetResourceUri()` — `VS2010`, `Expression`, `Metro`, `Aero`, `Generic`) | `VsTheme : DictionaryTheme` (`ThemeResourceDictionary` — `VS`, `VS2013`) |
 | :--- | :--- | :--- |
 | **Palette Representation** | Compiled BAML XAML (`DarkBrushs.xaml` + `DarkTheme.xaml`) | Compressed `.vstheme.gz` (~3–4 KB) + optional `.json` delta + C# mapper (`VsThemeResourceBuilder`) |
 | **Constructor Cost (`new XxxTheme()`)** | **Lazy (`~0 ms`, `~0 KB`):** Allocates a tiny object; nothing is parsed until `DockingManager.Theme` activates it. Registering 10 unused themes in DI/menus is free. | **Eager (`base(BuildFromStream(...))` runs in `.ctor`):** Decompresses `.vstheme.gz`, allocates ~85 frozen brushes, and loads `Generic.xaml` BAML *immediately* on construction — even for themes never selected. |
@@ -107,12 +105,12 @@ else
 ### 2.3 Summary of Pros & Cons
 
 #### When `Theme` (`GetResourceUri()`) Wins
-- **Best for 1–2 bespoke, designer-authored skins (`ArcDark` / `ArcLight`)** where contributors edit XAML visually with Hot Reload and host apps want `<ResourceDictionary Source="/AvalonDock.Themes.Arc;component/DarkBrushs.xaml" />` in `App.xaml` to style surrounding menus/status bars.
+- **Best for self-contained static XAML skins (`Expression`, `VS2010`, `Metro`, `Aero`)** where contributors edit XAML visually with Hot Reload and host apps merge `<ResourceDictionary Source="/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkTheme.xaml" />` in `App.xaml`.
 - **Zero startup cost** when pre-instantiating theme descriptors for a theme-switcher UI or DI container.
 - **Main weakness in AvalonDock today:** Lack of a `SharedResourceDictionary` cache causes redundant BAML parsing across floating/detached windows.
 
 #### When `VsTheme : DictionaryTheme` Wins
-- **Best for large palette families (`9–12+` VS themes), external user theme files (`.vstheme` / `.json`), and runtime host/OS accent synchronization.** Eliminates thousands of lines of duplicated XAML brush dictionaries in favor of 3–4 KB compressed palettes, guarantees 100% frozen brushes, and shares a single `ResourceDictionary` instance across all floating and detached windows.
+- **Best for large palette families (`12` VS2013–2026 themes), external user theme files (`.vstheme` / `.json`), and runtime host/OS accent synchronization.** Eliminates thousands of lines of duplicated XAML brush dictionaries in favor of 3–4 KB compressed palettes, guarantees 100% frozen brushes, and shares a single `ResourceDictionary` instance across all floating and detached windows.
 - **Main weakness in AvalonDock today:** `DictionaryTheme` populates `ThemeResourceDictionary` eagerly inside the constructor (`base(BuildDictionary(...))`), meaning `new VS2022DarkTheme()` immediately parses streams and BAML (and requires WPF's `pack://` URI scheme / STA context at construction time) even if the theme is never applied.
 
 ---
@@ -126,7 +124,7 @@ Across modern industrial WPF toolkits (`MahApps.Metro` / `ControlzEx`, `Material
 1. **Structural `Style`s and `ControlTemplate`s MUST remain in compiled BAML (`Generic.xaml`)** — never constructed in C# (`FrameworkElementFactory` is deprecated). *Both `Theme` and `VsTheme : DictionaryTheme` follow this rule.*
 2. **Semantic `ComponentResourceKey` brush tokens (`{DynamicResource}`) MUST be decoupled from templates, `Freeze()`-locked, and shared across windows.** *`VsTheme : DictionaryTheme` aligns closely with `ControlzEx.ThemeManager` and `MaterialDesignThemes.PaletteHelper` here, particularly for multi-window docking layouts.*
 3. **Theme descriptors SHOULD be lightweight and lazy.** *Here `Theme` (`GetResourceUri()`) is currently cleaner than `DictionaryTheme`: textbook WPF best practice would make `DictionaryTheme` resolve its `ResourceDictionary` lazily on first activation (`Lazy<ResourceDictionary>` or virtual `GetOrCreateResourceDictionary()`) rather than inside `.ctor`.*
-4. **Public XAML types SHOULD map uniformly via `[XmlnsDefinition]`.** *Unifying `AvalonDock.Themes` and `AvalonDock.Themes.VS` (or registering both CLR namespaces in `[XmlnsDefinition]`) aligns with WPF control-library design guidelines.*
+4. **Public XAML types SHOULD map uniformly via `[XmlnsDefinition]`.** *`NTLDR2 Fork v5.1.0` maps `AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}` in `[XmlnsDefinition]` so all 18 themes resolve under `https://github.com/NTLDR2/AvalonDock`.*
 
 ### 3.2 Do Best Practices Change Between `.NET Framework 4.8` and Modern `.NET` (`.NET 8 / 9 / 10`)?
 
@@ -135,7 +133,7 @@ The **core WPF XAML/resource engine does not change**, whereas **OS theme integr
 | Area | `.NET Framework 4.8` (`net48`) | Modern `.NET` (`net8.0-windows` / `net9.0-windows` / `net10.0-windows`) |
 | :--- | :--- | :--- |
 | **Core BAML, `ResourceDictionary`, `{DynamicResource}`, & `Freeze()` Engine** | **Identical architecture.** `new ResourceDictionary { Source = uri }` re-parses BAML per window; unfrozen `Freezable`s allocate event tables and pin UI threads. Because `net48` lacks minor `ResourceDictionary` lock/allocation micro-optimizations added in `.NET 7–9`, **`brush.Freeze()` and sharing a single `DictionaryTheme` dictionary across floating/detached windows matter *even more* on `net48`**. | **Same `Baml2006Reader` & lookup rules** (`dotnet/wpf` forked from `net48`). The exact same best practices apply: compiled BAML `ControlTemplate`s + `{DynamicResource}` `ComponentResourceKey` tokens + frozen brushes + shared dictionary instances. |
-| **First-Party OS Dark Mode, Accent Brushes & Fluent Theme** | **None.** `net48`'s `PresentationFramework.dll` is frozen at the Windows 10 1903 era (`Aero2`). There is **no** `Application.ThemeMode`, **no** built-in `Fluent` theme, and **no** `SystemColors.AccentColorBrushKey`. Docking libraries on `net48` **must** ship self-contained palettes (`Arc`, `VS`, `VS2013`), and any Windows dark-mode or accent sync on `net48` *must* read Win32/DWM/Registry colors in C# and feed them into a **`DictionaryTheme`**. | **Major addition in `.NET 9+`:** WPF introduced `Application.ThemeMode` / `Window.ThemeMode` (`Light`, `Dark`, `System`), built-in Windows 11 `Fluent` theme dictionaries, and live `{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}` tokens. On `.NET 9+`, libraries increasingly add a "System / Host-Adaptive" theme backed by WPF's native `Fluent` & `AccentColor*` keys. |
+| **First-Party OS Dark Mode, Accent Brushes & Fluent Theme** | **None.** `net48`'s `PresentationFramework.dll` is frozen at the Windows 10 1903 era (`Aero2`). There is **no** `Application.ThemeMode`, **no** built-in `Fluent` theme, and **no** `SystemColors.AccentColorBrushKey`. Docking libraries on `net48` **must** ship self-contained palettes (`VS`, `VS2013`, `Expression`), and any Windows dark-mode or accent sync on `net48` *must* read Win32/DWM/Registry colors in C# and feed them into a **`DictionaryTheme`**. | **Major addition in `.NET 9+`:** WPF introduced `Application.ThemeMode` / `Window.ThemeMode` (`Light`, `Dark`, `System`), built-in Windows 11 `Fluent` theme dictionaries, and live `{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}` tokens. On `.NET 9+`, libraries increasingly add a "System / Host-Adaptive" theme backed by WPF's native `Fluent` & `AccentColor*` keys. |
 | **NuGet & BCL Dependency Hygiene in Theme Libraries** | **Strict Zero-NuGet Rule (Paramount on `net48`):** Referencing out-of-band NuGet packages (`System.Text.Json`, `System.Memory`, `System.Runtime.CompilerServices.Unsafe`, `Microsoft.Bcl.*`) in a `net48` theme library drags 6–8 extra DLLs into `bin/` and triggers `FileLoadException` binding-redirect failures in VSIX/CAD/plugin hosts. Sticking strictly to inbox `.NET Framework 4.8` BCL (`mscorlib`, `System.Xml.Linq`, `System.IO.Compression`, WPF) is mandatory best practice. | **`System.Text.Json` & `Span<T>` are inbox:** Because `Microsoft.NETCore.App` ships `System.Text.Json` and `Span<T>` inside the runtime, using them on `.NET 8+` adds zero external DLLs (which is why upstream introduced `System.Text.Json` without noticing the `net48` DLL-hell cost). |
 | **Single-File Publishing (`PublishSingleFile`)** | Not applicable (classic folder, MSI, or ClickOnce deployment). | Common on `.NET 8+`. Both compiled `pack://` BAML (`Theme`) and `Assembly.GetManifestResourceStream` (`VsTheme` / `Vs2013*Theme`) are 100% single-file compatible; only `Assembly.Location` file paths break. |
 
@@ -143,7 +141,7 @@ The **core WPF XAML/resource engine does not change**, whereas **OS theme integr
 
 ## 4. Architectural Recommendations for Phase 5 (`AvalonDox`)
 
-1. **Retain Both Base Classes (`Theme` + `DictionaryTheme`):** They are complementary — `Theme` is ideal for static XAML-first themes (`Arc`), while `DictionaryTheme` (`VsTheme`) is ideal for multi-palette families (`VS2013`–`VS2026`), user-supplied theme files, and runtime host/accent synchronization on `net48`.
-2. **Make `DictionaryTheme` Lazy on First Activation:** Introduce a lazy factory (`protected virtual ResourceDictionary CreateResourceDictionary()` cached on first access to `ThemeResourceDictionary`) so registering all 20 themes in `ThemeManager` or DI at startup costs `0 ms` and `0 KB` until selected, and no longer requires `pack://` URI initialization inside theme constructors.
-3. **Cache URI-Based `Theme` Dictionaries Across Floating/Detached Windows:** Cache the loaded `ResourceDictionary` for URI-based `Theme` instances on `DockingManager` (just like `currentThemeResourceDictionary` already does for `DictionaryTheme`) so tearing off floating or detached windows under `ArcDarkTheme` reuses the single parsed dictionary in `O(1)` instead of re-parsing BAML per window.
-4. **Unify Theme Namespaces & `[XmlnsDefinition]`:** During the Phase 5 `AvalonDox` rename, place all built-in theme classes in `AvalonDox.Themes` (or register `AvalonDox.Themes.VS` alongside `AvalonDox.Themes` in `[assembly: XmlnsDefinition(...)]`) so XAML consumers have one consistent namespace across all 7 theme packages.
+1. **Retain Both Core Base Contracts (`Theme` + `DictionaryTheme`):** They are complementary — `Theme` supports static XAML-first themes (`Expression`, `VS2010`, `Metro`, `Aero`), while `DictionaryTheme` (`VsTheme`) powers multi-palette families (`VS2013`–`VS2026`), user-supplied theme files, and runtime host/accent synchronization on `net48`.
+2. **Make `DictionaryTheme` Lazy on First Activation:** Introduce a lazy factory (`protected virtual ResourceDictionary CreateResourceDictionary()` cached on first access to `ThemeResourceDictionary`) so registering all 18 themes in `ThemeManager` or DI at startup costs `0 ms` and `0 KB` until selected, and no longer requires `pack://` URI initialization inside theme constructors.
+3. **Cache URI-Based `Theme` Dictionaries Across Floating/Detached Windows:** Cache the loaded `ResourceDictionary` for URI-based `Theme` instances on `DockingManager` (just like `currentThemeResourceDictionary` already does for `DictionaryTheme`) so tearing off floating or detached windows under `ExpressionDarkTheme` reuses the single parsed dictionary in `O(1)` instead of re-parsing BAML per window.
+4. **Completed in `NTLDR2 Fork v5.1.0` — 3-Tier Theme Taxonomy:** Concrete themes are organized into `AvalonDock.Themes.{Type1Legacy,Type2Hybrid,Type3New}` with matching category assemblies and unified `https://github.com/NTLDR2/AvalonDock` XAML mappings.

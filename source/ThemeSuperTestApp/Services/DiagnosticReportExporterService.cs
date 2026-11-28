@@ -8,7 +8,7 @@ namespace ThemeSuperTestApp.Services
 {
 	/// <summary>
 	/// Compiles a complete GitHub-Flavored Markdown diagnostic snapshot combining OS theme state,
-	/// 20-theme architecture &amp; constructor/apply benchmarks, active theme <c>Freezable</c> audit,
+	/// 18-theme architecture &amp; constructor/apply benchmarks, active theme <c>Freezable</c> audit,
 	/// multi-window dictionary sharing, and captured WPF <c>PresentationTraceSources</c> events.
 	/// </summary>
 	public sealed class DiagnosticReportExporterService
@@ -23,7 +23,7 @@ namespace ThemeSuperTestApp.Services
 		/// Initializes a new instance of the <see cref="DiagnosticReportExporterService"/> class.
 		/// </summary>
 		/// <param name="osThemeService">Windows OS theme service.</param>
-		/// <param name="themeCatalog">20-theme catalog service.</param>
+		/// <param name="themeCatalog">18-theme catalog service.</param>
 		/// <param name="auditService">ResourceDictionary &amp; Freezable audit service.</param>
 		/// <param name="windowTracker">Multi-window dictionary sharing service.</param>
 		/// <param name="traceCapture">WPF trace capture service.</param>
@@ -89,7 +89,7 @@ namespace ThemeSuperTestApp.Services
 
 			sb.AppendLine();
 
-			// 3. 20-Theme Architecture & Timing Table
+			// 3. 18-Theme Architecture & Timing Table
 			sb.AppendLine(_themeCatalog.BuildMarkdownBenchmarkReport().TrimEnd());
 			sb.AppendLine();
 

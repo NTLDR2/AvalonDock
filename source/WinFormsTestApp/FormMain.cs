@@ -9,7 +9,7 @@ namespace AvalonDock.WinFormsTestApp
     using AvalonDock.Core;
     using AvalonDock.Layout;
     using AvalonDock.Serializer.Xml;
-    using AvalonDock.Themes;
+    using AvalonDock.Themes.Type1Legacy;
 
     public partial class FormMain : Form
     {
@@ -61,31 +61,31 @@ namespace AvalonDock.WinFormsTestApp
 
         private void menuItemVS2010_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.VS2010Theme();
+            _dockingManager.Theme = new VS2010Theme();
             this.SetChecked(menuItemVS2010);
         }
 
         private void menuItemMetro_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.MetroTheme();
+            _dockingManager.Theme = new MetroTheme();
             this.SetChecked(menuItemMetro);
         }
 
         private void menuItemGeneric_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.GenericTheme();
+            _dockingManager.Theme = new GenericTheme();
             this.SetChecked(menuItemGeneric);
         }
 
         private void menuItemExpressionDark_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.ExpressionDarkTheme();
+            _dockingManager.Theme = new ExpressionDarkTheme();
             this.SetChecked(menuItemExpressionDark);
         }
 
         private void menuItemExpressionLight_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.ExpressionLightTheme();
+            _dockingManager.Theme = new ExpressionLightTheme();
             this.SetChecked(menuItemExpressionLight);
         }
 
@@ -103,7 +103,7 @@ namespace AvalonDock.WinFormsTestApp
 
         private void menuItemAero_Click(object sender, EventArgs e)
         {
-            _dockingManager.Theme = new AvalonDock.Themes.AeroTheme();
+            _dockingManager.Theme = new AeroTheme();
             this.SetChecked(menuItemAero);
         }
     }

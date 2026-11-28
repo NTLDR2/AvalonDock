@@ -24,6 +24,7 @@ using System.IO;
 using AvalonDock.Serializer.Xml;
 using AvalonDock;
 using AvalonDock.Themes;
+using AvalonDock.Themes.Type1Legacy;
 using System.Diagnostics.CodeAnalysis;
 
 namespace TestApp
@@ -287,15 +288,13 @@ namespace TestApp
 			Theme theme;
 			switch (themeTag)
 			{
-				case "ArcDark": theme = new ArcDarkTheme(); break;
-				case "ArcLight": theme = new ArcLightTheme(); break;
 				case "VS2010": theme = new VS2010Theme(); break;
 				case "ExpressionDark": theme = new ExpressionDarkTheme(); break;
 				case "ExpressionLight": theme = new ExpressionLightTheme(); break;
 				case "Metro": theme = new MetroTheme(); break;
 				case "Aero": theme = new AeroTheme(); break;
 				case "Generic": theme = new GenericTheme(); break;
-				default: theme = new ArcDarkTheme(); break;
+				default: theme = new ExpressionDarkTheme(); break;
 			}
 
 			dockManager.Theme = theme;

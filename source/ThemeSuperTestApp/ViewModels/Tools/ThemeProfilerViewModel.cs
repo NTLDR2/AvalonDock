@@ -15,7 +15,7 @@ using ThemeSuperTestApp.Services;
 namespace ThemeSuperTestApp.ViewModels.Tools
 {
 	/// <summary>
-	/// Tool 1: 20-theme architecture inspector, <c>[XmlnsDefinition]</c> auditor, and cold <c>.ctor</c> vs. <c>OnThemeChanged</c> profiler.
+	/// Tool 1: 18-theme architecture inspector, <c>[XmlnsDefinition]</c> auditor, and cold <c>.ctor</c> vs. <c>OnThemeChanged</c> profiler.
 	/// </summary>
 	public sealed class ThemeProfilerViewModel : ToolboxScreen
 	{
@@ -27,14 +27,14 @@ namespace ThemeSuperTestApp.ViewModels.Tools
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThemeProfilerViewModel"/> class.
 		/// </summary>
-		/// <param name="themeCatalog">The shared 20-theme catalog service.</param>
+		/// <param name="themeCatalog">The shared 18-theme catalog service.</param>
 		public ThemeProfilerViewModel(ThemeCatalogService themeCatalog)
 		{
 			_themeCatalog = themeCatalog ?? throw new ArgumentNullException(nameof(themeCatalog));
 
 			Id = "Tool.ThemeProfiler";
 			DisplayName = "1. Theme Architecture & Profiler";
-			ToolTipText = "Inspect base classes, XmlnsDefinition mappings, cold .ctor cost, and apply+render latency across all 20 themes";
+			ToolTipText = "Inspect base classes, XmlnsDefinition mappings, cold .ctor cost, and apply+render latency across all 18 themes";
 			Zone = DockZone.BottomLeft;
 			IsOpenByDefault = true;
 			Shortcut = "Ctrl+Alt+P";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Markup;
@@ -26,15 +26,17 @@ using System.Windows.Markup;
 											  // app, or any theme specific resource dictionaries)
 ]
 
-[assembly: XmlnsPrefix("https://github.com/Dirkster99/AvalonDock", "avalondock")]
-[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock")]
-[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock.Controls")]
-[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock.Converters")]
-[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock.Layout")]
-[assembly: XmlnsDefinition("https://github.com/Dirkster99/AvalonDock", "AvalonDock.Themes")]
+[assembly: XmlnsPrefix("https://github.com/NTLDR2/AvalonDock", "avalondock")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Controls")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Converters")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Layout")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Themes")]
+[assembly: XmlnsDefinition("https://github.com/NTLDR2/AvalonDock", "AvalonDock.Themes.Type1Legacy")]
 [assembly: XmlnsPrefix("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "avalondock")]
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock")]
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Controls")]
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Converters")]
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Layout")]
 [assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Themes")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "AvalonDock.Themes.Type1Legacy")]

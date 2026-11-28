@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<AssemblyName>AvalonDock.Themes.Type1Legacy</AssemblyName>
+		<RootNamespace>AvalonDock.Themes.Type1Legacy</RootNamespace>
+		<PackageId>Dirkster.AvalonDock.Themes.Type1Legacy</PackageId>
+		<Description>Classic URI-based WPF themes (Aero, Expression Dark/Light, Metro, VS2010) for AvalonDock.</Description>
+		<TargetFrameworks>$(ComponentTargetFrameworks)</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="**\*.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AvalonDock\AvalonDock.csproj" />
+	</ItemGroup>
+</Project>

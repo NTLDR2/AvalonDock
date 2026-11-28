@@ -8,12 +8,12 @@ description: "Install AvalonDock v5 NuGet packages and configure target framewor
 
 # Installation
 
-**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **13 component libraries** under the `Dirkster.AvalonDock*` package/assembly prefix, targeting **`.NET Framework 4.8` (`net48`)** for WPF assemblies and **`.NET Standard 2.0` (`netstandard2.0`)** for UI-agnostic libraries, with **zero `System.Text.Json` dependencies**.
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** is organized into a modular family of **9 component libraries** under the `Dirkster.AvalonDock*` package prefix, targeting **`.NET Framework 4.8` (`net48`)** for WPF assemblies and **`.NET Standard 2.0` (`netstandard2.0`)** for UI-agnostic libraries, with **zero `System.Text.Json` dependencies**.
 
 {: .important }
 **Fork vs. Upstream Distribution & Planned `AvalonDox` Rebrand:**
 - **Consuming `NTLDR2 Fork v5.1.0` (Recommended for Zero-`System.Text.Json` / Vendored Hosts):** Reference the projects under `source/Components/*` directly via `ProjectReference` (submodule/vendored source) or pack local `.nupkg` artifacts (`dotnet pack source/AvalonDock.sln -c Release -o ./artifacts/nupkgs`) and install from your local NuGet feed.
-- **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including `Serializer.Json` and `System.Text.Json`-dependent builds of `Themes.VS` / `Themes.VS2013` on `net48`).
+- **Upstream `nuget.org` Feed ([Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock)):** Running `dotnet add package Dirkster.AvalonDock*` against `nuget.org` installs upstream packages (where `Upstream v5.0.0` published 14 packages, including `Serializer.Json`, `Themes.Arc`, and `System.Text.Json`-dependent builds of `Themes.VS` / `Themes.VS2013` on `net48`).
 - **Planned Rebrand (`AvalonDox`):** Assembly and `<PackageId>` names temporarily remain `Dirkster.AvalonDock*` during initial vendoring stabilization; a full rebrand to **`AvalonDox`** is scheduled on the fork `ROADMAP.md` before any standalone NuGet publication to eliminate package and CLR assembly name collisions.
 
 ---
@@ -49,23 +49,19 @@ Install-Package Dirkster.AvalonDock
 
 ---
 
-## 2. Install a Theme Package
+## 2. Install a Theme Category Package
 
-`Dirkster.AvalonDock` includes a fallback generic Windows theme (`GenericTheme`), and **7 dedicated theme packages** are available (all targeting `net48` exclusively with zero external NuGet dependencies):
+`Dirkster.AvalonDock` includes a fallback generic Windows theme (`GenericTheme`), and **3 consolidated theme category packages** are available in this fork (all targeting `net48` exclusively with zero external NuGet dependencies):
 
 ```bash
-# Modern compact IDE theme — Dark & Light variants (recommended for modern apps)
-dotnet add package Dirkster.AvalonDock.Themes.Arc
+# Category 3 (VsTheme : DictionaryTheme): Visual Studio 2015, 2022 & 2026 themes (+ .vstheme / JSON loader)
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
 
-# Visual Studio 2015, 2022 & 2026 themes (+ .vstheme / JSON loader) and VS2013 themes
-dotnet add package Dirkster.AvalonDock.Themes.VS
-dotnet add package Dirkster.AvalonDock.Themes.VS2013
+# Category 2 (DictionaryTheme): Visual Studio 2013 Dark, Light & Blue themes
+dotnet add package Dirkster.AvalonDock.Themes.Type2Hybrid
 
-# Additional classic & flat themes
-dotnet add package Dirkster.AvalonDock.Themes.VS2010
-dotnet add package Dirkster.AvalonDock.Themes.Expression
-dotnet add package Dirkster.AvalonDock.Themes.Metro
-dotnet add package Dirkster.AvalonDock.Themes.Aero
+# Category 1 (Theme URI): Aero, Expression Dark/Light, Metro & VS2010 themes
+dotnet add package Dirkster.AvalonDock.Themes.Type1Legacy
 ```
 
 ---
@@ -86,13 +82,13 @@ All five extension packages below target **`netstandard2.0`** and have **no WPF 
 
 ## 4. Verify Installation
 
-Add the AvalonDock XML namespace (`https://github.com/Dirkster99/AvalonDock`) to a WPF `Window` or `UserControl`:
+Add the AvalonDock XML namespace (`https://github.com/NTLDR2/AvalonDock`) to a WPF `Window` or `UserControl`:
 
 ```xml
 <Window x:Class="MyDockingApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock">
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock">
 
     <avalonDock:DockingManager>
         <avalonDock:LayoutRoot>

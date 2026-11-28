@@ -2,27 +2,27 @@
 title: Metro Theme
 layout: default
 parent: Themes
-nav_order: 6
+nav_order: 5
 description: "Clean, flat Metro light theme with crisp borders and sky-blue accents."
 ---
 
-# Metro Theme
+# Metro Theme (`Type1Legacy`)
 
-`Dirkster.AvalonDock.Themes.Metro` provides a clean, flat Modern UI / Windows 8 light theme with crisp single-pixel borders, generous whitespace, `#41B1E1` sky-blue accents, and full `IconSource` tab icon rendering.
+`MetroTheme` (shipped in `Dirkster.AvalonDock.Themes.Type1Legacy`) provides a clean, flat Modern UI / Windows 8 light theme with crisp single-pixel borders, generous whitespace, `#41B1E1` sky-blue accents, and full `IconSource` tab icon rendering.
 
 ---
 
 ## Installation
 
 ```bash
-dotnet add package Dirkster.AvalonDock.Themes.Metro
+dotnet add package Dirkster.AvalonDock.Themes.Type1Legacy
 ```
 
 | Property | Value |
 |:---------|:------|
-| **NuGet Package** | `Dirkster.AvalonDock.Themes.Metro` |
-| **Assembly** | `AvalonDock.Themes.Metro` |
-| **CLR Namespace** | `AvalonDock.Themes` |
+| **NuGet Package** | `Dirkster.AvalonDock.Themes.Type1Legacy` |
+| **Assembly** | `AvalonDock.Themes.Type1Legacy` |
+| **CLR Namespace** | `AvalonDock.Themes.Type1Legacy` |
 | **Theme Class** | `MetroTheme` |
 | **Document Tab Icons** | Supported (`IconSource` displayed directly in tab headers) |
 
@@ -36,12 +36,11 @@ dotnet add package Dirkster.AvalonDock.Themes.Metro
 <Window x:Class="MyApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:metro="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Metro">
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock">
 
     <avalonDock:DockingManager x:Name="dockManager">
         <avalonDock:DockingManager.Theme>
-            <metro:MetroTheme />
+            <avalonDock:MetroTheme />
         </avalonDock:DockingManager.Theme>
 
         <!-- Layout -->
@@ -52,7 +51,7 @@ dotnet add package Dirkster.AvalonDock.Themes.Metro
 ### Code-Behind
 
 ```csharp
-using AvalonDock.Themes;
+using AvalonDock.Themes.Type1Legacy;
 
 dockManager.Theme = new MetroTheme();
 ```
@@ -61,7 +60,7 @@ dockManager.Theme = new MetroTheme();
 
 ## Pack URIs & Compact 7-Brush Palette
 
-`MetroTheme` uses one of the simplest brush dictionaries in AvalonDock—just seven `SolidColorBrush` keys in `/AvalonDock.Themes.Metro;component/Brushes.xaml`—making it very easy to re-accent in a custom XAML `ResourceDictionary`:
+`MetroTheme` uses one of the simplest brush dictionaries in AvalonDock—just seven `SolidColorBrush` keys in `/AvalonDock.Themes.Type1Legacy;component/Themes/Metro/Brushes.xaml`—making it very easy to re-accent in a custom XAML `ResourceDictionary`:
 
 | Resource Key (`x:Key`) | Default Color | Role |
 |:-----------------------|:--------------|:-----|
@@ -73,12 +72,12 @@ dockManager.Theme = new MetroTheme();
 | `AvalonDock_ThemeMetro_BaseColor6` | `#8C8E94` | Splitter and subtle panel borders |
 | `AvalonDock_ThemeMetro_BaseColor7` | `#EEEEEE` | Secondary / inactive header surface |
 
-To override the `#41B1E1` accent, merge `/AvalonDock.Themes.Metro;component/Theme.xaml` and redefine `AvalonDock_ThemeMetro_BaseColor3` and `AvalonDock_ThemeMetro_BaseColor4` in a custom `Theme` or `DictionaryTheme`.
+To override the `#41B1E1` accent, merge `/AvalonDock.Themes.Type1Legacy;component/Themes/Metro/Theme.xaml` and redefine `AvalonDock_ThemeMetro_BaseColor3` and `AvalonDock_ThemeMetro_BaseColor4` in a custom `Theme` or `DictionaryTheme`.
 
 ---
 
 ## See Also
 
-- [Aero Theme]({{ site.baseurl }}{% link themes/aero.md %}) — Classic Windows Aero light theme.
-- [Arc Theme]({{ site.baseurl }}{% link themes/arc.md %}) — Modern Arc Light and Arc Dark themes.
+- [Aero Theme]({{ site.baseurl }}{% link themes/aero.md %}) — Classic Windows Aero light theme (`Type1Legacy`).
+- [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) — Visual Studio 2015, 2022, and 2026 themes (`Type3New`).
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Create reusable custom themes.

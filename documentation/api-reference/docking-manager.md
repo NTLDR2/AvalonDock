@@ -43,7 +43,7 @@ System.Windows.Controls.Control
 |:---------|:-----|:---------------|:------------|
 | `Layout` | `LayoutRoot` | DP (coerced non-null) | Root of the WPF layout model tree (`[ContentProperty]`). Setting `null` coerces to a new `LayoutRoot` containing a `LayoutDocumentPaneGroup(new LayoutDocumentPane())`. |
 | `DockLayout` | `IRootDock` | DP (`null`) | UI-agnostic v5 MVVM layout tree (`AvalonDock.Core.IRootDock`). When non-null, attaches `LayoutSyncBridge` and installs `DockAlignmentStrategy` if `LayoutUpdateStrategy` is unset. |
-| `Theme` | `Theme` | DP (`null`) | Active theme (`ArcDarkTheme`, `ArcLightTheme`, `VS2010Theme`, etc.). Changing at runtime updates `DockingManager`, all `FloatingWindows`, all `DetachedAnchorables` windows, `NavigatorWindow`, and `OverlayWindow`. |
+| `Theme` | `Theme` | DP (`null`) | Active theme (`VS2026DarkTheme`, `ExpressionDarkTheme`, `VS2010Theme`, etc.). Changing at runtime updates `DockingManager`, all `FloatingWindows`, all `DetachedAnchorables` windows, `NavigatorWindow`, and `OverlayWindow`. |
 | `ActiveContent` | `object` | DP (`null`) | Currently active content (supports two-way binding to your active ViewModel or `LayoutContent`). |
 | `LayoutUpdateStrategy` | `ILayoutUpdateStrategy` | DP (`null`) | Custom hook invoked before and after inserting documents or anchorables. |
 | `LayoutEngine` | `ILayoutEngine` | `virtual` get (`DefaultLayoutEngine`) | Strategy performing structural tree insertions and orientation fixes. Overridden by `ToggleDockingManager` (`ToggleLayoutEngine`). |
@@ -176,7 +176,7 @@ Setting a `*TemplateSelector` clears the corresponding `*Template` property (and
     AnchorableHiding="OnAnchorableHiding">
 
     <avalonDock:DockingManager.Theme>
-        <themes:ArcDarkTheme />
+        <avalonDock:VS2026DarkTheme />
     </avalonDock:DockingManager.Theme>
 
     <avalonDock:DockingManager.LayoutItemTemplate>
@@ -202,11 +202,11 @@ Setting a `*TemplateSelector` clears the corresponding `*Template` property (and
 using System.Windows;
 using AvalonDock;
 using AvalonDock.Layout;
-using AvalonDock.Themes;
+using AvalonDock.Themes.Type3New;
 
 var dockManager = new DockingManager
 {
-    Theme = new ArcDarkTheme(),
+    Theme = new VS2026DarkTheme(),
     IgnoreTabControlKeyBindings = true,
     ShowNavigator = true,
     Layout = new LayoutRoot

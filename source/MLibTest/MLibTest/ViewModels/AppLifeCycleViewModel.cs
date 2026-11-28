@@ -149,7 +149,7 @@ namespace MLibTest.ViewModels
 					 new Uri("/MLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MWindowLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
 
-					,new Uri("/AvalonDock.Themes.Metro;component/Theme.xaml", UriKind.RelativeOrAbsolute)
+					,new Uri("/AvalonDock.Themes.Type1Legacy;component/Themes/Metro/Theme.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
 				}, settings.Themes);
@@ -169,7 +169,7 @@ namespace MLibTest.ViewModels
 					 new Uri("/MLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MWindowLib;component/Themes/Generic.xaml", UriKind.RelativeOrAbsolute)
 
-					,new Uri("/AvalonDock.Themes.Expression;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+					,new Uri("/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/LightTheme.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
 				}, settings.Themes);
@@ -191,7 +191,7 @@ namespace MLibTest.ViewModels
 					,new Uri("/ColorPickerLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/NumericUpDownLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-					,new Uri("/AvalonDock.Themes.Expression;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+					,new Uri("/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/MWindowLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/ColorPickerLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 					,new Uri("/MLibTest;component/BindToMLib/NumericUpDownLib_DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)

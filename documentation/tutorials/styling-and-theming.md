@@ -22,11 +22,8 @@ cd AvalonDockThemeDemo
 # In AvalonDockThemeDemo.csproj, set <TargetFramework>net48</TargetFramework> and <LangVersion>12</LangVersion>
 
 dotnet add package Dirkster.AvalonDock
-dotnet add package Dirkster.AvalonDock.Themes.Arc
-dotnet add package Dirkster.AvalonDock.Themes.VS2010
-dotnet add package Dirkster.AvalonDock.Themes.Expression
-dotnet add package Dirkster.AvalonDock.Themes.Metro
-dotnet add package Dirkster.AvalonDock.Themes.Aero
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
+dotnet add package Dirkster.AvalonDock.Themes.Type1Legacy
 dotnet add package CommunityToolkit.Mvvm
 ```
 
@@ -34,24 +31,24 @@ dotnet add package CommunityToolkit.Mvvm
 
 ## Step 1: Review All Built-in Theme Classes
 
-Across the seven theme packages and `Dirkster.AvalonDock`, 20 ready-to-use `Theme` classes are available (this tutorial wires the five URI-based packages below; you can also add `Dirkster.AvalonDock.Themes.VS` for `VS2015*`/`VS2022*`/`VS2026*` and `Dirkster.AvalonDock.Themes.VS2013` for `Vs2013*`):
+Across the three theme category packages (`Type3New`, `Type2Hybrid`, `Type1Legacy`) and `Dirkster.AvalonDock`, 18 ready-to-use `Theme` classes are available (this tutorial wires `VS2026DarkTheme`/`VS2026LightTheme` from `Themes.Type3New` plus the classic URI-based themes in `Themes.Type1Legacy` below; `Themes.Type3New` also includes `VS2026BlueTheme`, `VS2022*Theme`, and `VS2015*Theme`, and `Dirkster.AvalonDock.Themes.Type2Hybrid` provides `Vs2013*Theme`):
 
-| Theme Class | Namespace | NuGet Package | Palette |
-|:------------|:----------|:--------------|:--------|
-| `ArcDarkTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Arc` | Dark |
-| `ArcLightTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Arc` | Light |
-| `VS2010Theme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.VS2010` | Blue-Gray |
-| `ExpressionDarkTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Expression` | Dark |
-| `ExpressionLightTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Expression` | Light |
-| `MetroTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Metro` | Light |
-| `AeroTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock.Themes.Aero` | Light |
-| `GenericTheme` | `AvalonDock.Themes` | `Dirkster.AvalonDock` *(built-in)* | System |
+| Theme Class | CLR Namespace | NuGet Package | Palette |
+|:------------|:--------------|:--------------|:--------|
+| `VS2026DarkTheme` | `AvalonDock.Themes.Type3New` | `Dirkster.AvalonDock.Themes.Type3New` | Dark |
+| `VS2026LightTheme` | `AvalonDock.Themes.Type3New` | `Dirkster.AvalonDock.Themes.Type3New` | Light |
+| `VS2010Theme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | Blue-Gray |
+| `ExpressionDarkTheme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | Dark |
+| `ExpressionLightTheme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | Light |
+| `MetroTheme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | Light |
+| `AeroTheme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock.Themes.Type1Legacy` | Light |
+| `GenericTheme` | `AvalonDock.Themes.Type1Legacy` | `Dirkster.AvalonDock` *(built-in)* | System |
 
 ---
 
 ## Step 2: Create a Custom Corporate XAML Theme
 
-Before building the theme selector, let's add a custom corporate theme (`CorporateTheme`) built on top of `Dirkster.AvalonDock.Themes.Arc` using verified `AvalonDock.Themes.Arc.Themes.ResourceKeys` overrides.
+Before building the theme selector, let's add a custom corporate theme (`CorporateTheme`) built on top of `Dirkster.AvalonDock.Themes.Type3New` rounded-tab templates using verified `AvalonDock.Themes.Type3New.Themes.ResourceKeys` overrides.
 
 ### `Themes/BrandOverrides.xaml`
 
@@ -62,41 +59,41 @@ Create a `Themes` folder and add `Themes/BrandOverrides.xaml` containing just yo
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:avalonDockControls="clr-namespace:AvalonDock.Controls;assembly=AvalonDock"
-                    xmlns:arcKeys="clr-namespace:AvalonDock.Themes.Arc.Themes;assembly=AvalonDock.Themes.Arc">
+                    xmlns:vsKeys="clr-namespace:AvalonDock.Themes.Type3New.Themes;assembly=AvalonDock.Themes.Type3New">
 
     <!-- Corporate Teal Accent -->
-    <Color x:Key="{x:Static arcKeys:ResourceKeys.ControlAccentColorKey}">#FF009688</Color>
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ControlAccentBrushKey}"
+    <Color x:Key="{x:Static vsKeys:ResourceKeys.ControlAccentColorKey}">#FF009688</Color>
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ControlAccentBrushKey}"
                      options:Freeze="True" Color="#FF009688" />
 
     <!-- Deep Slate Surfaces -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.Background}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.Background}"
                      options:Freeze="True" Color="#FF141B22" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.TabBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.TabBackground}"
                      options:Freeze="True" Color="#FF1B242E" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PanelBorderBrush}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PanelBorderBrush}"
                      options:Freeze="True" Color="#FF293645" />
 
     <!-- Active Document Tab & Tool Window Caption -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DocumentWellTabSelectedActiveBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DocumentWellTabSelectedActiveBackground}"
                      options:Freeze="True" Color="#FF009688" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DocumentWellTabSelectedActiveText}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DocumentWellTabSelectedActiveText}"
                      options:Freeze="True" Color="#FFFFFFFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ToolWindowCaptionActiveBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ToolWindowCaptionActiveBackground}"
                      options:Freeze="True" Color="#FF009688" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ToolWindowCaptionActiveText}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ToolWindowCaptionActiveText}"
                      options:Freeze="True" Color="#FFFFFFFF" />
 
     <!-- Hover & Drop Indicators -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.AutoHideTabHoveredBorder}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.AutoHideTabHoveredBorder}"
                      options:Freeze="True" Color="#FF26A69A" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.AutoHideTabHoveredText}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.AutoHideTabHoveredText}"
                      options:Freeze="True" Color="#FF26A69A" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DockingButtonForegroundBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DockingButtonForegroundBrushKey}"
                      options:Freeze="True" Color="#FF009688" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PreviewBoxBorderBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PreviewBoxBorderBrushKey}"
                      options:Freeze="True" Color="#FF009688" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PreviewBoxBackgroundBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PreviewBoxBackgroundBrushKey}"
                      options:Freeze="True" Color="#44009688" />
 
     <!-- ToggleDockingManager Sidebar Button Foreground -->
@@ -107,14 +104,13 @@ Create a `Themes` folder and add `Themes/BrandOverrides.xaml` containing just yo
 
 ### `Themes/CorporateTheme.xaml`
 
-Create `Themes/CorporateTheme.xaml` merging Arc Dark first and `BrandOverrides.xaml` last (in `MergedDictionaries`, later dictionaries override keys from earlier ones):
+Create `Themes/CorporateTheme.xaml` merging the VS 2022 rounded-tab `Generic.xaml` templates first and `BrandOverrides.xaml` last (in `MergedDictionaries`, later dictionaries override keys from earlier ones):
 
 ```xml
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/AvalonDock.Themes.Arc;component/DarkBrushs.xaml" />
-        <ResourceDictionary Source="/AvalonDock.Themes.Arc;component/Themes/Generic.xaml" />
+        <ResourceDictionary Source="/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml" />
         <ResourceDictionary Source="/AvalonDockThemeDemo;component/Themes/BrandOverrides.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
@@ -145,14 +141,14 @@ public sealed class CorporateTheme : Theme
 
 ## Step 3: Add a Dynamic C# Palette Theme (`DictionaryTheme`)
 
-You can also create a custom accent theme purely in C# without writing an extra XAML file by subclassing `DictionaryTheme`:
+You can also create a custom accent theme purely in C# without writing an extra XAML file by subclassing `DictionaryTheme` on top of `VS2022DarkTheme`:
 
 ```csharp
-using System;
 using System.Windows;
 using System.Windows.Media;
 using AvalonDock.Themes;
-using ArcKeys = AvalonDock.Themes.Arc.Themes.ResourceKeys;
+using AvalonDock.Themes.Type3New;
+using VsKeys = AvalonDock.Themes.Type3New.Themes.ResourceKeys;
 
 namespace AvalonDockThemeDemo.Themes;
 
@@ -167,27 +163,23 @@ public sealed class NordFrostTheme : DictionaryTheme
 
     private static ResourceDictionary BuildDictionary()
     {
-        var dict = new ResourceDictionary();
-        dict.MergedDictionaries.Add(new ResourceDictionary
-        {
-            Source = new Uri("/AvalonDock.Themes.Arc;component/DarkTheme.xaml", UriKind.Relative)
-        });
+        var dict = new VS2022DarkTheme().ThemeResourceDictionary;
 
         var accent = Color.FromRgb(0x88, 0xC0, 0xD0);
         var accentBrush = Frozen(accent);
         var darkText = Frozen(Color.FromRgb(0x2E, 0x34, 0x40));
 
-        dict[ArcKeys.ControlAccentColorKey] = accent;
-        dict[ArcKeys.ControlAccentBrushKey] = accentBrush;
-        dict[ArcKeys.Background] = Frozen(Color.FromRgb(0x2E, 0x34, 0x40));
-        dict[ArcKeys.TabBackground] = Frozen(Color.FromRgb(0x3B, 0x42, 0x52));
-        dict[ArcKeys.PanelBorderBrush] = Frozen(Color.FromRgb(0x43, 0x4C, 0x5E));
-        dict[ArcKeys.DocumentWellTabSelectedActiveBackground] = accentBrush;
-        dict[ArcKeys.DocumentWellTabSelectedActiveText] = darkText;
-        dict[ArcKeys.ToolWindowCaptionActiveBackground] = accentBrush;
-        dict[ArcKeys.ToolWindowCaptionActiveText] = darkText;
-        dict[ArcKeys.DockingButtonForegroundBrushKey] = accentBrush;
-        dict[ArcKeys.PreviewBoxBorderBrushKey] = accentBrush;
+        dict[VsKeys.ControlAccentColorKey] = accent;
+        dict[VsKeys.ControlAccentBrushKey] = accentBrush;
+        dict[VsKeys.Background] = Frozen(Color.FromRgb(0x2E, 0x34, 0x40));
+        dict[VsKeys.TabBackground] = Frozen(Color.FromRgb(0x3B, 0x42, 0x52));
+        dict[VsKeys.PanelBorderBrush] = Frozen(Color.FromRgb(0x43, 0x4C, 0x5E));
+        dict[VsKeys.DocumentWellTabSelectedActiveBackground] = accentBrush;
+        dict[VsKeys.DocumentWellTabSelectedActiveText] = darkText;
+        dict[VsKeys.ToolWindowCaptionActiveBackground] = accentBrush;
+        dict[VsKeys.ToolWindowCaptionActiveText] = darkText;
+        dict[VsKeys.DockingButtonForegroundBrushKey] = accentBrush;
+        dict[VsKeys.PreviewBoxBorderBrushKey] = accentBrush;
 
         return dict;
     }
@@ -211,6 +203,8 @@ Create `Models/ThemeOption.cs` to describe each selectable theme along with whet
 using System;
 using System.Collections.Generic;
 using AvalonDock.Themes;
+using AvalonDock.Themes.Type1Legacy;
+using AvalonDock.Themes.Type3New;
 using AvalonDockThemeDemo.Themes;
 
 namespace AvalonDockThemeDemo.Models;
@@ -223,16 +217,16 @@ public sealed record ThemeOption(
 {
     public static IReadOnlyList<ThemeOption> All { get; } = new ThemeOption[]
     {
-        new("arc-dark",       "Arc Dark",               IsDark: true,  () => new ArcDarkTheme()),
-        new("arc-light",      "Arc Light",              IsDark: false, () => new ArcLightTheme()),
-        new("vs2010",         "Visual Studio 2010",     IsDark: false, () => new VS2010Theme()),
-        new("expr-dark",      "Expression Dark",        IsDark: true,  () => new ExpressionDarkTheme()),
-        new("expr-light",     "Expression Light",       IsDark: false, () => new ExpressionLightTheme()),
-        new("metro",          "Metro",                  IsDark: false, () => new MetroTheme()),
-        new("aero",           "Aero",                   IsDark: false, () => new AeroTheme()),
-        new("generic",        "Generic (System)",       IsDark: false, () => new GenericTheme()),
-        new("corporate-teal", "Corporate Teal (XAML)",  IsDark: true,  () => new CorporateTheme()),
-        new("nord-frost",     "Nord Frost (C#)",        IsDark: true,  () => new NordFrostTheme())
+        new("vs2026-dark",    "Visual Studio 2026 Dark",  IsDark: true,  () => new VS2026DarkTheme()),
+        new("vs2026-light",   "Visual Studio 2026 Light", IsDark: false, () => new VS2026LightTheme()),
+        new("vs2010",         "Visual Studio 2010",       IsDark: false, () => new VS2010Theme()),
+        new("expr-dark",      "Expression Dark",          IsDark: true,  () => new ExpressionDarkTheme()),
+        new("expr-light",     "Expression Light",         IsDark: false, () => new ExpressionLightTheme()),
+        new("metro",          "Metro",                    IsDark: false, () => new MetroTheme()),
+        new("aero",           "Aero",                     IsDark: false, () => new AeroTheme()),
+        new("generic",        "Generic (System)",         IsDark: false, () => new GenericTheme()),
+        new("corporate-teal", "Corporate Teal (XAML)",    IsDark: true,  () => new CorporateTheme()),
+        new("nord-frost",     "Nord Frost (C#)",          IsDark: true,  () => new NordFrostTheme())
     };
 
     public override string ToString() => DisplayName;
@@ -250,7 +244,7 @@ namespace AvalonDockThemeDemo.Services;
 
 public sealed class UserSettings
 {
-    public string ThemeId { get; set; } = "arc-dark";
+    public string ThemeId { get; set; } = "vs2026-dark";
 }
 
 public static class UserSettingsService
@@ -388,7 +382,7 @@ Replace `MainWindow.xaml` with a complete docking layout bound to `MainViewModel
 <Window x:Class="AvalonDockThemeDemo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"
         xmlns:vm="clr-namespace:AvalonDockThemeDemo.ViewModels"
         Title="AvalonDock Theme Studio"
         Width="1050" Height="680"
@@ -492,7 +486,7 @@ Run the application:
 dotnet run
 ```
 
-1. Switch between **Arc Dark**, **Arc Light**, **Visual Studio 2010**, **Expression Dark**, **Corporate Teal (XAML)**, and **Nord Frost (C#)**—notice how tabs, headers, splitters, and host surfaces update immediately without losing open documents or docking positions.
+1. Switch between **Visual Studio 2026 Dark**, **Visual Studio 2026 Light**, **Visual Studio 2010**, **Expression Dark**, **Corporate Teal (XAML)**, and **Nord Frost (C#)**—notice how tabs, headers, splitters, and host surfaces update immediately without losing open documents or docking positions.
 2. Drag **Solution Explorer** out into a floating window and switch themes again—floating windows receive the new theme dictionary automatically.
 3. Close and relaunch the app—your last chosen theme is restored from `%LOCALAPPDATA%\AvalonDockThemeDemo\settings.xml`.
 
@@ -500,6 +494,6 @@ dotnet run
 
 ## Next Steps
 
-- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all seven theme packages.
+- [Themes Gallery]({{ site.baseurl }}{% link themes/index.md %}) — Explore visual details and tab-icon behavior across all three theme category packages.
 - [Custom Themes]({{ site.baseurl }}{% link guides/custom-themes.md %}) — Full `ResourceKeys` reference and `DictionaryTheme` customization patterns.
 - [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}) — Combine persisted theme settings with XML docking layout save/restore.

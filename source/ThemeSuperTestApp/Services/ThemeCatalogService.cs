@@ -7,28 +7,30 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using AvalonDock;
 using AvalonDock.Themes;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type1Legacy;
+using AvalonDock.Themes.Type2Hybrid;
+using AvalonDock.Themes.Type3New;
 using Caliburn.Micro;
 using ThemeSuperTestApp.Models;
 
 namespace ThemeSuperTestApp.Services
 {
 	/// <summary>
-	/// Catalogs all 20 built-in AvalonDock themes (plus any dynamically loaded runtime themes) using lazy factories
+	/// Catalogs all 18 built-in AvalonDock themes (plus any dynamically loaded runtime themes) using lazy factories
 	/// and applies the active selection to the attached classic <see cref="DockingManager"/>.
 	/// </summary>
 	public sealed class ThemeCatalogService
 	{
 		/// <summary>
-		/// Default startup theme ID (<c>ArcDark</c> — a lazy URI <see cref="Theme"/> so all 12 <see cref="DictionaryTheme"/>
+		/// Default startup theme ID (<c>ExpressionDark</c> — a lazy URI <see cref="Theme"/> so all 12 <see cref="DictionaryTheme"/>
 		/// entries remain uninstantiated at startup until explicitly selected or benchmarked).
 		/// </summary>
-		public const string DefaultThemeId = "ArcDark";
+		public const string DefaultThemeId = "ExpressionDark";
 
 		private DockingManager? _dockingManager;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThemeCatalogService"/> class with all 20 built-in themes registered lazily.
+		/// Initializes a new instance of the <see cref="ThemeCatalogService"/> class with all 18 built-in themes registered lazily.
 		/// </summary>
 		public ThemeCatalogService()
 		{
@@ -206,7 +208,7 @@ namespace ThemeSuperTestApp.Services
 		public string BuildMarkdownBenchmarkReport()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine("# AvalonDock v5 — 20-Theme Architecture & Timing Benchmark (`net48`)");
+			sb.AppendLine("# AvalonDock v5 — 18-Theme Architecture & Timing Benchmark (`net48`)");
 			sb.AppendLine();
 			sb.AppendLine("| Theme | Base Class | CLR Namespace | Xmlns Mapped | Cold `.ctor` (ms) | Cold Alloc (KB) | Apply + Render (ms) | Root Keys | Merged Dicts | `GetResourceUri()` |");
 			sb.AppendLine("| :--- | :--- | :--- | :--- | ---: | ---: | ---: | ---: | ---: | :--- |");
@@ -252,31 +254,27 @@ namespace ThemeSuperTestApp.Services
 		{
 			return new[]
 			{
-				// 1. Arc (AvalonDock.Themes.Arc - URI Theme)
-				Create<ArcDarkTheme>("ArcDark", "Arc Dark", "Arc", ThemePolarity.Dark, () => new ArcDarkTheme()),
-				Create<ArcLightTheme>("ArcLight", "Arc Light", "Arc", ThemePolarity.Light, () => new ArcLightTheme()),
-
-				// 2. Visual Studio 2026 (AvalonDock.Themes.VS - VsTheme : DictionaryTheme, .vstheme + .json)
+				// 1. Visual Studio 2026 (AvalonDock.Themes.Type3New - VsTheme : DictionaryTheme, .vstheme + .json)
 				Create<VS2026DarkTheme>("VS2026Dark", "VS 2026 Dark", "VS 2026", ThemePolarity.Dark, () => new VS2026DarkTheme()),
 				Create<VS2026BlueTheme>("VS2026Blue", "VS 2026 Blue", "VS 2026", ThemePolarity.Blue, () => new VS2026BlueTheme()),
 				Create<VS2026LightTheme>("VS2026Light", "VS 2026 Light", "VS 2026", ThemePolarity.Light, () => new VS2026LightTheme()),
 
-				// 3. Visual Studio 2022 (AvalonDock.Themes.VS - VsTheme : DictionaryTheme, VS2022 Generic.xaml)
+				// 2. Visual Studio 2022 (AvalonDock.Themes.Type3New - VsTheme : DictionaryTheme, VS2022 Generic.xaml)
 				Create<VS2022DarkTheme>("VS2022Dark", "VS 2022 Dark", "VS 2022", ThemePolarity.Dark, () => new VS2022DarkTheme()),
 				Create<VS2022BlueTheme>("VS2022Blue", "VS 2022 Blue", "VS 2022", ThemePolarity.Blue, () => new VS2022BlueTheme()),
 				Create<VS2022LightTheme>("VS2022Light", "VS 2022 Light", "VS 2022", ThemePolarity.Light, () => new VS2022LightTheme()),
 
-				// 4. Visual Studio 2015 (AvalonDock.Themes.VS - VsTheme : DictionaryTheme, Classic Generic.xaml)
+				// 3. Visual Studio 2015 (AvalonDock.Themes.Type3New - VsTheme : DictionaryTheme, Classic Generic.xaml)
 				Create<VS2015DarkTheme>("VS2015Dark", "VS 2015 Dark", "VS 2015", ThemePolarity.Dark, () => new VS2015DarkTheme()),
 				Create<VS2015BlueTheme>("VS2015Blue", "VS 2015 Blue", "VS 2015", ThemePolarity.Blue, () => new VS2015BlueTheme()),
 				Create<VS2015LightTheme>("VS2015Light", "VS 2015 Light", "VS 2015", ThemePolarity.Light, () => new VS2015LightTheme()),
 
-				// 5. Visual Studio 2013 (AvalonDock.Themes.VS2013 - DictionaryTheme, .vstheme.gz)
+				// 4. Visual Studio 2013 (AvalonDock.Themes.Type2Hybrid - DictionaryTheme, .vstheme.gz)
 				Create<Vs2013DarkTheme>("Vs2013Dark", "VS 2013 Dark", "VS 2013", ThemePolarity.Dark, () => new Vs2013DarkTheme()),
 				Create<Vs2013BlueTheme>("Vs2013Blue", "VS 2013 Blue", "VS 2013", ThemePolarity.Blue, () => new Vs2013BlueTheme()),
 				Create<Vs2013LightTheme>("Vs2013Light", "VS 2013 Light", "VS 2013", ThemePolarity.Light, () => new Vs2013LightTheme()),
 
-				// 6. Legacy / Classic URI Themes (AvalonDock.Themes.* + Built-in GenericTheme)
+				// 5. Legacy / Classic URI Themes (AvalonDock.Themes.Type1Legacy)
 				Create<VS2010Theme>("VS2010", "VS 2010", "Classic URI", ThemePolarity.ClassicSystem, () => new VS2010Theme()),
 				Create<ExpressionDarkTheme>("ExpressionDark", "Expression Dark", "Expression", ThemePolarity.Dark, () => new ExpressionDarkTheme()),
 				Create<ExpressionLightTheme>("ExpressionLight", "Expression Light", "Expression", ThemePolarity.Light, () => new ExpressionLightTheme()),

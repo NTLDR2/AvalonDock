@@ -35,8 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Components\AvalonDock.Themes.Expression\AvalonDock.Themes.Expression.csproj" />
-    <ProjectReference Include="..\..\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj" />
+    <ProjectReference Include="..\..\Components\AvalonDock.Themes.Type1Legacy\AvalonDock.Themes.Type1Legacy.csproj" />
     <ProjectReference Include="..\..\Components\AvalonDock.Serializer.Xml\AvalonDock.Serializer.Xml.csproj" />
     <ProjectReference Include="..\..\Components\AvalonDock\AvalonDock.csproj" />
     <ProjectReference Include="..\..\MLibTest\MLibTest_Components\ServiceLocator\ServiceLocator.csproj" />

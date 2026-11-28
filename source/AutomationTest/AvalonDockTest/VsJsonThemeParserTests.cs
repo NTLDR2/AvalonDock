@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Media;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 using NUnit.Framework;
 
 namespace AvalonDockTest

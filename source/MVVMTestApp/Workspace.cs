@@ -1,4 +1,5 @@
 using AvalonDock.Themes;
+using AvalonDock.Themes.Type1Legacy;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

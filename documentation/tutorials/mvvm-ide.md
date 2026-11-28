@@ -42,7 +42,7 @@ dotnet add package Dirkster.AvalonDock.Mvvm
 dotnet add package Dirkster.AvalonDock.Mvvm.CommunityToolkit
 dotnet add package Dirkster.AvalonDock.DependencyInjection
 dotnet add package Dirkster.AvalonDock.Serializer.Xml
-dotnet add package Dirkster.AvalonDock.Themes.Arc
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet add package CommunityToolkit.Mvvm
 ```
@@ -419,9 +419,8 @@ Notice that both `ToolboxStyle` and `DocumentStyle` bind `ContentId` to **`{Bind
 <Window x:Class="MvvmIdeApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"
         xmlns:avalonDockControls="clr-namespace:AvalonDock.Controls;assembly=AvalonDock"
-        xmlns:themes="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Arc"
         xmlns:local="clr-namespace:MvvmIdeApp"
         xmlns:vm="clr-namespace:MvvmIdeApp.ViewModels"
         Title="MVVM IDE — AvalonDock v5"
@@ -526,7 +525,7 @@ Notice that both `ToolboxStyle` and `DocumentStyle` bind `ContentId` to **`{Bind
             LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelector}">
 
             <avalonDock:ToggleDockingManager.Theme>
-                <themes:ArcDarkTheme />
+                <avalonDock:VS2026DarkTheme />
             </avalonDock:ToggleDockingManager.Theme>
 
             <avalonDock:LayoutRoot>
@@ -679,4 +678,4 @@ dotnet run
 
 - Explore advanced DI options and NUnit ViewModel testing in [Tutorial: Dependency Injection App]({{ site.baseurl }}{% link tutorials/dependency-injection-app.md %}).
 - Persist open documents, XML layouts, and lazy plugin panels in [Tutorial: Layout Persistence]({{ site.baseurl }}{% link tutorials/layout-persistence.md %}).
-- Add runtime theme switching across `Arc` and classic themes in [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}).
+- Add runtime theme switching across `VS` and classic themes in [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}).

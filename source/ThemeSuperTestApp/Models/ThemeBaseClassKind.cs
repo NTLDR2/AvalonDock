@@ -16,7 +16,7 @@ namespace ThemeSuperTestApp.Models
 		DictionaryTheme,
 
 		/// <summary>
-		/// Subclasses or instantiates <see cref="AvalonDock.Themes.VS.VsTheme"/> (<c>: DictionaryTheme</c>) in <c>AvalonDock.Themes.VS</c>.
+		/// Subclasses or instantiates <see cref="AvalonDock.Themes.Type3New.VsTheme"/> (<c>: DictionaryTheme</c>) in <c>AvalonDock.Themes.Type3New</c>.
 		/// </summary>
 		VsTheme,
 	}

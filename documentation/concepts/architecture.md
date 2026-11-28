@@ -27,10 +27,10 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 ├───────────────────────────────────┴───────────────────────────────┤
 │                     AvalonDock  (WPF UI)                          │
 │  ┌────────────────────┐ ┌────────────────┐ ┌───────────────────┐  │
-│  │ Controls & Managers│ │ Themes (7 pkgs)│ │ Serializer (1 pkg)│  │
-│  │ (DockingManager,   │ │ (Arc, VS,      │ │ (Serializer.Xml,  │  │
-│  │  ToggleDockingMgr, │ │  VS2013/2010,  │ │  netstandard2.0)  │  │
-│  │  LayoutSyncBridge) │ │  Expr/Met/Aero)│ │                   │  │
+│  │ Controls & Managers│ │ Themes (3 pkgs)│ │ Serializer (1 pkg)│  │
+│  │ (DockingManager,   │ │ (Type1Legacy,  │ │ (Serializer.Xml,  │  │
+│  │  ToggleDockingMgr, │ │  Type2Hybrid,  │ │  netstandard2.0)  │  │
+│  │  LayoutSyncBridge) │ │  Type3New)     │ │                   │  │
 │  └─────────┬──────────┘ └───────┬────────┘ └─────────┬─────────┘  │
 │            │                    │                    │            │
 │  ┌─────────┴────────────────────┴────────────────────┴─────────┐  │
@@ -47,10 +47,10 @@ AvalonDock v5 is built on a modular, layered architecture that cleanly separates
 
 ## Package Architecture (`NTLDR2 Fork v5.1.0`)
 
-**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** ships as **13 focused libraries** with strict dependency boundaries:
+**[NTLDR2/AvalonDock](https://github.com/NTLDR2/AvalonDock) (`v5.1.0` fork)** ships as **9 focused libraries** with strict dependency boundaries:
 
 {: .note }
-**Fork vs. Upstream `v5.0.0` Scope:** Upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) `v5.0.0` introduced this layered architecture across 14 packages. `NTLDR2 Fork v5.1.0` omits `Serializer.Json` and refactors `Themes.VS` (`VsJsonThemeParser`) + `Themes.VS2013` to zero `System.Text.Json` dependencies so all 13 libraries below deploy cleanly on `.NET Framework 4.8` without binding-redirect conflicts.
+**Fork vs. Upstream `v5.0.0` Scope:** Upstream [Dirkster99/AvalonDock](https://github.com/Dirkster99/AvalonDock) `v5.0.0` introduced this layered architecture across 14 packages. `NTLDR2 Fork v5.1.0` omits `Serializer.Json` and `Themes.Arc`, consolidates the remaining themes into 3 category packages (`Themes.{Type1Legacy,Type2Hybrid,Type3New}`) refactored to zero `System.Text.Json` dependencies, and maps XAML to `https://github.com/NTLDR2/AvalonDock` so all 9 libraries deploy cleanly on `.NET Framework 4.8` without binding-redirect conflicts.
 
 ### Core & WPF Host Packages
 
@@ -70,19 +70,15 @@ All four extension packages target **`netstandard2.0`**, allowing your ViewModel
 | `Dirkster.AvalonDock.DependencyInjection` | `netstandard2.0` | `Microsoft.Extensions.DependencyInjection` extensions (`AddDockLayoutService`, `DockLayoutBuilder`, `DockingOptions`, `ToggleDockOptions`, `AddAvalonDock<TFactory>`). |
 | `Dirkster.AvalonDock.Serializer.Xml` | `netstandard2.0` | Zero-dependency XML layout persistence via `XmlLayoutSerializer` (reads both v5 DTO XML and legacy v4 XML layouts). |
 
-### Theme Packages
+### Theme Category Packages
 
-Each of the **7 theme packages** targets `net48` exclusively with zero third-party dependencies, so you only ship the visual themes your application uses:
+Each of the **3 theme category packages** targets `net48` exclusively with zero third-party dependencies, matching its CLR namespace and direct base class:
 
-| Package | Theme Classes & Capabilities |
-|:--------|:-----------------------------|
-| `Dirkster.AvalonDock.Themes.Arc` | `ArcDarkTheme`, `ArcLightTheme` — modern compact IDE aesthetic with rounded corners |
-| `Dirkster.AvalonDock.Themes.VS` | `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, plus `VsTheme` (`.vstheme` / `.vstheme.gz` / zero-dependency VS2026 JSON) in `AvalonDock.Themes.VS` |
-| `Dirkster.AvalonDock.Themes.VS2013` | `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` |
-| `Dirkster.AvalonDock.Themes.VS2010` | `VS2010Theme` |
-| `Dirkster.AvalonDock.Themes.Expression` | `ExpressionDarkTheme`, `ExpressionLightTheme` |
-| `Dirkster.AvalonDock.Themes.Metro` | `MetroTheme` |
-| `Dirkster.AvalonDock.Themes.Aero` | `AeroTheme` |
+| Package | CLR Namespace & Theme Classes |
+|:--------|:------------------------------|
+| `Dirkster.AvalonDock.Themes.Type3New` | `AvalonDock.Themes.Type3New` — `VS2026{Dark,Light,Blue}Theme`, `VS2022{Dark,Light,Blue}Theme`, `VS2015{Dark,Light,Blue}Theme`, plus `VsTheme` (`.vstheme` / `.vstheme.gz` / zero-dependency VS2026 JSON) |
+| `Dirkster.AvalonDock.Themes.Type2Hybrid` | `AvalonDock.Themes.Type2Hybrid` — `Vs2013DarkTheme`, `Vs2013LightTheme`, `Vs2013BlueTheme` (`DictionaryTheme`) |
+| `Dirkster.AvalonDock.Themes.Type1Legacy` | `AvalonDock.Themes.Type1Legacy` — `VS2010Theme`, `ExpressionDarkTheme`, `ExpressionLightTheme`, `MetroTheme`, `AeroTheme` (`Theme` URI; paired with core `GenericTheme`) |
 
 ---
 
@@ -137,7 +133,7 @@ AvalonDock provides two root controls in `Dirkster.AvalonDock`:
 <!-- Classic DockingManager -->
 <avalonDock:DockingManager x:Name="dockManager">
     <avalonDock:DockingManager.Theme>
-        <themes:ArcDarkTheme />
+        <avalonDock:VS2026DarkTheme />
     </avalonDock:DockingManager.Theme>
 
     <avalonDock:LayoutRoot>
@@ -151,7 +147,7 @@ AvalonDock provides two root controls in `Dirkster.AvalonDock`:
 LayoutRoot layout = dockManager.Layout;
 
 // Switch themes dynamically at runtime
-dockManager.Theme = new ArcLightTheme();
+dockManager.Theme = new VS2026LightTheme();
 
 // Query layout elements using AvalonDock.Layout.Extensions
 var explorer = layout.Descendents()

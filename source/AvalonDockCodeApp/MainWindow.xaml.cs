@@ -12,6 +12,7 @@ using AvalonDock.Core;
 using AvalonDock.DependencyInjection;
 using AvalonDock.Serializer.Xml;
 using AvalonDock.Themes;
+using AvalonDock.Themes.Type3New;
 using ToggleTestApp.ViewModels;
 
 namespace ToggleTestApp
@@ -56,20 +57,20 @@ namespace ToggleTestApp
 
 		private void OnThemeChanged(object sender, RoutedEventArgs e)
 		{
-			menuArcDark.IsChecked = sender == menuArcDark;
-			menuArcLight.IsChecked = sender == menuArcLight;
+			menuVs2026Dark.IsChecked = sender == menuVs2026Dark;
+			menuVs2026Light.IsChecked = sender == menuVs2026Light;
 
 			Theme theme;
 			bool isDark;
 
-			if (sender == menuArcLight)
+			if (sender == menuVs2026Light)
 			{
-				theme = new ArcLightTheme();
+				theme = new VS2026LightTheme();
 				isDark = false;
 			}
 			else
 			{
-				theme = new ArcDarkTheme();
+				theme = new VS2026DarkTheme();
 				isDark = true;
 			}
 

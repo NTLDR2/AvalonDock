@@ -14,13 +14,9 @@ ECHO TestApp
 ECHO WinFormsTestApp
 ECHO.
 ECHO Components\AvalonDock
-ECHO Components\AvalonDock.Themes.Aero
-ECHO Components\AvalonDock.Themes.Arc
-ECHO Components\AvalonDock.Themes.Expression
-ECHO Components\AvalonDock.Themes.VS
-ECHO Components\AvalonDock.Themes.VS2013
-ECHO Components\AvalonDock.Themes.VS2010
-ECHO Components\AvalonDock.Themes.Metro
+ECHO Components\AvalonDock.Themes.Type1Legacy
+ECHO Components\AvalonDock.Themes.Type2Hybrid
+ECHO Components\AvalonDock.Themes.Type3New
 ECHO.
 ECHO AutomationTest\AvalonDockTest
 ECHO CaliburnDockTestApp
@@ -72,46 +68,25 @@ ECHO.
 RMDIR /S /Q WinFormsTestApp\bin
 RMDIR /S /Q WinFormsTestApp\obj
 
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Aero
-ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.Aero\bin
-RMDIR /S /Q Components\AvalonDock.Themes.Aero\obj
-
 ECHO Deleting BIN and OBJ Folders in AvalonDock
 ECHO.
 RMDIR /S /Q Components\AvalonDock\bin
 RMDIR /S /Q Components\AvalonDock\obj
 
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Expression
-
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Type1Legacy
 ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.Expression\bin
-RMDIR /S /Q Components\AvalonDock.Themes.Expression\obj
+RMDIR /S /Q Components\AvalonDock.Themes.Type1Legacy\bin
+RMDIR /S /Q Components\AvalonDock.Themes.Type1Legacy\obj
 
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS2010
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Type2Hybrid
 ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.VS2010\bin
-RMDIR /S /Q Components\AvalonDock.Themes.VS2010\obj
+RMDIR /S /Q Components\AvalonDock.Themes.Type2Hybrid\bin
+RMDIR /S /Q Components\AvalonDock.Themes.Type2Hybrid\obj
 
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Metro
+ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Type3New
 ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.Metro\bin
-RMDIR /S /Q Components\AvalonDock.Themes.Metro\obj
-
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.Arc
-ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.Arc\bin
-RMDIR /S /Q Components\AvalonDock.Themes.Arc\obj
-
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS
-ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.VS\bin
-RMDIR /S /Q Components\AvalonDock.Themes.VS\obj
-
-ECHO Deleting BIN and OBJ Folders in AvalonDock.Themes.VS2013
-ECHO.
-RMDIR /S /Q Components\AvalonDock.Themes.VS2013\bin
-RMDIR /S /Q Components\AvalonDock.Themes.VS2013\obj
+RMDIR /S /Q Components\AvalonDock.Themes.Type3New\bin
+RMDIR /S /Q Components\AvalonDock.Themes.Type3New\obj
 
 ECHO Deleting BIN and OBJ Folders in AutomationTest\AvalonDockTest
 ECHO.

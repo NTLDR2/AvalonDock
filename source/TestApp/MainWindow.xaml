@@ -12,7 +12,7 @@
 <Window x:Class="TestApp.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
+    xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TestApp"
     xmlns:winformsIntegration="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
@@ -73,11 +73,8 @@
                 <MenuItem Click="OnNewFloatingWindow" Header="New floating window" />
             </MenuItem>
             <MenuItem x:Name="themeMenu" Header="Theme">
-                <MenuItem Header="Arc Dark" Click="OnSwitchTheme" Tag="ArcDark" IsCheckable="True" IsChecked="True" />
-                <MenuItem Header="Arc Light" Click="OnSwitchTheme" Tag="ArcLight" IsCheckable="True" />
-                <Separator />
                 <MenuItem Header="VS2010" Click="OnSwitchTheme" Tag="VS2010" IsCheckable="True" />
-                <MenuItem Header="Expression Dark" Click="OnSwitchTheme" Tag="ExpressionDark" IsCheckable="True" />
+                <MenuItem Header="Expression Dark" Click="OnSwitchTheme" Tag="ExpressionDark" IsCheckable="True" IsChecked="True" />
                 <MenuItem Header="Expression Light" Click="OnSwitchTheme" Tag="ExpressionLight" IsCheckable="True" />
                 <MenuItem Header="Metro" Click="OnSwitchTheme" Tag="Metro" IsCheckable="True" />
                 <MenuItem Header="Aero" Click="OnSwitchTheme" Tag="Aero" IsCheckable="True" />
@@ -94,7 +91,7 @@
             IsVirtualizingAnchorable="True"
             IsVirtualizingDocument="True">
             <DockingManager.Theme>
-	            <ArcDarkTheme/>
+	            <ExpressionDarkTheme/>
             </DockingManager.Theme>
             <DockingManager.DocumentHeaderTemplate>
                 <DataTemplate>

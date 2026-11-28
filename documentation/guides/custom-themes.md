@@ -3,74 +3,68 @@ title: Custom Themes
 layout: default
 parent: Guides
 nav_order: 6
-description: "Create custom AvalonDock themes using DictionaryTheme subclasses or Arc XAML ResourceKeys overrides."
+description: "Create custom AvalonDock themes using DictionaryTheme / VsTheme subclasses or XAML ResourceDictionary overrides."
 ---
 
 # Custom Themes
 
-AvalonDock gives you two clean ways to create a custom theme—ranging from a runtime C# `DictionaryTheme` accent override to a reusable compiled XAML `Theme` class with tailored brushes or control templates.
+AvalonDock gives you two clean ways to create a custom theme—ranging from a runtime C# `DictionaryTheme` / `VsTheme` accent override to a reusable compiled XAML `Theme` class with tailored brushes or control templates.
 
 | Approach | Effort | Best When You Want To… |
 |:---------|:-------|:-----------------------|
-| **1. `DictionaryTheme` Subclass in C#** | Low (zero XAML) | Override specific `ComponentResourceKey` brushes dynamically at runtime (e.g., user-chosen accent colors) |
+| **1. `DictionaryTheme` / `VsTheme` Subclass in C#** | Low (zero XAML) | Override specific `ComponentResourceKey` brushes dynamically at runtime (e.g., user-chosen accent colors) |
 | **2. Custom `Theme` Subclass + XAML ResourceDictionary** | Medium | Ship a reusable XAML theme class across projects or customize control templates |
 
 ---
 
 ## Approach 1: Dynamic Brush Overrides with `DictionaryTheme`
 
-When you want to start from an existing theme (such as `ArcDarkTheme` or `ArcLightTheme`) and override brushes in C#—for example, applying a user-picked accent color at runtime—subclass `DictionaryTheme`.
+When you want to start from an existing theme (such as `VS2022DarkTheme` or `Vs2013DarkTheme`) and override brushes in C#—for example, applying a user-picked accent color at runtime—subclass `DictionaryTheme` (or `VsTheme`).
 
 {: .important }
 `DictionaryTheme` is an **`abstract`** class (`public abstract class DictionaryTheme : Theme`). Always define a small concrete subclass that passes your `ResourceDictionary` to `base(dictionary)`.
 
-### Example: Dynamic Accent Override on Top of Arc Dark
+### Example: Dynamic Accent Override on Top of VS 2022 Dark
 
-`Dirkster.AvalonDock.Themes.Arc` exposes every themeable color and brush as a `ComponentResourceKey` on `AvalonDock.Themes.Arc.Themes.ResourceKeys`:
+`Dirkster.AvalonDock.Themes.Type3New` exposes every themeable color and brush as a `ComponentResourceKey` on `AvalonDock.Themes.Type3New.Themes.ResourceKeys`:
 
 ```csharp
-using System;
 using System.Windows;
 using System.Windows.Media;
 using AvalonDock.Controls;
 using AvalonDock.Themes;
-using ArcKeys = AvalonDock.Themes.Arc.Themes.ResourceKeys;
+using AvalonDock.Themes.Type3New;
+using VsKeys = AvalonDock.Themes.Type3New.Themes.ResourceKeys;
 
-public sealed class AccentedArcDarkTheme : DictionaryTheme
+public sealed class AccentedVsDarkTheme : DictionaryTheme
 {
-    public AccentedArcDarkTheme(Color accentColor)
+    public AccentedVsDarkTheme(Color accentColor)
         : base(BuildDictionary(accentColor))
     {
     }
 
     private static ResourceDictionary BuildDictionary(Color accent)
     {
-        var dict = new ResourceDictionary();
+        // 1. Start from the complete VS 2022 Dark dictionary (frozen brushes + VS2022 Generic.xaml)
+        var dict = new VS2022DarkTheme().ThemeResourceDictionary;
 
-        // 1. Merge the complete Arc Dark base theme (brushes + control templates)
-        dict.MergedDictionaries.Add(new ResourceDictionary
-        {
-            Source = new Uri("/AvalonDock.Themes.Arc;component/DarkTheme.xaml", UriKind.Relative)
-        });
-
-        // 2. Override accent and active tab/caption keys AFTER MergedDictionaries
-        //    (local dictionary entries take precedence over MergedDictionaries in WPF)
+        // 2. Override accent and active tab/caption keys in place
         var accentBrush = CreateFrozenBrush(accent);
         var whiteBrush = CreateFrozenBrush(Colors.White);
         var previewFill = CreateFrozenBrush(Color.FromArgb(0x66, accent.R, accent.G, accent.B));
 
-        dict[ArcKeys.ControlAccentColorKey] = accent;
-        dict[ArcKeys.ControlAccentBrushKey] = accentBrush;
-        dict[ArcKeys.DocumentWellTabSelectedActiveBackground] = accentBrush;
-        dict[ArcKeys.DocumentWellTabSelectedActiveText] = whiteBrush;
-        dict[ArcKeys.ToolWindowCaptionActiveBackground] = accentBrush;
-        dict[ArcKeys.ToolWindowCaptionActiveText] = whiteBrush;
-        dict[ArcKeys.ToolWindowTabSelectedActiveText] = accentBrush;
-        dict[ArcKeys.AutoHideTabHoveredBorder] = accentBrush;
-        dict[ArcKeys.AutoHideTabHoveredText] = accentBrush;
-        dict[ArcKeys.DockingButtonForegroundBrushKey] = accentBrush;
-        dict[ArcKeys.PreviewBoxBorderBrushKey] = accentBrush;
-        dict[ArcKeys.PreviewBoxBackgroundBrushKey] = previewFill;
+        dict[VsKeys.ControlAccentColorKey] = accent;
+        dict[VsKeys.ControlAccentBrushKey] = accentBrush;
+        dict[VsKeys.DocumentWellTabSelectedActiveBackground] = accentBrush;
+        dict[VsKeys.DocumentWellTabSelectedActiveText] = whiteBrush;
+        dict[VsKeys.ToolWindowCaptionActiveBackground] = accentBrush;
+        dict[VsKeys.ToolWindowCaptionActiveText] = whiteBrush;
+        dict[VsKeys.ToolWindowTabSelectedActiveText] = accentBrush;
+        dict[VsKeys.AutoHideTabHoveredBorder] = accentBrush;
+        dict[VsKeys.AutoHideTabHoveredText] = accentBrush;
+        dict[VsKeys.DockingButtonForegroundBrushKey] = accentBrush;
+        dict[VsKeys.PreviewBoxBorderBrushKey] = accentBrush;
+        dict[VsKeys.PreviewBoxBackgroundBrushKey] = previewFill;
 
         // Optional: customize ToggleDockingManager sidebar button text
         dict[ToggleDockButton.ForegroundBrushKey] = CreateFrozenBrush(Color.FromRgb(0xD0, 0xD4, 0xDC));
@@ -90,15 +84,15 @@ public sealed class AccentedArcDarkTheme : DictionaryTheme
 Apply it at runtime whenever the user picks a new accent color:
 
 ```csharp
-// Emerald accent on Arc Dark
-dockManager.Theme = new AccentedArcDarkTheme(Color.FromRgb(0x10, 0xB9, 0x81));
+// Emerald accent on VS 2022 Dark
+dockManager.Theme = new AccentedVsDarkTheme(Color.FromRgb(0x10, 0xB9, 0x81));
 ```
 
 ---
 
 ## Approach 2: Reusable XAML `Theme` Subclass
 
-To package a custom theme as compiled XAML resources (either inside your application or in a dedicated class library), create a XAML `ResourceDictionary` and a `Theme` subclass returning its pack URI. For modern flat styling, base your dictionary on **`AvalonDock.Themes.Arc`** (`DarkBrushs.xaml` + `Themes/Generic.xaml`), or use **`AvalonDock.Themes.Expression`**, **`AvalonDock.Themes.Metro`**, or **`AvalonDock.Themes.Aero`**.
+To package a custom theme as compiled XAML resources (either inside your application or in a dedicated class library), create a XAML `ResourceDictionary` and a `Theme` subclass returning its pack URI. For rounded modern tabs, merge `/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml` and define `AvalonDock.Themes.Type3New.Themes.ResourceKeys` tokens (or merge **`/AvalonDock.Themes.Type1Legacy;component/Themes/Expression/DarkTheme.xaml`**, `Themes/Metro/Theme.xaml`, or `Themes/Aero/Theme.xaml`).
 
 ### Step 1: Create the Theme `ResourceDictionary`
 
@@ -109,43 +103,42 @@ Create `Themes/BrandDarkTheme.xaml` (ensure Build Action is **`Page`**, the defa
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:avalonDockControls="clr-namespace:AvalonDock.Controls;assembly=AvalonDock"
-                    xmlns:arcKeys="clr-namespace:AvalonDock.Themes.Arc.Themes;assembly=AvalonDock.Themes.Arc">
+                    xmlns:vsKeys="clr-namespace:AvalonDock.Themes.Type3New.Themes;assembly=AvalonDock.Themes.Type3New">
 
-    <!-- 1. Pull in Arc Dark brushes and control templates -->
+    <!-- 1. Pull in VS 2022 rounded-tab control templates -->
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/AvalonDock.Themes.Arc;component/DarkBrushs.xaml" />
-        <ResourceDictionary Source="/AvalonDock.Themes.Arc;component/Themes/Generic.xaml" />
+        <ResourceDictionary Source="/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- 2. Override brand colors & brushes (entries in outer dictionary win over MergedDictionaries) -->
-    <Color x:Key="{x:Static arcKeys:ResourceKeys.ControlAccentColorKey}">#FF7C4DFF</Color>
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ControlAccentBrushKey}"
+    <!-- 2. Define brand colors & brushes (entries in outer dictionary win over MergedDictionaries) -->
+    <Color x:Key="{x:Static vsKeys:ResourceKeys.ControlAccentColorKey}">#FF7C4DFF</Color>
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ControlAccentBrushKey}"
                      options:Freeze="True" Color="#FF7C4DFF" />
 
     <!-- Frame & panel surfaces -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.Background}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.Background}"
                      options:Freeze="True" Color="#FF161822" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.TabBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.TabBackground}"
                      options:Freeze="True" Color="#FF1E2030" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PanelBorderBrush}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PanelBorderBrush}"
                      options:Freeze="True" Color="#FF2E3248" />
 
     <!-- Active document tab & tool window header -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DocumentWellTabSelectedActiveBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DocumentWellTabSelectedActiveBackground}"
                      options:Freeze="True" Color="#FF7C4DFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DocumentWellTabSelectedActiveText}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DocumentWellTabSelectedActiveText}"
                      options:Freeze="True" Color="#FFFFFFFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ToolWindowCaptionActiveBackground}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ToolWindowCaptionActiveBackground}"
                      options:Freeze="True" Color="#FF7C4DFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.ToolWindowCaptionActiveText}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.ToolWindowCaptionActiveText}"
                      options:Freeze="True" Color="#FFFFFFFF" />
 
     <!-- Drag-drop indicators & preview box -->
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.DockingButtonForegroundBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.DockingButtonForegroundBrushKey}"
                      options:Freeze="True" Color="#FF7C4DFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PreviewBoxBorderBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PreviewBoxBorderBrushKey}"
                      options:Freeze="True" Color="#FF7C4DFF" />
-    <SolidColorBrush x:Key="{x:Static arcKeys:ResourceKeys.PreviewBoxBackgroundBrushKey}"
+    <SolidColorBrush x:Key="{x:Static vsKeys:ResourceKeys.PreviewBoxBackgroundBrushKey}"
                      options:Freeze="True" Color="#447C4DFF" />
 
     <!-- ToggleDockingManager sidebar button foreground -->
@@ -153,9 +146,6 @@ Create `Themes/BrandDarkTheme.xaml` (ensure Build Action is **`Page`**, the defa
                      options:Freeze="True" Color="#FFC8D3F5" />
 </ResourceDictionary>
 ```
-
-{: .note }
-Notice the pack URI spelling in `AvalonDock.Themes.Arc`: `DarkBrushs.xaml` and `LightBrushs.xaml` (without an `e`). Merging `DarkTheme.xaml` directly is equivalent to merging `DarkBrushs.xaml` followed by `Themes/Generic.xaml`.
 
 ### Step 2: Implement the `Theme` Subclass
 
@@ -192,9 +182,9 @@ public sealed class BrandDarkTheme : Theme
 
 ---
 
-## Key `ResourceKeys` Reference (`AvalonDock.Themes.Arc`)
+## Key `ResourceKeys` Reference (`AvalonDock.Themes.Type3New`)
 
-`AvalonDock.Themes.Arc.Themes.ResourceKeys` exposes a comprehensive set of `ComponentResourceKey` properties grouped by UI area:
+`AvalonDock.Themes.Type3New.Themes.ResourceKeys` (and `AvalonDock.Themes.Type2Hybrid.Themes.ResourceKeys`) exposes a comprehensive set of `ComponentResourceKey` properties grouped by UI area:
 
 | UI Area | Key Properties on `ResourceKeys` | Value Type |
 |:--------|:---------------------------------|:-----------|
@@ -215,7 +205,7 @@ public sealed class BrandDarkTheme : Theme
 
 ## Controls Styled by AvalonDock Themes
 
-If you build a completely custom theme from scratch (copying `/AvalonDock;component/Themes/generic.xaml` or `/AvalonDock.Themes.Arc;component/Themes/Generic.xaml`), ensure styles and templates exist for all public docking controls:
+If you build a completely custom theme from scratch (copying `/AvalonDock;component/Themes/generic.xaml` or `/AvalonDock.Themes.Type3New;component/Themes/VS2022/Generic.xaml`), ensure styles and templates exist for all public docking controls:
 
 | Control (`AvalonDock.Controls`) | Role |
 |:--------------------------------|:-----|
@@ -249,6 +239,5 @@ Before shipping a custom theme, verify every visual state:
 ## See Also
 
 - [Theming Guide]({{ site.baseurl }}{% link guides/theming.md %}) — Applying and switching built-in themes.
-- [Arc Theme]({{ site.baseurl }}{% link themes/arc.md %}) — Pack URIs and `ResourceKeys` details for `Dirkster.AvalonDock.Themes.Arc`.
 - [VS Theme]({{ site.baseurl }}{% link themes/vs.md %}) — Loading custom `.vstheme`, `.vstheme.gz`, and VS2026 JSON color overrides via `VsTheme`.
 - [Tutorial: Styling & Theming]({{ site.baseurl }}{% link tutorials/styling-and-theming.md %}) — Step-by-step walkthrough building a multi-theme app with custom corporate branding.

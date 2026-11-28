@@ -8,7 +8,7 @@ description: "Build your first AvalonDock v5 docking layout in 5 minutes."
 
 # Quick Start
 
-This guide walks you through creating a complete WPF docking layout with tool windows, tabbed documents, an auto-hidden bottom panel, and the modern Arc Dark theme in under 5 minutes.
+This guide walks you through creating a complete WPF docking layout with tool windows, tabbed documents, an auto-hidden bottom panel, and the Visual Studio 2026 Dark theme in under 5 minutes.
 
 ---
 
@@ -26,7 +26,7 @@ cd MyDockingApp
 
 ```bash
 dotnet add package Dirkster.AvalonDock
-dotnet add package Dirkster.AvalonDock.Themes.Arc
+dotnet add package Dirkster.AvalonDock.Themes.Type3New
 ```
 
 ## Step 3: Define the Docking Layout in XAML
@@ -37,14 +37,13 @@ Replace the contents of `MainWindow.xaml` with:
 <Window x:Class="MyDockingApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
-        xmlns:themes="clr-namespace:AvalonDock.Themes;assembly=AvalonDock.Themes.Arc"
+        xmlns:avalonDock="https://github.com/NTLDR2/AvalonDock"
         Title="My Docking App" Height="600" Width="900">
 
     <avalonDock:DockingManager x:Name="dockManager">
-        <!-- Apply the Arc Dark theme -->
+        <!-- Apply the VS 2026 Dark theme -->
         <avalonDock:DockingManager.Theme>
-            <themes:ArcDarkTheme />
+            <avalonDock:VS2026DarkTheme />
         </avalonDock:DockingManager.Theme>
 
         <avalonDock:LayoutRoot>
@@ -144,4 +143,4 @@ Prefer a modern **VS Code / JetBrains Rider-style** interface with compact sideb
 - Understand how `LayoutRoot`, `LayoutPanel`, and panes fit together in [Layout Model]({{ site.baseurl }}{% link concepts/layout-model.md %}).
 - Bind documents and toolboxes cleanly using view models and DI in [MVVM Integration]({{ site.baseurl }}{% link guides/mvvm.md %}) and [Dependency Injection]({{ site.baseurl }}{% link guides/dependency-injection.md %}).
 - Persist user layouts across sessions with XML in [Layout Serialization]({{ site.baseurl }}{% link guides/serialization.md %}).
-- Explore all 7 theme packages in [Themes]({{ site.baseurl }}{% link themes/index.md %}).
+- Explore all 3 theme category packages (18 built-in themes) in [Themes]({{ site.baseurl }}{% link themes/index.md %}).

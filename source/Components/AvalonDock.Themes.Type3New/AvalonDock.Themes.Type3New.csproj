@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<AssemblyName>AvalonDock.Themes.Type3New</AssemblyName>
+		<RootNamespace>AvalonDock.Themes.Type3New</RootNamespace>
+		<PackageId>Dirkster.AvalonDock.Themes.Type3New</PackageId>
+		<Description>Runtime VsTheme-based Visual Studio 2015, 2022, and 2026 themes and .vstheme/.json loaders for AvalonDock.</Description>
+		<TargetFrameworks>$(ComponentTargetFrameworks)</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="**\*.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\*.vstheme" />
+		<EmbeddedResource Include="Resources\*.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AvalonDock\AvalonDock.csproj" />
+	</ItemGroup>
+</Project>

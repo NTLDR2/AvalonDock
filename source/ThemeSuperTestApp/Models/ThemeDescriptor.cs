@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Markup;
 using AvalonDock.Themes;
-using AvalonDock.Themes.VS;
+using AvalonDock.Themes.Type3New;
 using Caliburn.Micro;
 
 namespace ThemeSuperTestApp.Models
@@ -19,7 +19,7 @@ namespace ThemeSuperTestApp.Models
 	/// </remarks>
 	public sealed class ThemeDescriptor : PropertyChangedBase
 	{
-		private const string AvalonDockXmlNamespace = "https://github.com/Dirkster99/AvalonDock";
+		private const string AvalonDockXmlNamespace = "https://github.com/NTLDR2/AvalonDock";
 
 		private readonly Func<Theme> _factory;
 		private Theme? _cachedInstance;
@@ -36,7 +36,7 @@ namespace ThemeSuperTestApp.Models
 		/// </summary>
 		/// <param name="id">Stable unique identifier for the theme entry.</param>
 		/// <param name="displayName">Human-readable theme title shown in the selector.</param>
-		/// <param name="familyName">Logical theme family (e.g., <c>Arc</c>, <c>VS 2022</c>, <c>VS 2013</c>).</param>
+		/// <param name="familyName">Logical theme family (e.g., <c>VS 2026</c>, <c>VS 2022</c>, <c>VS 2013</c>).</param>
 		/// <param name="themeType">Concrete CLR type of the theme.</param>
 		/// <param name="polarity">Visual polarity of the theme.</param>
 		/// <param name="factory">Lazy factory that constructs a new <see cref="Theme"/> instance.</param>
